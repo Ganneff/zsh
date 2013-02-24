@@ -1,0 +1,12 @@
+# -*- mode:sh -*-
+
+### jump behind the first word on the cmdline.
+### useful to add options.
+local words
+words=(${(z)BUFFER})
+
+if (( ${#words} <= 1 )) ; then
+    CURSOR=${#BUFFER}
+else
+    CURSOR=${#${words[1]}}
+fi

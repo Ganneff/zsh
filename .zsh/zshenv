@@ -1,0 +1,85 @@
+# -*- mode: sh;-*-
+############
+#
+# .zshenv
+# Written by Joerg Jaspert <joerg@debian.org>
+#
+############
+
+# We (may) use those variables wherever, so fill them now.
+# Avoids calling the processes all the time we need em.
+OSNAME=`uname -s`
+USER=${USER:-`whoami`}
+UID=${UID:-`id -u`}
+# :r strips "extension" (a . followed by 0 or more characters)
+HOST=$HOST:r:r
+HOST=${HOST:-$(hostname -s)}
+DOMAIN=${DOMAIN:-$(hostname -d 2>&-)}
+[ "$DOMAIN" = "" -o "$DOMAIN" = "localdomain" -o "$DOMAIN" = "(none)" ] && DOMAIN=$(grep "^search " /etc/resolv.conf | cut -d' ' -f2)
+
+[ -f /etc/debian_version ] && DISTRI="Debian"
+
+DEBUG=${DEBUG:-no}
+
+# Path to search for autoloadable functions.
+fpath=( $HOME/.zsh/functions $HOME/zsh "$fpath[@]" )
+# Only unique entries please.
+typeset -U fpath
+export fpath
+
+# Include function path in script path so that we can run them even
+# though a subshell may not know about functions.
+# PATH should already be exported, but in case not. . .
+path=(
+    lala
+    "$HOME/bin"
+    /usr/local/bin
+    /bin
+    /usr/bin
+    /srv/qa.debian.org/mia
+    /usr/X11/bin
+    /usr/bin/X11
+    /usr/local/X11/bin
+    /usr/local/games
+    /usr/games
+    /usr/lib/nagios/plugins
+    "$fpath[@]"
+    "$path[@]"
+    "$PATH[@]"
+)
+if [ "`id -u`" = "0" ] || ! [ -x /usr/bin/id ]; then
+    path=(
+        "$path[@]"
+        /usr/local/sbin
+        /usr/sbin
+        /sbin
+    )
+fi
+
+# Only unique entries please.
+typeset -U path
+# Remove entries that don't exist on this system.  Just for sanity's
+# sake more than anything.
+path=( ${^path}(N-/) )
+
+export PATH USER HOST DOMAIN UID
+
+# Now that FPATH is set correctly, do autoloaded functions.
+# autoload all functions in $FPATH - that is, all files in
+# each component of the array $fpath.  If there are none, feed the list
+# it prints into /dev/null.
+for paths in "$fpath[@]"; do
+    autoload -U "$paths"/*(N:t) >/dev/null
+done
+unset paths
+
+# Command to use when redirecting from/to a null command.
+# READNULLCMD is redefined in .zshrc for interactive shells.
+READNULLCMD=cat
+NULLCMD=cat
+
+# Unix groups: remember the original group ID.  (For prompts.)
+if [[ ${+ORIGGID} -eq 0 ]]; then
+    export ORIGGID="$GID"
+fi
+

@@ -1,0 +1,11 @@
+## vim:ft=zsh:foldmethod=marker
+
+if [ "$SSH_AUTH_SOCK" != "" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh-auth-sock" ] ; then
+	if ! [ -e "$HOME/.ssh-auth-sock" ] || [ "`readlink $HOME/.ssh-auth-sock`" != "$SSH_AUTH_SOCK" ]; then
+		echo "Setting ~/.ssh-auth-sock."
+		rm -f "$HOME/.ssh-auth-sock"
+		ln -s "$SSH_AUTH_SOCK" "$HOME/.ssh-auth-sock"
+	fi
+elif [ "$SSH_AUTH_SOCK" = "" ] && [ -e "$HOME/.ssh-auth-sock" ]; then
+	SSH_AUTH_SOCK="$HOME/.ssh-auth-sock"; export SSH_AUTH_SOCK
+fi

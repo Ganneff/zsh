@@ -1,0 +1,44 @@
+# -*- mode:sh -*-
+
+# termsupported function
+# Define a useful function to determine if the current value of TERM
+# is useful, or if it needs changing.  Used below.
+termsupported ()
+{
+  # terminfo should have a file for this terminal type.
+  if [[ -f "/usr/share/terminfo/$TERM[1]/$TERM" ]]
+  then
+    # If it's there, success.
+    return 0
+  else
+    # With termcap, we have a monolithic terminal type listing.
+    if [[ -f /etc/termcap ]]
+    then
+      # This sed script joins continued \
+      # lines and then checks to see if this terminal name is listed.
+      if [[ "`sed -n \
+        -e '/^$/d' \
+        -e '/^#/d' \
+        -e 'h' \
+        -e 's/^\\([^:\\\\]*\\)[:\\\\].*\$/|\\1|/' \
+        -e '/|'$1'|/p' \
+        -e 'g' \
+        -e ':detail' \
+        -e '/\\$/{' \
+        -e 'n' \
+        -e 'b detail' \
+        -e '}' \
+        < /etc/termcap`" = "" ]]
+      then
+        # Nothing matches, fail.
+        return 1
+      else
+        # Found a matching entry, succeed.
+        return 0
+      fi
+    else
+      # If neither terminal capabilities system was found, fail.
+      return 2
+    fi
+  fi
+}

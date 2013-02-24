@@ -1,0 +1,40 @@
+# -*- mode:sh -*-
+
+# Process the exceptions which allow logging out while still having
+# attached jobs.
+
+# This is weird . . $1 seems to contain "logout" because the "logout"
+# command has been aliased to "noglob logout" - and $0 is the noglob.
+# I can't believe that this is what is meant to happen.
+if [[ $1 = "logout" ]]
+then
+	shift
+fi
+# If the checkjobs option is unset, just plain exit.  (This option
+# emerged in zsh 3.1.8.)
+if [[ ! -o checkjobs ]]
+then
+    reallyexit ${1+"$@"}
+fi
+# Did I type logout twice in a row?  Note check for history number.
+if [[ $history[$#history] = (exit|(logout|lo)(|\ *)) || $lastlogout = $#history ]]; then
+    reallyexit ${1+"$@"}
+fi
+
+# Did I type jobs, then logout?
+if [[ $history[$#history] = (j(|obs)(|\ *)) ]]; then
+    reallyexit ${1+"$@"}
+fi
+
+lastlogout=$#history
+
+# Emulate the code that protects against logout if I have
+# attached jobs.
+if [[ $#jobstates -gt 0 ]]; then
+    # The first listed state is good enough to be a hint of my job states.
+    echo "You have ${jobstates[${${(k)jobstates}[1]}]%%:*} jobs."
+    return
+fi
+
+# If we got here we're really exiting.
+reallyexit ${1+"$@"}

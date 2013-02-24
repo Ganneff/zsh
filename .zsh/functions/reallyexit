@@ -1,0 +1,8 @@
+# -*- mode:sh -*-
+
+# logging out
+# It isn't bulletproof, but it's good
+# enough for my needs.
+# This function is called if I really want to exit the shell.
+kill -HUP $$
+

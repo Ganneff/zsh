@@ -1,0 +1,11 @@
+# -*- mode:sh -*-
+
+host=${1:-""}
+port=${2:-"443"}
+
+if [[ $host = "" ]]; then
+    echo "Missing host argument"
+    return
+fi
+
+openssl s_client -host ${host} -port ${port}

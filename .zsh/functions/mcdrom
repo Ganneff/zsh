@@ -1,0 +1,20 @@
+# -*- mode:sh -*-
+
+local mounted
+local cpwd
+mounted=$(grep cdrom /etc/mtab)
+if [[ $mounted = "" ]];then
+    mount /cdrom/
+    echo "-- mounted cdrom --"
+    cd /cdrom/ ; ls
+else
+    cpwd=$(pwd|grep cdrom)
+    if [[ $cpwd = "" ]];then
+        umount /cdrom/
+        echo "-- umounted cdrom --"
+	else
+        cd; umount /cdrom/
+        echo "-- umounted cdrom --"
+        pwd
+    fi
+fi

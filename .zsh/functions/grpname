@@ -1,0 +1,10 @@
+# -*- mode:sh -*-
+
+# This little function just returns the name of a unix group for the
+# given gid
+# 3 ways to do it, all work. select what you prefer :)
+#	${(j.:u:.)${(f)"$(getent group $1)"}%%:*}
+#	echo ${${(s.:.)"$(getent group $1)"}[0]}
+echo ${"$(getent group $1)"%%:*}
+
+

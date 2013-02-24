@@ -1,0 +1,78 @@
+# -*- mode:sh -*-
+
+# I use this function to generate a few variables which then get used in my prompt.
+# This function here is only executed every X seconds, the prompt uses the variables set by it.
+# This way I can include some information in my prompt which may need more time to collect
+# than you want a promptdisplay to use
+#
+# The function has to fill in the associative array "ACPIDISPLAY", setting the following values
+# (if available):
+#
+# bat1 - first battery
+# bat2 - possible second battery, unset if none
+# tz1 .. tzX - temperatures
+# cpu - CPU frequency
+# tznum - number of tempX entries
+# ac - online or offline
+case $LAPTOP in
+	yacpi)
+		ACPIDATA=(${(s:|:)"$(yacpi -p)"})
+
+		ACPIDISPLAY=(
+			bat1  ${${ACPIDATA[1]}[(w)3]}
+			bat2  ${${ACPIDATA[2]}[(w)3]}
+			ac    ${${ACPIDATA[3]}[(w)3]}
+			tz5   ${${ACPIDATA[4]}[(w)3]}
+			tz4   ${${ACPIDATA[5]}[(w)3]}
+			tz3   ${${ACPIDATA[6]}[(w)3]}
+			tz2   ${${ACPIDATA[7]}[(w)3]}
+			tz1   ${${ACPIDATA[8]}[(w)3]}
+			tz0   ${${ACPIDATA[9]}[(w)3]}
+			cpu   ${${${ACPIDATA[11]}[(w)3]}//\/*/}
+			tznum 5
+		)
+		PR_APM_BAT='${PR_YELLOW}B: ${PR_RED}$ACPIDISPLAY[bat1] ${(e)PR_SLASH}${ACPIDISPLAY[bat2]} ${PR_YELLOW}%%'
+		PR_APM_TEMP='T: ${PR_RED}$ACPIDISPLAY[tz0]${(e)PR_SLASH}$ACPIDISPLAY[tz1]${(e)PR_SLASH}$ACPIDISPLAY[tz2]${(e)PR_SLASH}$ACPIDISPLAY[tz3]${(e)PR_SLASH}$ACPIDISPLAY[tz4]${(e)PR_SLASH}$ACPIDISPLAY[tz5]${PR_YELLOW}°C'
+		PR_APM_CPU='CPU: ${PR_RED}$ACPIDISPLAY[cpu]${PR_YELLOW}MHz'
+		PR_APM_AC='AC: ${PR_RED}$ACPIDISPLAY[ac]'
+		PR_APM_LAST='${PR_CYAN}'
+
+		case $TOOLONG in
+			0)
+				PR_APM="${PR_APM_BAT} ${PR_APM_TEMP} ${PR_APM_CPU} ${PR_APM_AC}${PR_APM_LAST}"
+				;;
+			1)
+				PR_APM="${PR_APM_BAT} ${PR_APM_TEMP} ${PR_APM_CPU} ${PR_APM_LAST}"
+				;;
+			2)
+				PR_APM="${PR_APM_BAT} ${PR_APM_TEMP} ${PR_APM_LAST}"
+				;;
+			3)
+				PR_APM="${PR_APM_BAT} ${PR_APM_LAST}"
+				;;
+			4)
+				PR_APM=""
+				;;
+			*)
+				PR_APM=""
+				;;
+		esac
+		;;
+	ibam)
+		ACPIDATA=$(ibam --percentbattery)
+		ACPIDISPLAY=(
+			bat1 ${${ACPIDATA[(f)1]}[(w)-2]}
+			tznum 0
+		)
+		PR_APM='${PR_RED}B: $ACPIDISPLAY[bat1] ${PR_CYAN}'
+
+		;;
+	*)
+		unset ACPIDATA
+		unset ACPIDISPLAY
+		PR_APM=''
+esac
+
+# Finally see how long the acpi related prompt is
+PR_APM_TEMP=${PR_APM//\${\(e\)PR_SLASH}/#}
+PR_APM_LENGTH=${(e)PR_APM_TEMP//\${PR_(LIGHT|)(RED|GREEN|YELLOW|BLUE|MAGENTA|CYAN|WHITE)}/}

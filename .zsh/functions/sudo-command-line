@@ -1,0 +1,5 @@
+# -*- mode:sh -*-
+
+# run command line as user root via sudo:
+[[ -z $BUFFER ]] && zle up-history
+[[ $BUFFER != sudo\ * ]] && BUFFER="sudo $BUFFER"

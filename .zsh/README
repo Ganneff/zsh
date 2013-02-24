@@ -1,0 +1,41 @@
+########################################################################
+# To correctly use this fileset for zsh, you need to understand the
+# order in which stuff is loaded by zsh.
+#
+# Wherever $ZDOTDIR is unset, $HOME is used instead
+# 
+# 1. /etc/zsh/zshenv             This is not overridable and not affected by the
+#                                RCS/GLOBAL_RCS variables explained below!
+# 2. $ZDOTDIR/.zshenv            
+#
+# If the shell is a login shell, it continues with
+# 3. /etc/zsh/zprofile
+# 4. $ZDOTDIR/.zprofile
+#
+# If the shell is interactive, it continues with
+# 5. /etc/zsh/zshrc
+# 6. $ZDOTDIR/.zshrc
+#
+# If the shell is a login shell, it continues with
+# 7. /etc/zsh/zlogin
+# 8. $ZDOTDIR/zlogin
+########################################################################
+
+########################################################################
+# On logout it is easier: If the shell exits (not due to exec'ing another
+# process, but logout/exit), it reads
+#
+# 1. $ZDOTDIR/.zlogout
+# 2. /etc/zsh/zlogout
+########################################################################
+
+########################################################################
+# There are 2 variables affecting the above ordering.
+#
+# RCS         If this is unset, none of the (remaining) startup files
+#             are sourced.
+# GLOBAL_RCS  If this is unset, none of the startup files in /etc/zsh
+#             are sourced.
+#
+# Note: These variables do NOT affect /etc/zsh/zshenv, which is
+#       ALWAYS read!
