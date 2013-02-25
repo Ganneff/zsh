@@ -14,8 +14,8 @@ install-zsh() {
     {
 	    local OK="$fg_bold[green]OK.${reset_color}"
 	    print -n "$fg[green]Building archive...${reset_color} "
-	    cd $ZSH 
-        git archive HEAD | tar -C $work -xf -
+	    #cd $ZSH 
+        vcsh run zsh git archive HEAD | tar -C $work -xf -
         mkdir -p $work/zsh-syntax-highlighting
         cd $ZSH/zsh-syntax-highlighting 
         git archive HEAD | tar -C $work/zsh-syntax-highlighting -xf -
@@ -58,5 +58,8 @@ if [[ $1 == "MAGIC" ]]; then
     rm -f ~/.zshrc
     rm -f ~/.zshenv
     ln -s .zsh/zshenv.home ~/.zshenv
+    print $OK
+    print "$fg[green]Disabling old udh cronjob...${reset_color} "
+    crontab -l|sed -e 's_\(#\?[0-9][0-9] [/6*]* \* \* \* $HOME/bin/udh >/dev/null\)_#off#\1_'|crontab
     print $OK
 fi
