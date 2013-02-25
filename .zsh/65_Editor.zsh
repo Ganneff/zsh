@@ -36,7 +36,7 @@ EOF
     # Maybe use emacsclient?
     (( $+commands[emacsclient] )) && {
         export ALTERNATE_EDITOR=$EDITOR
-        export EDITOR="emacsclient"
+        export EDITOR="emacsclient -t"
         # Maybe with -n
         alias e="emacsclient"
     }

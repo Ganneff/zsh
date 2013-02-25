@@ -1,4 +1,5 @@
 var
 .zcompcache
 .zcompdump
-zsh-syntax-highlighting
+.zcompdump.zwc
+zsh-install.sh

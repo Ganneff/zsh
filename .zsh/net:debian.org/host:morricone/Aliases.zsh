@@ -36,13 +36,6 @@ alias -- -='cd -'
 for index ({1..9}) alias "$index"="cd -${index}"; unset index
 
 alias mc='mc -d -U'
-alias showpkg='apt-cache showpkg'
-alias acs='apt-cache search'
-alias acw='apt-cache show'
-alias agi='LANG=C sudo aptitude install'
-alias agr='LANG=C sudo aptitude remove'
-alias agp='LANG=C sudo aptitude purge'
-alias dclean='LANG=C LC_ALL=C fakeroot debian/rules clean'
 alias cpan='perl -MCPAN -e shell'
 
 # No spellchecks here

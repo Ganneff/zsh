@@ -10,3 +10,5 @@ alias pdbie='LANG=C LC_ALL=C linux32 pdebuild --auto-debsign --debsign-k B12525C
 alias pdbae='LANG=C LC_ALL=C pdebuild --auto-debsign --debsign-k B12525C4 -- --pkgname-logfile --basetgz /var/cache/pbuilder/base_etch_amd64.tgz --debbuildopts -sa '
 alias pdbil='LANG=C LC_ALL=C linux32 pdebuild --auto-debsign --debsign-k B12525C4 -- --pkgname-logfile --basetgz /var/cache/pbuilder/base_lenny_i386.tgz --debbuildopts -sa '
 alias pdbal='LANG=C LC_ALL=C pdebuild --auto-debsign --debsign-k B12525C4 -- --pkgname-logfile --basetgz /var/cache/pbuilder/base_lenny_amd64.tgz --debbuildopts -sa '
+
+alias vcr="vcsh run"
