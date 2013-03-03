@@ -29,6 +29,9 @@ alias logout='noglob logout'
 alias ztrace='typeset -f -t'
 alias zuntrace='typeset -f +t'
 
+# overwrite cal
+alias cal='cal -3'
+
 # convenient abbreviations
 alias c=clear
 
