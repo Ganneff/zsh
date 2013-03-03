@@ -1,0 +1,10 @@
+# -*- mode:sh -*-
+
+case "${TERM}" in
+    rxvt*)
+        LC_ORIGINALTERM=$TERM TERM=xterm command sudo "$@"
+        ;;
+    *)
+        command sudo "$@"
+        ;;
+esac

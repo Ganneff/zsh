@@ -1,5 +1,9 @@
 # -*- mode: sh;-*-
 
+# autoloads first
+autoload -Uz compinit
+autoload -U zsh/complist
+
 ## General completion technique
 ## complete as much u can ..
 zstyle ':completion:*' completer _complete _list _oldlist _expand _ignored _match _correct _approximate _prefix
@@ -89,11 +93,17 @@ zstyle ':completion:*:processes' command 'ps -au$USER'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 
 # host completion
-[[ -r ~/.ssh/known_hosts ]] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
-[[ -r ~/.ssh/debian_known_hosts ]] && _ssh_debian_hosts=(${${${${(f)"$(<$HOME/.ssh/debian_known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_debian_hosts=()
-[[ -r /etc/ssh/ssh_known_hosts ]] && _ssh_etc_hosts=(${${${${(f)"$(</etc/ssh/ssh_known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_etc_hosts=()
-[[ -r /etc/hosts ]] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
-
+if is42; then
+    [[ -r ~/.ssh/known_hosts ]] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
+    [[ -r ~/.ssh/debian_known_hosts ]] && _ssh_debian_hosts=(${${${${(f)"$(<$HOME/.ssh/debian_known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_debian_hosts=()
+    [[ -r /etc/ssh/ssh_known_hosts ]] && _ssh_etc_hosts=(${${${${(f)"$(</etc/ssh/ssh_known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_etc_hosts=()
+    [[ -r /etc/hosts ]] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
+else
+    _ssh_hosts=()
+    _ssh_debian_hosts=()
+    _ssh_etc_hosts=()
+    _etc_hosts=()
+fi
 hosts=(
     ${HOST}
     "$_ssh_hosts[@]"
@@ -116,6 +126,7 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
       
 # ... unless we really want to.
 zstyle '*' single-ignored show
+
 
 # Dont complete CVS dirs and lost+found
 zstyle ':completion:*:(all-|)files' ignored-patterns '(|*/)CVS'
@@ -148,8 +159,7 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
-autoload -Uz compinit
-compinit
+compinit -d ${ZDOTDIR}/var/.zcompdump
 
 ## generic completions for programs which understand GNU long options(--help)
 compdef _gnu_generic make df du gpg lintian
@@ -162,33 +172,35 @@ compdef _hosts ssha
 _debian_rules() { words=(make -f debian/rules) _make }
 compdef _debian_rules debian/rules
 
-# git related
-compdef g=git
-compdef _git gst=git-status
-compdef _git gl=git-pull
-compdef _git gup=git-fetch
-compdef _git gp=git-push
-gdv() { git diff -w "$@" }
-compdef _git gdv=git-diff
-compdef _git gc=git-commit
-compdef _git gca=git-commit
-compdef _git gco=git-checkout
-compdef _git gr=git-remote
-compdef _git grv=git-remote
-compdef _git grmv=git-remote
-compdef _git grrm=git-remote
-compdef _git grset=git-remote
-compdef _git grset=git-remote
-compdef _git gb=git-branch
-compdef _git gba=git-branch
-compdef gcount=git
-compdef _git gcp=git-cherry-pick
-compdef _git glg=git-log
-compdef _git glgg=git-log
-compdef _git glgga=git-log
-compdef _git gss=git-status
-compdef _git ga=git-add
-compdef _git gm=git-merge
-compdef ggpull=git
-compdef ggpush=git
-compdef ggpnp=git
+if is434; then
+    # git related
+    compdef g=git
+    compdef _git gst=git-status
+    compdef _git gl=git-pull
+    compdef _git gup=git-fetch
+    compdef _git gp=git-push
+    gdv() { git diff -w "$@" }
+    compdef _git gdv=git-diff
+    compdef _git gc=git-commit
+    compdef _git gca=git-commit
+    compdef _git gco=git-checkout
+    compdef _git gr=git-remote
+    compdef _git grv=git-remote
+    compdef _git grmv=git-remote
+    compdef _git grrm=git-remote
+    compdef _git grset=git-remote
+    compdef _git grset=git-remote
+    compdef _git gb=git-branch
+    compdef _git gba=git-branch
+    compdef gcount=git
+    compdef _git gcp=git-cherry-pick
+    compdef _git glg=git-log
+    compdef _git glgg=git-log
+    compdef _git glgga=git-log
+    compdef _git gss=git-status
+    compdef _git ga=git-add
+    compdef _git gm=git-merge
+    compdef ggpull=git
+    compdef ggpush=git
+    compdef ggpnp=git
+fi

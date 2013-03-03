@@ -171,8 +171,12 @@ bindkey '\e[B' history-substring-search-down
 #-----------------------------------------------------------------------------
 
 setopt extendedglob
-zmodload -F zsh/parameter
-
+if [[ $ZSH_VERSION == 4.3.<4->* || $ZSH_VERSION == 4.<4->* \
+    || $ZSH_VERSION == <5->* ]]; then
+    zmodload -F zsh/parameter
+else
+    zmodload zsh/parameter 2>/dev/null
+fi
 #
 # We have to "override" some keys and widgets if the
 # zsh-syntax-highlighting plugin has not been loaded:

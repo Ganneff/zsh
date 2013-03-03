@@ -191,7 +191,7 @@ SetOPT   LIST_PACKED
 # set-local-history zle binding.  It is also possible to create a zle
 # widget that will make some commands ignore imported commands, and some
 # include them.
-SetOPT   SHARE_HISTORY
+is4 && SetOPT   SHARE_HISTORY
 
 # Save each command's beginning timestamp (in seconds since the epoch)
 # and the duration (in seconds) to the history file.
@@ -265,3 +265,10 @@ UnsetOPT IGNORE_EOF
 # may be modified if completion is called from a user-defined widget.
 UnsetOPT LIST_BEEP
 
+# Remove any right prompt from display when accepting a command line.
+# This may be useful with terminals with other cut/paste methods.
+is41 && SetOPT TRANSIENT_RPROMPT
+
+unfunction -m SetOPT
+unfunction -m UnsetOPT
+unfunction -m SetOPTifExists

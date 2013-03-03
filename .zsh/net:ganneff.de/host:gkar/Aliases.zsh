@@ -12,3 +12,4 @@ alias pdbil='LANG=C LC_ALL=C linux32 pdebuild --auto-debsign --debsign-k B12525C
 alias pdbal='LANG=C LC_ALL=C pdebuild --auto-debsign --debsign-k B12525C4 -- --pkgname-logfile --basetgz /var/cache/pbuilder/base_lenny_amd64.tgz --debbuildopts -sa '
 
 alias vcr="vcsh run"
+alias vc="vcsh"

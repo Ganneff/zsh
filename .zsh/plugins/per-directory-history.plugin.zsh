@@ -55,6 +55,10 @@
 #-------------------------------------------------------------------------------
 # configuration, the base under which the directory histories are stored
 #-------------------------------------------------------------------------------
+if ! [[ $ZSH_VERSION == 4.3.<4->* || $ZSH_VERSION == 4.<4->* \
+    || $ZSH_VERSION == <5->* ]]; then
+    return
+fi
 
 [[ -z $HISTORY_BASE ]] && HISTORY_BASE="$HOME/.directory_history"
 

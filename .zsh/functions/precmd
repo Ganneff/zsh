@@ -1,7 +1,7 @@
 # -*- mode:sh -*-
 
 # update VCS information
-vcs_info
+is439 && vcs_info
 
 # set variable debian_chroot if running in a chroot with /etc/debian_chroot
 if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then

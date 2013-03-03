@@ -36,9 +36,14 @@ EOF
     # Maybe use emacsclient?
     (( $+commands[emacsclient] )) && {
         export ALTERNATE_EDITOR=$EDITOR
-        export EDITOR="emacsclient -t"
+        export EDITOR=$ZDOTDIR/run/eeditor-$HOST-$UID
+        cat <<EOF >| $EDITOR
+#!/bin/sh
+exec emacsclient -t "\$@"
+EOF
+        chmod +x $EDITOR
         # Maybe with -n
-        alias e="emacsclient"
+        alias e="emacsclient -t"
     }
 }
 

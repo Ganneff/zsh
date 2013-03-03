@@ -33,22 +33,23 @@ periodic
 
 # gather version control information for inclusion in a prompt
 # we will only be using one variable, so let the code know now.
-autoload -Uz vcs_info && vcs_info
-zstyle ':vcs_info:*' max-exports 1
-zstyle ':vcs_info:*' disable cdv darcs mtn tla hg
-zstyle ':vcs_info:*' use-prompt-escapes
-zstyle ':vcs_info:*' use_simple
+if is439 && zrcautoload vcs_info && vcs_info; then
+    zstyle ':vcs_info:*' max-exports 1
+    zstyle ':vcs_info:*' disable cdv darcs mtn tla hg
+    zstyle ':vcs_info:*' use-prompt-escapes
+    zstyle ':vcs_info:*' use_simple
 
-# change vcs_info formats for the prompt
-if [[ "$TERM" == dumb ]] ; then
-	zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] "
-	zstyle ':vcs_info:*' formats       "(%s%)-[%b] "
-else
-    # these are the same, just with a lot of colours:
-#	zstyle ':vcs_info:*' actionformats "$%s${PR_YELLOW})${PR_CYAN}-${PR_YELLOW}[${PR_GREEN}%b${PR_YELLOW}|${PR_RED}%a${PR_YELLOW}]${PR_NO_COLOUR}"
-	zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b%{$fg[red]%}:%{$fg[yellow]%}%r"
-    zstyle ':vcs_info:git*' formats "%{$fg[yellow]%}%s %{$reset_color%} %{$fg[green]%}%b%{$reset_color%}%m%u%c%{$reset_color%} "
-    zstyle ':vcs_info:git*' actionformats "%{$fg[yellow]%}%s%{$reset_color%} %{$fg[green]%}%b%{$reset_color%} $fg[red]%}(%a)%{$reset_color%} %m%u%c%{$reset_color%} "
+    # change vcs_info formats for the prompt
+    if [[ "$TERM" == dumb ]]; then
+        zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] "
+	       zstyle ':vcs_info:*' formats       "(%s%)-[%b] "
+    else
+        # these are the same, just with a lot of colours:
+        #	zstyle ':vcs_info:*' actionformats "$%s${PR_YELLOW})${PR_CYAN}-${PR_YELLOW}[${PR_GREEN}%b${PR_YELLOW}|${PR_RED}%a${PR_YELLOW}]${PR_NO_COLOUR}"
+	       zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b%{$fg[red]%}:%{$fg[yellow]%}%r"
+        zstyle ':vcs_info:git*' formats "%{$fg[yellow]%}%s %{$reset_color%} %{$fg[green]%}%b%{$reset_color%}%m%u%c%{$reset_color%} "
+        zstyle ':vcs_info:git*' actionformats "%{$fg[yellow]%}%s%{$reset_color%} %{$fg[green]%}%b%{$reset_color%} $fg[red]%}(%a)%{$reset_color%} %m%u%c%{$reset_color%} "
+    fi
 fi
 
 PR_BARLENGTH=0

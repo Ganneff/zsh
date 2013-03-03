@@ -1,13 +1,23 @@
 # -*- mode: sh;-*-
 
-# In addition to what we have globally
-_hostdescs_debconf=(${${${${(f)"$(<$HOME/.hostdesc.debconf)"}:#[\|]*}%%\ *}%%,*})
-_hostdescs_ganneff=(${${${${(f)"$(<$HOME/.hostdesc.ganneff)"}:#[\|]*}%%\ *}%%,*})
-_hostdescs_ilo=(${${${${(f)"$(<$HOME/.hostdesc.ilo)"}:#[\|]*}%%\ *}%%,*})
-_hostdescs_nsb=(${${${${(f)"$(<$HOME/.hostdesc.nsb)"}:#[\|]*}%%\ *}%%,*})
-_hostdescs_oftc=(${${${${(f)"$(<$HOME/.hostdesc.oftc)"}:#[\|]*}%%\ *}%%,*})
-_hostdescs_other=(${${${${(f)"$(<$HOME/.hostdesc.other)"}:#[\|]*}%%\ *}%%,*})
-_hostdescs_spi=(${${${${(f)"$(<$HOME/.hostdesc.spi)"}:#[\|]*}%%\ *}%%,*})
+if is42; then
+    # In addition to what we have globally
+    _hostdescs_debconf=(${${${${(f)"$(<$HOME/.hostdesc.debconf)"}:#[\|]*}%%\ *}%%,*})
+    _hostdescs_ganneff=(${${${${(f)"$(<$HOME/.hostdesc.ganneff)"}:#[\|]*}%%\ *}%%,*})
+    _hostdescs_ilo=(${${${${(f)"$(<$HOME/.hostdesc.ilo)"}:#[\|]*}%%\ *}%%,*})
+    _hostdescs_nsb=(${${${${(f)"$(<$HOME/.hostdesc.nsb)"}:#[\|]*}%%\ *}%%,*})
+    _hostdescs_oftc=(${${${${(f)"$(<$HOME/.hostdesc.oftc)"}:#[\|]*}%%\ *}%%,*})
+    _hostdescs_other=(${${${${(f)"$(<$HOME/.hostdesc.other)"}:#[\|]*}%%\ *}%%,*})
+    _hostdescs_spi=(${${${${(f)"$(<$HOME/.hostdesc.spi)"}:#[\|]*}%%\ *}%%,*})
+else
+    _hostdescs_debconf=()
+    _hostdescs_ganneff=()
+    _hostdescs_ilo=()
+    _hostdescs_nsb=()
+    _hostdescs_oftc=()
+    _hostdescs_other=()
+    _hostdescs_spi=()
+fi
 
 hosts=(
     ${HOST}

@@ -64,15 +64,6 @@ path=( ${^path}(N-/) )
 
 export PATH USER HOST DOMAIN UID
 
-# Now that FPATH is set correctly, do autoloaded functions.
-# autoload all functions in $FPATH - that is, all files in
-# each component of the array $fpath.  If there are none, feed the list
-# it prints into /dev/null.
-for paths in "$fpath[@]"; do
-    autoload -U "$paths"/*(N:t) >/dev/null
-done
-unset paths
-
 # Command to use when redirecting from/to a null command.
 # READNULLCMD is redefined in .zshrc for interactive shells.
 READNULLCMD=cat

@@ -1,5 +1,5 @@
 # -*- mode:sh -*-
 if [[ "$TERM" == "screen" ]]; then
-	local CMD=${1[(wr)^(*=*|sudo|ssh|sshc|-*)]}
+	local CMD=${2[(wr)^(*=*|command|noclobber|sudo|ssh|sshc|-*)]}
 	echo -n "\ek$CMD\e\\"
 fi
