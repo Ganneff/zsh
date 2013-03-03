@@ -1,0 +1,21 @@
+# -*- mode:sh -*-
+
+local filename=${1:-""}
+
+if [ "${#filename}" -lt 1 ]; then
+    echo "Call: $0 SYMLINK"
+    return 1
+fi
+
+if [ ! -L "${filename}" ]; then
+    echo "$0: ${filename} is not a symbolic link"
+    return 2
+fi
+
+sourcefile=$(readlink -f -n ${filename})
+if [ ! -r "${sourcefile}" ]; then
+    echo "$0: Can't read sourcefile: $sourcefile"
+    return 3
+fi
+
+cp --remove-destination ${sourcefile} ${filename}
