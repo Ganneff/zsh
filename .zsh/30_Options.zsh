@@ -269,6 +269,9 @@ UnsetOPT LIST_BEEP
 # This may be useful with terminals with other cut/paste methods.
 is41 && SetOPT TRANSIENT_RPROMPT
 
+# Send the HUP signal to running jobs when the shell exits.
+UnsetOPT HUP
+
 unfunction -m SetOPT
 unfunction -m UnsetOPT
 unfunction -m SetOPTifExists
