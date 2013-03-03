@@ -1,0 +1,90 @@
+# -*- mode:sh -*-
+
+SPECBASE=${HOME}/.dotfiles
+CRONBASE=${HOME}/.crontabs
+
+if [ "$ZDOTDIR" = "" ]; then
+    echo "Sorry, need to run within a configured zsh environment"
+    return
+fi
+mr update
+
+# Now we check if we have something specific for this host, that we need
+# to link into the homedir
+
+typeset -a specdirs
+specdirs=(
+    "${SPECBASE}/net:$DOMAIN"
+    "${SPECBASE}/host:$HOST"
+    "${SPECBASE}/sys:$OSNAME"
+    "${SPECBASE}/distri:$DISTRI"
+    "${SPECBASE}/user:$USER"
+    "${SPECBASE}/user:$SUDO_USER"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST"
+    "${SPECBASE}/net:$DOMAIN/sys:$OSNAME"
+    "${SPECBASE}/net:$DOMAIN/distri:$DISTRI"
+    "${SPECBASE}/net:$DOMAIN/user:$USER"
+    "${SPECBASE}/net:$DOMAIN/user:$SUDO_USER"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST/sys:$OSNAME"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST/distri:$DISTRI"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST/user:$USER"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST/user:$SUDO_USER"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST/sys:$OSNAME"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST/sys:$OSNAME/distri:$DISTRI"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST/sys:$OSNAME/user:$USER"
+    "${SPECBASE}/net:$DOMAIN/host:$HOST/sys:$OSNAME/user:$SUDO_USER"
+    "${SPECBASE}/host:$HOST/sys:$OSNAME"
+    "${SPECBASE}/host:$HOST/distri:$DISTRI"
+    "${SPECBASE}/host:$HOST/user:$USER"
+    "${SPECBASE}/host:$HOST/user:$SUDO_USER"
+    "${SPECBASE}/host:$HOST/sys:$OSNAME/distri:$DISTRI"
+    "${SPECBASE}/host:$HOST/sys:$OSNAME/user:$USER"
+    "${SPECBASE}/host:$HOST/sys:$OSNAME/user:$SUDO_USER"
+)
+
+typeset -a workdirs
+for entry in $specdirs[@]; do
+    for file in ${entry}/**/*(N.); do
+        workdirs+=$file
+    done
+done
+typeset -U workdirs
+
+# Now link stuff
+for entry in $workdirs[@]; do
+    base=${entry:t}
+    dirn=${entry:h}
+    dirn=${dirn//$SPECBASE/}
+    dirn=${dirn//net:$DOMAIN/}
+    dirn=${dirn//host:$HOST/}
+    dirn=${dirn//sys:$OSNAME/}
+    dirn=${dirn//distri:$DISTRI/}
+    dirn=${dirn//user:$USER/}
+    dirn=${dirn//user:$SUDO_USER/}
+    dirn=${${(j:/:)dirn}//\/\/##/}
+    if [ -n "${dirn}" ]; then
+        mkdir -p "${HOME}/${dirn}"
+        if [ ! -L ${HOME}/${dirn}/${base} ]; then
+            echo "Linking ${entry} to ${HOME}/${dirn}"
+            ln -rs ${entry} ${HOME}/${dirn}
+        fi
+    else
+        if [ ! -L ${HOME}/${dirn}/${base} ]; then
+            echo "Linking ${entry} to ${HOME}/${dirn}"
+            ln -rs ${entry} ${HOME}/
+        fi
+    fi
+done
+
+if [ -f "${CRONBASE}/${HOST}.${DOMAIN}" ]; then
+    if ! old=${${(z)"$(crontab -l | md5sum)"}[1]}; then
+        echo "crontab disabled for users"
+        return
+    fi
+    new=${${(z)$(md5sum .crontabs/gkar.ganneff.de )}[1]}
+    if [ "${new}" != "${old}" ]; then
+        echo "Crontab changed, installing repository copy"
+        crontab "${CRONBASE}/${HOST}.${DOMAIN}"
+    fi
+fi
+
