@@ -272,6 +272,9 @@ is41 && SetOPT TRANSIENT_RPROMPT
 # Send the HUP signal to running jobs when the shell exits.
 UnsetOPT HUP
 
+# Run all background jobs at a lower priority.
+UnsetOPT BG_NICE
+
 unfunction -m SetOPT
 unfunction -m UnsetOPT
 unfunction -m SetOPTifExists
