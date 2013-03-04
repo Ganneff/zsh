@@ -14,12 +14,12 @@ mr update
 
 typeset -a specdirs
 specdirs=(
-    "${SPECBASE}/net:$DOMAIN"
-    "${SPECBASE}/host:$HOST"
-    "${SPECBASE}/sys:$OSNAME"
-    "${SPECBASE}/distri:$DISTRI"
-    "${SPECBASE}/user:$USER"
-    "${SPECBASE}/user:$SUDO_USER"
+#    "${SPECBASE}/net:$DOMAIN"
+#    "${SPECBASE}/host:$HOST"
+#    "${SPECBASE}/sys:$OSNAME"
+#    "${SPECBASE}/distri:$DISTRI"
+#    "${SPECBASE}/user:$USER"
+#    "${SPECBASE}/user:$SUDO_USER"
     "${SPECBASE}/net:$DOMAIN/host:$HOST"
     "${SPECBASE}/net:$DOMAIN/sys:$OSNAME"
     "${SPECBASE}/net:$DOMAIN/distri:$DISTRI"
@@ -51,6 +51,7 @@ done
 typeset -U workdirs
 
 # Now link stuff
+echo "Checking host files..."
 for entry in $workdirs[@]; do
     base=${entry:t}
     dirn=${entry:h}
@@ -62,16 +63,36 @@ for entry in $workdirs[@]; do
     dirn=${dirn//user:$USER/}
     dirn=${dirn//user:$SUDO_USER/}
     dirn=${${(j:/:)dirn}//\/\/##/}
+    dirn=${${(j:/:)dirn}//\/##/}
+
+    echo "... ${HOME}/${dirn}/${base}"
+
+    linktarget=$(readlink -f "${HOME}/${dirn}/${base}")
+    if ! [[ $linktarget =~ .dotfiles ]] || [ -z "${linktarget}" ]; then
+        answer=N
+        echo "File exists. ${HOME}/${dirn}/${base} (is ${linktarget})"
+        vared -p 'Overwrite with symlink to ${entry}?: [y/N] ' answer
+        case ${answer} in
+            y|Y)
+                rm -f "${HOME}/${dirn}/${base}"
+                ;;
+            *)
+                echo "Not overwriting ${linktarget}"
+                continue
+                ;;
+        esac
+    fi
+
     if [ -n "${dirn}" ]; then
         mkdir -p "${HOME}/${dirn}"
         if [ ! -L ${HOME}/${dirn}/${base} ]; then
-            echo "Linking ${entry} to ${HOME}/${dirn}"
+            echo "Linking ${entry} to ${HOME}/${dirn}/${base}"
             ln -rs ${entry} ${HOME}/${dirn}
         fi
     else
         if [ ! -L ${HOME}/${dirn}/${base} ]; then
             echo "Linking ${entry} to ${HOME}/${dirn}"
-            ln -rs ${entry} ${HOME}/
+            ln -rs ${entry} ${HOME}/${base}
         fi
     fi
 done
@@ -81,7 +102,7 @@ if [ -f "${CRONBASE}/${HOST}.${DOMAIN}" ]; then
         echo "crontab disabled for users"
         return
     fi
-    new=${${(z)$(md5sum .crontabs/gkar.ganneff.de )}[1]}
+    new=${${(z)$(md5sum "${CRONBASE}/${HOST}.${DOMAIN}" )}[1]}
     if [ "${new}" != "${old}" ]; then
         echo "Crontab changed, installing repository copy"
         crontab "${CRONBASE}/${HOST}.${DOMAIN}"
