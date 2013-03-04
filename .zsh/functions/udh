@@ -83,16 +83,21 @@ for entry in $workdirs[@]; do
         esac
     fi
 
+    LNOPTS="-s"
+    if ln --help 2>/dev/null | grep -- --relative >/dev/null; then
+        LNOPTS="${LNOPTS} --relative"
+    fi
+
     if [ -n "${dirn}" ]; then
         mkdir -p "${HOME}/${dirn}"
         if [ ! -L ${HOME}/${dirn}/${base} ]; then
             echo "Linking ${entry} to ${HOME}/${dirn}/${base}"
-            ln -rs ${entry} ${HOME}/${dirn}
+            ln ${LNOPTS} ${entry} ${HOME}/${dirn}
         fi
     else
         if [ ! -L ${HOME}/${dirn}/${base} ]; then
             echo "Linking ${entry} to ${HOME}/${dirn}"
-            ln -rs ${entry} ${HOME}/${base}
+            ln ${LNOPTS} ${entry} ${HOME}/${base}
         fi
     fi
 done
