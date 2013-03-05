@@ -1,7 +1,7 @@
 # -*- mode:sh -*-
 
-SPECBASE=${HOME}/.dotfiles
-CRONBASE=${HOME}/.crontabs
+local SPECBASE=${HOME}/.dotfiles
+local CRONBASE=${HOME}/.crontabs
 
 if [ "$ZDOTDIR" = "" ]; then
     echo "Sorry, need to run within a configured zsh environment"
@@ -67,37 +67,38 @@ for entry in $workdirs[@]; do
 
     echo "... ${HOME}/${dirn}/${base}"
 
-    linktarget=$(readlink -f "${HOME}/${dirn}/${base}")
-    if ! [[ $linktarget =~ .dotfiles ]] || [ -z "${linktarget}" ]; then
-        answer=N
-        echo "File exists. ${HOME}/${dirn}/${base} (is ${linktarget})"
-        vared -p 'Overwrite with symlink to ${entry}?: [y/N] ' answer
-        case ${answer} in
-            y|Y)
-                rm -f "${HOME}/${dirn}/${base}"
-                ;;
-            *)
-                echo "Not overwriting ${linktarget}"
-                continue
-                ;;
-        esac
+    if [ -f "${HOME}/${dirn}/${base}" ] || [ -L "${HOME}/${dirn}/${base}" ]; then
+        linktarget=$(readlink -f "${HOME}/${dirn}/${base}")
+        if ! [[ $linktarget =~ .dotfiles ]] || [ -z "${linktarget}" ]; then
+            answer=N
+            echo "File exists. ${HOME}/${dirn}/${base} (is ${linktarget})"
+            vared -p 'Overwrite with symlink to ${entry}?: [y/N] ' answer
+            case ${answer} in
+                y|Y)
+                    rm -f "${HOME}/${dirn}/${base}"
+                    ;;
+                *)
+                    echo "Not overwriting ${linktarget}"
+                    continue
+                    ;;
+            esac
+        fi
     fi
 
-    LNOPTS="-s"
     if ln --help 2>/dev/null | grep -- --relative >/dev/null; then
-        LNOPTS="${LNOPTS} --relative"
+        LNOPTS="-r"
     fi
 
     if [ -n "${dirn}" ]; then
         mkdir -p "${HOME}/${dirn}"
         if [ ! -L ${HOME}/${dirn}/${base} ]; then
             echo "Linking ${entry} to ${HOME}/${dirn}/${base}"
-            ln ${LNOPTS} ${entry} ${HOME}/${dirn}
+            /bin/ln -s $LNOPTS ${entry} ${HOME}/${dirn}
         fi
     else
         if [ ! -L ${HOME}/${dirn}/${base} ]; then
             echo "Linking ${entry} to ${HOME}/${dirn}"
-            ln ${LNOPTS} ${entry} ${HOME}/${base}
+            /bin/ln -s $LNOPTS ${entry} ${HOME}/${base}
         fi
     fi
 done
