@@ -62,8 +62,8 @@ for entry in $workdirs[@]; do
     dirn=${dirn//distri:$DISTRI/}
     dirn=${dirn//user:$USER/}
     dirn=${dirn//user:$SUDO_USER/}
-    dirn=${${(j:/:)dirn}//\/\/##/}
-    dirn=${${(j:/:)dirn}//\/##/}
+#    dirn=${${(j:/:)dirn}//\/\/##/}
+#    dirn=${${(j:/:)dirn}//\/##/}
 
     echo "... ${HOME}/${dirn}/${base}"
 

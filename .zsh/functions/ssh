@@ -29,8 +29,8 @@ _jj_ssh() {
     # Also, when the same ZSH configuration is used on the remote host,
     # the locale is reset with the help of 12-Locale.zsh
     case "$TERM" in
-        rxvt-256color|rxvt-unicode*)
-            LC__ORIGINALTERM=$TERM TERM=xterm LANG=C LC_MESSAGES=C command ssh "$@"
+        rxvt-256color|rxvt-unicode)
+            LC__ORIGINALTERM=$TERM TERM=rxvt LANG=C LC_MESSAGES=C command ssh "$@"
             ;;
         *)
             LANG=C LC_MESSAGES=C command ssh "$@"
