@@ -16,9 +16,6 @@ install-zsh() {
         print -n "$fg[green]Building archive...${reset_color} "
         cd $ZSH 
         git archive HEAD | tar -C $work -xf -
-        mkdir -p $work/zsh-syntax-highlighting
-        cd $ZSH/zsh-syntax-highlighting 
-        git archive HEAD | tar -C $work/zsh-syntax-highlighting -xf -
         cp $HOME/.zshenv $work/zshenv.home
         print $OK
         print -n "$fg[green]Building installer...${reset_color} "
