@@ -14,7 +14,7 @@ if is437; then
          zstyle ':prompt:ganneff:right:setup' use-rprompt true
          zstyle ':prompt:ganneff:left:full:setup' items \
              ulcorner line openbracket user at host pts closebracket line history \
-             ganneff flexline openbracket path closebracket line urcorner newline \
+             flexline openbracket path closebracket line urcorner newline \
              llcorner line rc openbracket time closebracket line vcs line change-root pipe space
          zstyle ':prompt:ganneff:right:full:setup' items \
              pipe line openbracket date closebracket line lrcorner
@@ -22,13 +22,12 @@ if is437; then
              ulcorner line openbracket user at host closebracket line openbracket path closebracket newline \
              llcorner line rc openbracket time closebracket line vcs line pipe space
 
-#         zstyle ':prompt:ganneff:left:items:ganneff' pre '${PR_RED}'
-#         zstyle ':prompt:ganneff:left:items:ganneff' post '${PR_NO_COLOR}'
-#         zstyle ':prompt:ganneff:left:items:ganneff' pre '%M'
+        zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
 
-
-
-         prompt ganneff
+#        zstyle ':prompt:ganneff:left:items:ganneff' pre '${PR_RED}'
+#        zstyle ':prompt:ganneff:left:items:ganneff' post '${PR_NO_COLOR}'
+#        zstyle ':prompt:ganneff:left:items:ganneff' token '$BLABLA'
+        prompt ganneff
     fi
 else
 # And the old way

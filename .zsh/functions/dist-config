@@ -131,7 +131,7 @@ fi
         [[ -z $1 ]] || {
             plog "Remote install..."
             scp $TMPDIR/dotfiles-install.sh ${remote}:
-            ssh $remote sh ./dotfiles-install.sh
+            ssh -t $remote sh ./dotfiles-install.sh
             plog "OK"
         }
     } always {

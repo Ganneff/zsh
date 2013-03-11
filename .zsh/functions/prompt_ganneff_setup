@@ -97,9 +97,9 @@ prompt_ganneff_help () {
             zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat \
                       "\${PR_YELLOW}%b%{\${PR_RED}%}:\${PR_YELLOW}%r\${PR_NO_COLOR}"
             zstyle ':vcs_info:*' formats \
-                      "(\${PR_YELLOW}%s\${PR_NO_COLOR} \${PR_GREEN}%b\${PR_NO_COLOR})%m%u%c "
+                      "(\${PR_YELLOW}%s\${PR_NO_COLOR})-[\${PR_GREEN}%b\${PR_NO_COLOR}]%m%u%c "
             zstyle ':vcs_info:*' actionformats \
-                      "(\${PR_YELLOW}%s\${PR_NO_COLOR} \${PR_GREEN}%b\${PR_NO_COLOR}-\${PR_RED}(%a)\${PR_NO_COLOR})%m%u%c "
+                      "(\${PR_YELLOW}%s\${PR_NO_COLOR})-[\${PR_GREEN}%b\${PR_NO_COLOR}-\${PR_RED}(%a)\${PR_NO_COLOR}]%m%u%c "
 
         - colors (boolean): If \`true' (the default), use colors. b/w
           otherwise.
@@ -222,8 +222,8 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
 
             # change vcs_info formats for the prompt
             zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "${PR_YELLOW}%b%{${PR_RED}%}:${PR_YELLOW}%r${PR_NO_COLOR}"
-            zstyle ':vcs_info:*' formats "(${PR_YELLOW}%s${PR_NO_COLOR} ${PR_GREEN}%b${PR_NO_COLOR})%m%u%c "
-            zstyle ':vcs_info:*' actionformats "(${PR_YELLOW}%s${PR_NO_COLOR} ${PR_GREEN}%b${PR_NO_COLOR}-${PR_RED}(%a)${PR_NO_COLOR})%m%u%c "
+            zstyle ':vcs_info:*' formats "(${PR_YELLOW}%s${PR_NO_COLOR})-[${PR_GREEN}%b${PR_NO_COLOR}]%m%u%c "
+            zstyle ':vcs_info:*' actionformats "(${PR_YELLOW}%s${PR_NO_COLOR})-[${PR_GREEN}%b${PR_NO_COLOR}-${PR_RED}(%a)${PR_NO_COLOR}]%m%u%c "
         fi
     fi
 
@@ -416,7 +416,7 @@ ganneff_prompt_addto () {
     for it in "${items[@]}"; do
         zstyle -s ":prompt:ganneff:${lr}:items:$it" pre apre \
             || apre=${ganneff_prompt_pre_default[$it]}
-        zstyle -s ":prompt:ganneff:ganneff:${lr}:$it" post apost \
+        zstyle -s ":prompt:ganneff:${lr}:items:$it" post apost \
             || apost=${ganneff_prompt_post_default[$it]}
         zstyle -s ":prompt:ganneff:${lr}:items:$it" token new \
             || new=${ganneff_prompt_token_default[$it]}

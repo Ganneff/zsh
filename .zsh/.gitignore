@@ -4,3 +4,4 @@ var
 .zcompdump.zwc
 zsh-install.sh
 run
+.zdirs
