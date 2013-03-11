@@ -1,7 +1,7 @@
 # -*- mode:sh -*-
 
 # update VCS information
-is439 && vcs_info
+# is439 && vcs_info
 
 # set variable debian_chroot if running in a chroot with /etc/debian_chroot
 if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
@@ -9,54 +9,56 @@ if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
 fi
 ###
 
-local TERMWIDTH
-(( TERMWIDTH = ${COLUMNS} - 1 ))
+if ! is437; then
+    local TERMWIDTH
+    (( TERMWIDTH = ${COLUMNS} - 1 ))
 
-# Truncate the path if it's too long.
-PR_FILLBAR=""
-PR_PWDLEN=""
+    # Truncate the path if it's too long.
+    PR_FILLBAR=""
+    PR_PWDLEN=""
 
-local promptsize=${#${(%):---(%n@%m:%l)---()--}}
-local pwdsize=${#${(%):-%~}}
-# for whatever reason this works better if set to 3 on systems where no acpi info is in prompt
-local apmsize=3
+    local promptsize=${#${(%):---(%n@%m:%l)---()--}}
+    local pwdsize=${#${(%):-%~}}
+    # for whatever reason this works better if set to 3 on systems where no acpi info is in prompt
+    local apmsize=3
 
-# Finally see how long the acpi related prompt is
-PR_APM_TEMP=${PR_APM//\${\(e\)PR_SLASH}/#}
-PR_APM_LENGTH=${(e)PR_APM_TEMP//\${PR_(LIGHT|)(RED|GREEN|YELLOW|BLUE|MAGENTA|CYAN|WHITE)}/}
+    # Finally see how long the acpi related prompt is
+    PR_APM_TEMP=${PR_APM//\${\(e\)PR_SLASH}/#}
+    PR_APM_LENGTH=${(e)PR_APM_TEMP//\${PR_(LIGHT|)(RED|GREEN|YELLOW|BLUE|MAGENTA|CYAN|WHITE)}/}
 
-# The info i collect for my laptop is - well. long. As I usually have my terms in full screen
-# mode that doesnt matter, there is enough space. But for some cases I may want smaller
-# windows, so deal with it and make the acpi line smaller by dropping parts of it.
+    # The info i collect for my laptop is - well. long. As I usually have my terms in full screen
+    # mode that doesnt matter, there is enough space. But for some cases I may want smaller
+    # windows, so deal with it and make the acpi line smaller by dropping parts of it.
 
-(( apmsize=${(e)#PR_APM_LENGTH} - 2 ))
+    (( apmsize=${(e)#PR_APM_LENGTH} - 2 ))
 
-while [[ "$promptsize + $pwdsize + $apmsize" -gt $TERMWIDTH ]]; do
-	(( TOOLONG=$TOOLONG + 1 ))
+    while [[ "$promptsize + $pwdsize + $apmsize" -gt $TERMWIDTH ]]; do
+        (( TOOLONG=$TOOLONG + 1 ))
 
-	if [[ "$TOOLONG" -gt 5 ]]; then
-		break
-	fi
-	periodic
-	(( apmsize=${(e)#PR_APM_LENGTH} - 2 ))
-done
+        if [[ "$TOOLONG" -gt 5 ]]; then
+        	break
+        fi
+        periodic
+        (( apmsize=${(e)#PR_APM_LENGTH} - 2 ))
+    done
 
-if [[ ${(e)#PR_APM_LENGTH} -gt 10 ]]; then
-	(( apmsize=${(e)#PR_APM_LENGTH} - 2 ))
-else
-	apmsize=3
+    if [[ ${(e)#PR_APM_LENGTH} -gt 10 ]]; then
+        (( apmsize=${(e)#PR_APM_LENGTH} - 2 ))
+    else
+        apmsize=3
+    fi
+
+    if [[ "$promptsize + $pwdsize + $apmsize" -gt $TERMWIDTH ]]; then
+        ((PR_PWDLEN=$TERMWIDTH - $promptsize - $apmsize ))
+    else
+        PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize + $apmsize)))..${PR_HBAR}.)}"
+    fi
+
+    if [[ "$PR_BARLENGTH" -lt "${#${(e)PR_FILLBAR}}" ]]; then
+        (( TOOLONG=$TOOLONG - 1 ))
+        if [[ "$TOOLONG" -lt 0 ]]; then
+        	TOOLONG=0
+        fi
+    fi
+    PR_BARLENGTH=${#${(e)PR_FILLBAR}}
 fi
-
-if [[ "$promptsize + $pwdsize + $apmsize" -gt $TERMWIDTH ]]; then
-	((PR_PWDLEN=$TERMWIDTH - $promptsize - $apmsize ))
-else
-	PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize + $apmsize)))..${PR_HBAR}.)}"
-fi
-
-if [[ "$PR_BARLENGTH" -lt "${#${(e)PR_FILLBAR}}" ]]; then
-	(( TOOLONG=$TOOLONG - 1 ))
-	if [[ "$TOOLONG" -lt 0 ]]; then
-		TOOLONG=0
-	fi
-fi
-PR_BARLENGTH=${#${(e)PR_FILLBAR}}
