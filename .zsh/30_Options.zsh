@@ -5,10 +5,6 @@
 # see man zshoptions(1) for more details ;-)
 #
 
-# Funky run-help hooks
-autoload run-help-git
-autoload run-help-svn
-
 function SetOPT() {
 	SetOPTifExists $1 on
 }
@@ -126,11 +122,20 @@ SetOPT   CORRECT
 # duplicates of the previous event.
 SetOPT   HIST_IGNORE_DUPS
 
+# If a new command line being added to the history list duplicates an
+# older one, the older command is removed from the list (even if it is
+# not the previous event).
+SetOPT   HIST_IGNORE_ALL_DUPS
+
 # Remove the history (fc -l) command from the history list when invoked.
 # Note that the command lingers in the internal history until the next
 # command is entered before it vanishes, allowing you to briefly reuse
 # or edit the line.
 SetOPT   HIST_NO_STORE
+
+# Remove superfluous blanks from each command line being added to the
+# history list.
+SetOPT   HIST_REDUCE_BLANKS
 
 # This options works like APPEND_HISTORY except that new history lines
 # are added to the $HISTFILE incrementally (as soon as they are
