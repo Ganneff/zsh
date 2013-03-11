@@ -1,0 +1,6 @@
+# -*- mode:sh -*-
+echo -e "
+Available subjects:
+"
+for i in $HOME/.zsh/functions/help_*; echo "  ${i:t}"
+echo

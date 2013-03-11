@@ -1,0 +1,461 @@
+# -*- mode:sh -*-
+
+# This prompt is based on work of other people.
+#
+# The prompt itself is based on various others:
+#   - The "design" is taken from Phil!'s ZSH prompt, as found on
+#     http://aperiodic.net/phil/prompt/
+#
+#   - The technic using zstyle is inspired by the prompt as used by
+#     the grml-live system <http://grml.org>, see
+#     http://git.grml.org/?p=grml-etc-core.git;a=summary for details
+#     on theirs.
+#     A good number of their support functions are also taken, though
+#     they got renamed from grml_* to ganneff_* to have a single namespace
+#     here.
+#
+#   - The winch function as seen in the prompt theme "bart", delivered
+#     with zsh
+
+prompt_ganneff_help () {
+    cat <<__EOF0__
+  prompt ganneff
+
+    This is the prompt as used by (who would have guessed) Ganneff.  By
+    default it is a two-line prompt.  You can find its latest version at
+    http://git.ganneff.de/cgi-bin/gitweb.cgi?p=zsh.git;a=summary
+
+    The prompt itself is based on various others:
+      - The "design" is taken from Phil!'s ZSH prompt, as found on
+        http://aperiodic.net/phil/prompt/
+
+      - The technic using zstyle is inspired by the prompt as used by
+        the grml-live system <http://grml.org>, see
+        http://git.grml.org/?p=grml-etc-core.git;a=summary for details
+        on theirs.
+
+    The prompt integrates with zsh's prompt themes system and uses the
+    zstyle system for its configuration. It is configurable as much as
+    seems to make sense. In particular, these aspects are customisable:
+
+        - The items used in the prompt and their order (e.g. you can
+          remove \`user' from the list of activated items, which will
+          cause the user name to be omitted from the prompt string).
+
+        - The attributes used with the items are customisable via strings
+          used before and after the actual item.
+
+        - An itemset for "small terminals" can be provided. That is, if the
+          length of the upper line exceeds the terminal width, various
+          items get removed from the prompt to (hopefully) make it still
+          look good. Obviously this only works down to a limit.
+
+    The available items are: at, battery, change-root, date, history,
+    host, jobs, newline, path, percent, rc, rc-always, shell-level,
+    time, user, vcs, ulcorner, llcorner, urcorner, lrcorner, line, pts,
+    openbracket, closebracket, pipe, space, flexline
+
+    Most of those should be self-explanatory, some may need more:
+     line     - Draws a single line character
+     XYcorner - Draws a corner. The chars to replace XY are
+                X=u for upper, l for lower
+                Y=l for left, r for right
+     flexline - Same as line, but flexible length to fill remaining space
+                Only works in a two-line prompt in the upper line, that
+                is, a newline MUST appear in the setup!
+
+    The actual configuration is done via zsh's \`zstyle' mechanism. The
+    context, that is used while looking up styles is:
+
+        ':prompt:ganneff:<left-or-right>:<full-or-small>:<subcontext>'
+
+    Here <left-or-right> is either \`left' or \`right', signifying whether the
+    style should affect the left or the right prompt. <full-or-small> is
+    either \`full' or \`small' and only valid in the item selection,
+    signifying wether the item list should affect the full length or
+    the "small terminal" prompt. As "small terminal" prompt does not
+    display the right side prompt, <full-or-small> has no effect on the
+    right side prompt.
+    <subcontext> is either \`setup' or 'items:<item>', where \`<item>'
+    is one of the available items.
+
+    The styles available under ':prompt:ganneff:':
+
+        - vcs_info (boolean): If \`true' (the default), use \`vcs_info'.
+
+        - colors (boolean): If \`true' (the default), use colors. b/w
+          otherwise.
+
+        - nicelines (boolean): If \`true' (the default), use special
+          magic to draw nice lines and corners. Might not work on every
+          terminal. If false, draws using plain ascii characters.
+
+        - battery (string): If \`none' then no battery function at all.
+          If either \`ibam' or \`acpi' then use those tools to gather
+          the current battery level.
+
+        - use-rprompt (boolean): If \`true' (the default), print the
+          right side prompt.
+
+        - items (list): The list of items used in the prompt. If \`vcs' is
+          present in the list, the theme's code invokes \`vcs_info'
+          accordingly. Default (left): rc change-root user at host path vcs
+          percent; Default (right): sad-smiley
+
+    Available styles in 'items:<item>' are: pre, post. These are strings that
+    are inserted before (pre) and after (post) the item in question. Thus, the
+    following would cause the user name to be printed in red instead of the
+    default blue:
+
+        zstyle ':prompt:ganneff:*:items:user' pre '\${PR_RED}'
+
+    Note, that the \`post' style may remain at its default value, because its
+    default value is '\${PR_NO_COLOR}', which turns the foreground text
+    attribute off (which is exactly, what is still required with the new
+    \`pre' value).
+
+    Possible values for the colors: \${PR_XXX} and \${PR_BOLD_XXX} with
+    XXX replaced with one of: RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
+    \${PR_NO_COLOR} resets color.
+    Using the \${PR_XXX} values instead of zsh's internal \%F{xxx} allows
+    the style to turn off colors to work.
+__EOF0__
+}
+
+prompt_ganneff_setup () {
+    emulate -L zsh
+    setopt nolocaltraps
+
+    # See if we can and should use extended characters to look nicer.
+    if zstyle -t ':prompt:ganneff' nicelines; then
+        typeset -A altchar
+        set -A altchar ${(s..)terminfo[acsc]}
+        # Some stuff to help us draw nice lines
+        PR_SET_CHARSET="%{$terminfo[enacs]%}"
+        PR_SHIFT_IN="%{$terminfo[smacs]%}"
+        PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
+        PR_HBAR=${altchar[q]:--}
+        PR_ULCORNER=${altchar[l]:--}
+        PR_LLCORNER=${altchar[m]:--}
+        PR_LRCORNER=${altchar[j]:--}
+        PR_URCORNER=${altchar[k]:--}
+    else
+        PR_SET_CHARSET=""
+        PR_SHIFT_IN=""
+        PR_SHIFT_OUT=""
+        PR_HBAR="-"
+        PR_ULCORNER=""
+        PR_LLCORNER=""
+        PR_LRCORNER=""
+        PR_URCORNER=""
+    fi
+
+    if zstyle -t ':prompt:ganneff' colors; then
+        if [[ -n "${BLUE}" ]] && [[ -n "${YELLOW}" ]]; then
+            # Two defined, so we assume someone already defined themself
+            # the colors. We just use them and not setup our own.
+            for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+                eval PR_$color="%{${(P)color}%}"
+                eval PR_BOLD_$color="%{$terminfo[bold]${(LP)color}%}"
+            done
+            PR_NO_COLOR="%{${reset_color}%}"
+        else
+            # Seems like colors are not defined, so set them up
+            docolors
+        fi
+    else
+        PR_BLUE=''
+        PR_RED=''
+        PR_GREEN=''
+        PR_CYAN=''
+        PR_WHITE=''
+        PR_MAGENTA=''
+        PR_YELLOW=''
+        PR_NO_COLOR="%{${reset_color}%}"
+    fi
+
+    # Easy things first.
+    # The secondary prompt, printed when the shell needs more
+    # information to complete a command. %_ displays any shell constructs
+    # or quotation marks which are currently being processed.
+    PS2='${PR_CYAN}${PR_SHIFT_IN}${PR_HBAR}${PR_BLUE}${PR_HBAR}${PR_SHIFT_OUT}\
+(${PR_GREEN}%_${PR_BLUE})\
+${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
+
+    # selection prompt used within a select loop.
+    PS3='?# '
+    # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
+    PS4='+%N:%i:%_> '
+
+    if zstyle -t ':prompt:ganneff' vcs_info && \
+        is439 && autoload -Uz vcs_info && vcs_info; then
+        # gather version control information for inclusion in a prompt
+        # we will only be using one variable, so let the code know now.
+        zstyle ':vcs_info:*' max-exports 3
+        zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
+        zstyle ':vcs_info:*' use-prompt-escapes
+        zstyle ':vcs_info:*' use_simple
+        zstyle ':vcs_info:*' stagedstr      "!"
+        zstyle ':vcs_info:*' unstagedstr    "?"
+        zstyle ':vcs_info:*' check-for-changes true
+
+        # change vcs_info formats for the prompt
+        if [[ "$TERM" == dumb ]]; then
+            zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] "
+            zstyle ':vcs_info:*' formats       "(%s%)-[%b] "
+        else
+            # these are the same, just with a lot of colours:
+            zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "${PR_YELLOW}%b%{${PR_RED}%}:${PR_YELLOW}%r${PR_NO_COLOR}"
+            zstyle ':vcs_info:*' formats "(${PR_YELLOW}%s${PR_NO_COLOR} ${PR_GREEN}%b${PR_NO_COLOR})%m%u%c "
+            zstyle ':vcs_info:*' actionformats "(${PR_YELLOW}%s${PR_NO_COLOR} ${PR_GREEN}%b${PR_NO_COLOR}-${PR_RED}(%a)${PR_NO_COLOR})%m%u%c "
+        fi
+    fi
+
+    # These maps define default tokens and pre-/post-decoration for items to be
+    # used within the themes. All defaults may be customised in a context sensitive
+    # matter by using zsh's `zstyle' mechanism.
+    typeset -gA ganneff_prompt_pre_default \
+        ganneff_prompt_post_default \
+        ganneff_prompt_token_default
+
+    ganneff_prompt_pre_default=(
+        at                ''
+        battery           ' '
+        change-root       ''
+        date              '${PR_BLUE}'
+        history           '${PR_GREEN}'
+        host              '${PR_RED}'
+        jobs              '${PR_CYAN}'
+        newline           ''
+        path              '${PR_MAGENTA}'
+        percent           ''
+        rc                '${PR_RED}'
+        rc-always         ''
+        shell-level       '${PR_RED}'
+        time              '${PR_BLUE}'
+        user              '${PR_BLUE}'
+        vcs               ''
+        ulcorner          '${PR_SHIFT_IN}'
+        llcorner          '${PR_SHIFT_IN}'
+        urcorner          '${PR_SHIFT_IN}'
+        lrcorner          '${PR_SHIFT_IN}'
+        line              '${PR_SHIFT_IN}'
+        pts               ''
+        openbracket       ''
+        closebracket      ''
+        pipe              ''
+        space             ''
+        flexline          '${PR_SHIFT_IN}'
+    )
+
+    ganneff_prompt_post_default=(
+        at                ''
+        battery           ''
+        change-root       ''
+        date              '${PR_NO_COLOR}'
+        history           '${PR_NO_COLOR}'
+        host              '${PR_NO_COLOR}'
+        jobs              '${PR_NO_COLOR}'
+        newline           ''
+        path              '${PR_NO_COLOR}'
+        percent           ''
+        rc                '${PR_NO_COLOR}'
+        rc-always         ''
+        shell-level       '${PR_NO_COLOR}'
+        time              '${PR_NO_COLOR}'
+        user              '${PR_NO_COLOR}'
+        vcs               ''
+        ulcorner          '${PR_SHIFT_OUT}'
+        llcorner          '${PR_SHIFT_OUT}'
+        urcorner          '${PR_SHIFT_OUT}'
+        lrcorner          '${PR_SHIFT_OUT}'
+        line              '${PR_SHIFT_OUT}'
+        pts               ''
+        openbracket       ''
+        closebracket      ''
+        pipe              ''
+        space             ''
+        flexline          '${PR_SHIFT_OUT}'
+    )
+
+    ganneff_prompt_token_default=(
+        at                '@'
+        battery           'PERCENT'
+        change-root       'debian_chroot'
+        date              '%D{%Y-%m-%d}'
+        history           '{#%!}'
+        host              '%m'
+        jobs              '[%j running job(s)] '
+        newline           $'\n'
+        path              '%40<..<%~%<<'
+        percent           '% # '
+        rc                '%(?..%? )'
+        rc-always         '%?'
+        shell-level       '%(3L.+ .)'
+        time              '%D{%H:%M:%S}'
+        user              '%n'
+        vcs               '0'
+        ulcorner          '${PR_ULCORNER}'
+        llcorner          '${PR_LLCORNER}'
+        urcorner          '${PR_URCORNER}'
+        lrcorner          '${PR_LRCORNER}'
+        line              '${PR_HBAR}'
+        pts               ':%y'
+        openbracket       '('
+        closebracket      ')'
+        pipe              '|'
+        space             ' '
+        flexline          'PR_FLEXLINE'
+    )
+
+    PR_FLEXLINE=""
+    add-zsh-hook precmd prompt_ganneff_precmd
+    local pr_battery
+    zstyle -s ':prompt:ganneff' battery pr_battery
+    if [[ $pr_battery != "none" ]]; then
+        add-zsh-hook precmd prompt_ganneff_battery
+        prompt_ganneff_battery
+    fi
+
+    functions[TRAPWINCH]="${functions[TRAPWINCH]//prompt_ganneff_winch}
+        prompt_ganneff_winch"
+}
+
+prompt_ganneff_precmd () {
+    emulate -L zsh
+    setopt nolocaltraps
+
+    zstyle -t ':prompt:ganneff' vcs_info && vcs_info
+    local -a left_items right_items
+    left_items=(ulcorner line openbracket user at host pts closebracket line history flexline 
+                         openbracket path closebracket line urcorner newline
+                llcorner line rc openbracket time closebracket line vcs line change-root pipe space)
+    PR_PS1=""; nomore=0
+    ganneff_prompt_addto PS1 full "${left_items[@]}"
+    if zstyle -T ":prompt:ganneff:right:setup" use-rprompt; then
+        right_items=(space pipe line openbracket date closebracket line lrcorner)
+        ganneff_prompt_addto RPS1 full "${right_items[@]}"
+    fi
+
+    # Now a kind-of-hack to reduce the prompt when we run out of space.
+    promptsize=${#PR_PS1}
+    if [[ ${promptsize} -lt ${TERMWIDTH} ]]; then
+        # the q here should be ${PR_HBAR}, but for some reason zsh didn't like me,
+        # so meh
+        if zstyle -t ':prompt:ganneff' nicelines; then
+            PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..q.)}"
+        else
+            PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..-.)}"
+        fi
+    else
+        # Small size prompt is needed
+        left_items=(ulcorner line openbracket user at host closebracket line openbracket path closebracket newline
+            llcorner line rc openbracket time closebracket line vcs line pipe space)
+        ganneff_prompt_addto PS1 small "${left_items[@]}"
+        # And with a small prompt, we don't show the right size at all.
+        RPS1=""
+    fi
+}
+
+prompt_ganneff_length () {
+    (( TERMWIDTH = ${COLUMNS} - 1 ))
+}
+
+prompt_ganneff_winch () {
+    emulate -L zsh
+    setopt nolocaltraps noksharrays unset
+
+    # Delete ourself from TRAPWINCH if not using our precmd insert.
+    [[ $precmd_functions = *prompt_ganneff_precmd* ]] && prompt_ganneff_length ||
+        functions[TRAPWINCH]="${functions[TRAPWINCH]//prompt_ganneff_winch}"
+}
+
+ganneff_typeset_and_wrap () {
+    emulate -L zsh
+    local target="$1"
+    local new="$2"
+    local left="$3"
+    local right="$4"
+
+    if (( ${+parameters[$new]} )); then
+        typeset -g "${target}=${(P)target}${left}${(P)new}${right}"
+    fi
+}
+
+ganneff_prompt_addto () {
+    emulate -L zsh
+    local target="$1"
+    local size="$2"
+    local lr it apre apost new v
+    local -a items
+    shift
+    shift
+
+    [[ $target == PS1 ]] && lr=left || lr=right
+    zstyle -a ":prompt:ganneff:${lr}:${size}:setup" items items || items=( "$@" )
+    typeset -g "${target}="
+    for it in "${items[@]}"; do
+        zstyle -s ":prompt:ganneff:${lr}:items:$it" pre apre \
+            || apre=${ganneff_prompt_pre_default[$it]}
+        zstyle -s ":prompt:ganneff:ganneff:${lr}:$it" post apost \
+            || apost=${ganneff_prompt_post_default[$it]}
+        zstyle -s ":prompt:ganneff:${lr}:items:$it" token new \
+            || new=${ganneff_prompt_token_default[$it]}
+        typeset -g "${target}=${(P)target}${apre}"
+        # Store the expanded value in PR_PS1, as we use that for length calculations
+        [[ $it == "newline" ]] && nomore=1
+        if [[ $nomore -eq 0 ]] && [[ $it != "flexline" ]] &&  PR_PS1+=${(e%)new}
+        case $it in
+            battery)
+                ganneff_typeset_and_wrap $target $new '' ''
+                ;;
+            change-root)
+                ganneff_typeset_and_wrap $target $new '(' ')'
+                ;;
+            flexline)
+                typeset -g "${target}=${(P)target}\${${new}}"
+                ;;
+            ganneff-chroot)
+                if [[ -n ${(P)new} ]]; then
+                    typeset -g "${target}=${(P)target}(CHROOT)"
+                fi
+                ;;
+            vcs)
+                v="vcs_info_msg_${new}_"
+                if (( ${+parameters[$v]} )) && [[ -n "${(P)v}" ]]; then
+                    typeset -g "${target}=${(P)target}${(P)v}"
+                fi
+                ;;
+            *) typeset -g "${target}=${(P)target}${new}" ;;
+        esac
+        typeset -g "${target}=${(P)target}${apost}"
+    done
+}
+
+prompt_ganneff_battery() {
+    zstyle -s ':prompt:ganneff' battery pr_battery
+    case $pr_battery in
+	    ibam)
+		    local ACPIDATA=$(ibam --percentbattery 2>/dev/null || echo "")
+            PERCENT=${${ACPIDATA[(f)1]}[(w)-2]}
+            ;;
+        acpi)
+            PERCENT="${${"$(acpi 2>/dev/null)"}/(#b)[[:space:]]#Battery <->: [^0-9]##, (<->)%*/${match[1]}}"
+            ;;
+        *)
+            PERCENT=""
+            ;;
+    esac
+
+    if [[ -z "$PERCENT" ]] ; then
+        PERCENT="No battery or $pr_battery not present "
+    else
+        if [[ "$PERCENT" -lt 20 ]] ; then
+            PERCENT="warning: ${PERCENT}%%"
+        else
+            PERCENT="${PERCENT}%%"
+        fi
+    fi
+}
+
+prompt_ganneff_setup "$@"

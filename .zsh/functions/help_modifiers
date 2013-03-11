@@ -1,0 +1,13 @@
+# -*- mode:sh -*-
+echo '
+Modifiers:
+    (:h) head; (:t) tail; (:e) extension; (:u) upercase; (:l) lowercase
+Editing:
+    print -z foo
+Examples:
+
+- History expansion and modifiers combined: Use of !:t, which results
+into the basename of the last argument:
+    wget http://some.where.de/bla/archive.tar.gz
+    tar xfv !:t
+'
