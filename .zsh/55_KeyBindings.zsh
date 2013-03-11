@@ -7,43 +7,43 @@ bindkey -e
 # change some defaults
 bindkey '^Z' push-input            # "suspend" current line
 case "$TERM" in
-        linux)  # Linux console
-                bindkey '\e[1~' beginning-of-line       # Home 
-                bindkey '\e[4~' end-of-line             # End  
-                bindkey '\e[3~' delete-char             # Del
-                bindkey '\e[2~' overwrite-mode          # Insert  
-                ;;
-        screen) # The textmode window manager
-                # In Linux console
-                bindkey '\e[1~' beginning-of-line       # Home
-                bindkey '\e[4~' end-of-line             # End  
-                bindkey '\e[3~' delete-char             # Del
-                bindkey '\e[2~' overwrite-mode          # Insert  
-                bindkey '\e[7~' beginning-of-line       # home
-                bindkey '\e[8~' end-of-line             # end
-                # In rxvt
-                bindkey '\eOc' forward-word             # ctrl cursor right
-                bindkey '\eOd' backward-word            # ctrl cursor left
-                ;;
-#       rxvt)
-#               bindkey '\e[7~' beginning-of-line       # home
-#               bindkey '\e[8~' end-of-line             # end
-#               bindkey '\eOc' forward-word             # ctrl cursor right
-#               bindkey '\eOd' backward-word            # ctrl cursor left
-#               bindkey '\e[3~' delete-char
-#               bindkey '\e[2~' overwrite-mode          # Insert
-#               ;;
-        *xterm*|rxvt)
-                bindkey '\e[H'  beginning-of-line        # Home
-                bindkey '\e[F'  end-of-line             # End
-                # I need the next two when in rxvt via ssh.
-                bindkey '\e[7~' beginning-of-line       # home
-                bindkey '\e[8~' end-of-line             # end
-                bindkey '\e[3~' delete-char             # Del
-                bindkey '\e[2~' overwrite-mode          # Insert
-                bindkey "^[[5C" forward-word          # ctrl cursor right
-                bindkey "^[[5D" backward-word         # ctrl cursor left
-                ;;
+    linux)  # Linux console
+        bindkey '\e[1~' beginning-of-line       # Home
+        bindkey '\e[4~' end-of-line             # End
+        bindkey '\e[3~' delete-char             # Del
+        bindkey '\e[2~' overwrite-mode          # Insert
+        ;;
+    screen) # The textmode window manager
+        # In Linux console
+        bindkey '\e[1~' beginning-of-line       # Home
+        bindkey '\e[4~' end-of-line             # End
+        bindkey '\e[3~' delete-char             # Del
+        bindkey '\e[2~' overwrite-mode          # Insert
+        bindkey '\e[7~' beginning-of-line       # home
+        bindkey '\e[8~' end-of-line             # end
+        # In rxvt
+        bindkey '\eOc' forward-word             # ctrl cursor right
+        bindkey '\eOd' backward-word            # ctrl cursor left
+        ;;
+    rxvt*)
+        bindkey '\e[7~' beginning-of-line       # home
+        bindkey '\e[8~' end-of-line             # end
+        bindkey '\eOc' forward-word             # ctrl cursor right
+        bindkey '\eOd' backward-word            # ctrl cursor left
+        bindkey '\e[3~' delete-char
+        bindkey '\e[2~' overwrite-mode          # Insert
+        ;;
+    *xterm*)
+        bindkey '\e[H'  beginning-of-line        # Home
+        bindkey '\e[F'  end-of-line             # End
+        # I need the next two when in rxvt via ssh.
+        bindkey '\e[7~' beginning-of-line       # home
+        bindkey '\e[8~' end-of-line             # end
+        bindkey '\e[3~' delete-char             # Del
+        bindkey '\e[2~' overwrite-mode          # Insert
+        bindkey "^[[5C" forward-word          # ctrl cursor right
+        bindkey "^[[5D" backward-word         # ctrl cursor left
+        ;;
 esac
 
 #k# Insert a timestamp on the command line (yyyy-mm-dd)
@@ -87,3 +87,26 @@ typeset WORDCHARS='|'$WORDCHARS
 if is4 && zrcautoload edit-command-line && zle -N edit-command-line; then
     bindkey '\C-x\C-e' edit-command-line
 fi
+
+# move cursor between chars when typing '', "", (), [], and {}
+magic-single-quotes() { if [[ $LBUFFER[-1] == \' ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-double-quotes() { if [[ $LBUFFER[-1] == \" ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-parentheses() { if [[ $LBUFFER[-1] == \( ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-square-brackets() { if [[ $LBUFFER[-1] == \[ ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-curly-brackets() { if [[ $LBUFFER[-1] == \{ ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-angle-brackets() { if [[ $LBUFFER[-1] == \< ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+bindkey \' magic-single-quotes
+bindkey \" magic-double-quotes
+bindkey \) magic-parentheses
+bindkey \] magic-square-brackets
+bindkey \} magic-curly-brackets
+bindkey \> magic-angle-brackets
+zle -N magic-single-quotes
+zle -N magic-double-quotes
+zle -N magic-parentheses
+zle -N magic-square-brackets
+zle -N magic-curly-brackets
+zle -N magic-angle-brackets
+
+# Show what the completion system is trying to complete with at a given point
+bindkey '^Xh' _complete_help
