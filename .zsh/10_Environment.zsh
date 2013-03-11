@@ -68,3 +68,8 @@ NULLCMD=${PAGER}
 export MANWIDTH=${MANWIDTH:-80}
 
 [[ -f "$HOME/.local/share/mc/skins/solarized.ini" ]] && export MC_SKIN="solarized"
+
+# set variable debian_chroot if running in a chroot with /etc/debian_chroot
+if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
+    debian_chroot="chroot: $(cat /etc/debian_chroot)"
+fi
