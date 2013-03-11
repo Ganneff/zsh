@@ -10,7 +10,7 @@ cmd_exists ()
 preprint()
 {
 	local my_color i
-	my_color=${2-"$prompt_colors[generic]"}
+	my_color=${2-"$'%{\e[1;31m%}'"}
 
 	hbar=$T_
 	for i in {1..$((74 - ${#1} - 5))}; do

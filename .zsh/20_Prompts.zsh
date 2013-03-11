@@ -6,19 +6,27 @@
 if is437; then
     if zrcautoload promptinit && promptinit 2>/dev/null ; then
          zstyle ':prompt:ganneff' vcs_info true
+         zstyle ':prompt:ganneff' set_vcs_info_defaults true
+         zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
          zstyle ':prompt:ganneff' colors true
          zstyle ':prompt:ganneff' nicelines true
          zstyle ':prompt:ganneff' battery none
          zstyle ':prompt:ganneff:right:setup' use-rprompt true
          zstyle ':prompt:ganneff:left:full:setup' items \
              ulcorner line openbracket user at host pts closebracket line history \
-             flexline openbracket path closebracket line urcorner newline \
+             ganneff flexline openbracket path closebracket line urcorner newline \
              llcorner line rc openbracket time closebracket line vcs line change-root pipe space
          zstyle ':prompt:ganneff:right:full:setup' items \
              pipe line openbracket date closebracket line lrcorner
          zstyle ':prompt:ganneff:left:small:setup' items \
              ulcorner line openbracket user at host closebracket line openbracket path closebracket newline \
              llcorner line rc openbracket time closebracket line vcs line pipe space
+
+#         zstyle ':prompt:ganneff:left:items:ganneff' pre '${PR_RED}'
+#         zstyle ':prompt:ganneff:left:items:ganneff' post '${PR_NO_COLOR}'
+#         zstyle ':prompt:ganneff:left:items:ganneff' pre '%M'
+
+
 
          prompt ganneff
     fi

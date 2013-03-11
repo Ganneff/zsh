@@ -83,6 +83,24 @@ prompt_ganneff_help () {
 
         - vcs_info (boolean): If \`true' (the default), use \`vcs_info'.
 
+        - set_vcs_info_defaults (boolean): If \`true' (the default),
+          various vcs_info settings will be done. If unset or \`false'
+          it is assumed that the user has already done this.
+
+          The default setup is:
+            zstyle ':vcs_info:*' max-exports 1
+            zstyle ':vcs_info:*' use-prompt-escapes
+            zstyle ':vcs_info:*' use_simple
+            zstyle ':vcs_info:*' stagedstr      "!"
+            zstyle ':vcs_info:*' unstagedstr    "?"
+            zstyle ':vcs_info:*' check-for-changes true
+            zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat \
+                      "\${PR_YELLOW}%b%{\${PR_RED}%}:\${PR_YELLOW}%r\${PR_NO_COLOR}"
+            zstyle ':vcs_info:*' formats \
+                      "(\${PR_YELLOW}%s\${PR_NO_COLOR} \${PR_GREEN}%b\${PR_NO_COLOR})%m%u%c "
+            zstyle ':vcs_info:*' actionformats \
+                      "(\${PR_YELLOW}%s\${PR_NO_COLOR} \${PR_GREEN}%b\${PR_NO_COLOR}-\${PR_RED}(%a)\${PR_NO_COLOR})%m%u%c "
+
         - colors (boolean): If \`true' (the default), use colors. b/w
           otherwise.
 
@@ -127,7 +145,7 @@ prompt_ganneff_setup () {
     setopt nolocaltraps
 
     # See if we can and should use extended characters to look nicer.
-    if zstyle -t ':prompt:ganneff' nicelines; then
+    if zstyle -t ':prompt:ganneff' nicelines && [[ "$TERM" != dumb ]]; then
         typeset -A altchar
         set -A altchar ${(s..)terminfo[acsc]}
         # Some stuff to help us draw nice lines
@@ -150,7 +168,7 @@ prompt_ganneff_setup () {
         PR_URCORNER=""
     fi
 
-    if zstyle -t ':prompt:ganneff' colors; then
+    if zstyle -t ':prompt:ganneff' colors && [[ "$TERM" != dumb ]]; then
         if [[ -n "${BLUE}" ]] && [[ -n "${YELLOW}" ]]; then
             # Two defined, so we assume someone already defined themself
             # the colors. We just use them and not setup our own.
@@ -178,10 +196,13 @@ prompt_ganneff_setup () {
     # The secondary prompt, printed when the shell needs more
     # information to complete a command. %_ displays any shell constructs
     # or quotation marks which are currently being processed.
-    PS2='${PR_CYAN}${PR_SHIFT_IN}${PR_HBAR}${PR_BLUE}${PR_HBAR}${PR_SHIFT_OUT}\
+    if zstyle -t ':prompt:ganneff' colors && [[ "$TERM" != dumb ]]; then
+        PS2='${PR_CYAN}${PR_SHIFT_IN}${PR_HBAR}${PR_BLUE}${PR_HBAR}${PR_SHIFT_OUT}\
 (${PR_GREEN}%_${PR_BLUE})\
 ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
-
+    else
+        PS2='-(%_)- '
+    fi
     # selection prompt used within a select loop.
     PS3='?# '
     # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
@@ -189,22 +210,17 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
 
     if zstyle -t ':prompt:ganneff' vcs_info && \
         is439 && autoload -Uz vcs_info && vcs_info; then
-        # gather version control information for inclusion in a prompt
-        # we will only be using one variable, so let the code know now.
-        zstyle ':vcs_info:*' max-exports 3
-        zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
-        zstyle ':vcs_info:*' use-prompt-escapes
-        zstyle ':vcs_info:*' use_simple
-        zstyle ':vcs_info:*' stagedstr      "!"
-        zstyle ':vcs_info:*' unstagedstr    "?"
-        zstyle ':vcs_info:*' check-for-changes true
+        if zstyle -t ':prompt:ganneff' set_vcs_info_defaults; then
+            # gather version control information for inclusion in a prompt
+            # we will only be using one variable, so let the code know now.
+            zstyle ':vcs_info:*' max-exports 1
+            zstyle ':vcs_info:*' use-prompt-escapes
+            zstyle ':vcs_info:*' use_simple
+            zstyle ':vcs_info:*' stagedstr      "!"
+            zstyle ':vcs_info:*' unstagedstr    "?"
+            zstyle ':vcs_info:*' check-for-changes true
 
-        # change vcs_info formats for the prompt
-        if [[ "$TERM" == dumb ]]; then
-            zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] "
-            zstyle ':vcs_info:*' formats       "(%s%)-[%b] "
-        else
-            # these are the same, just with a lot of colours:
+            # change vcs_info formats for the prompt
             zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "${PR_YELLOW}%b%{${PR_RED}%}:${PR_YELLOW}%r${PR_NO_COLOR}"
             zstyle ':vcs_info:*' formats "(${PR_YELLOW}%s${PR_NO_COLOR} ${PR_GREEN}%b${PR_NO_COLOR})%m%u%c "
             zstyle ':vcs_info:*' actionformats "(${PR_YELLOW}%s${PR_NO_COLOR} ${PR_GREEN}%b${PR_NO_COLOR}-${PR_RED}(%a)${PR_NO_COLOR})%m%u%c "
@@ -310,6 +326,9 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
 
     PR_FLEXLINE=""
     add-zsh-hook precmd prompt_ganneff_precmd
+    # Call the winch function once to ensure the length gets calculated
+    # correctly
+    prompt_ganneff_winch
     local pr_battery
     zstyle -s ':prompt:ganneff' battery pr_battery
     if [[ $pr_battery != "none" ]]; then
@@ -327,7 +346,7 @@ prompt_ganneff_precmd () {
 
     zstyle -t ':prompt:ganneff' vcs_info && vcs_info
     local -a left_items right_items
-    left_items=(ulcorner line openbracket user at host pts closebracket line history flexline 
+    left_items=(ulcorner line openbracket user at host pts closebracket line history flexline
                          openbracket path closebracket line urcorner newline
                 llcorner line rc openbracket time closebracket line vcs line change-root pipe space)
     PR_PS1=""; nomore=0
@@ -342,7 +361,7 @@ prompt_ganneff_precmd () {
     if [[ ${promptsize} -lt ${TERMWIDTH} ]]; then
         # the q here should be ${PR_HBAR}, but for some reason zsh didn't like me,
         # so meh
-        if zstyle -t ':prompt:ganneff' nicelines; then
+        if zstyle -t ':prompt:ganneff' nicelines && [[ "$TERM" != dumb ]]; then
             PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..q.)}"
         else
             PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..-.)}"
