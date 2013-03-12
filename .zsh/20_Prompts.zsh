@@ -14,7 +14,7 @@ if is437; then
          zstyle ':prompt:ganneff:right:setup' use-rprompt true
          zstyle ':prompt:ganneff:left:full:setup' items \
              ulcorner line openbracket user at host pts closebracket line history \
-             flexline openbracket path closebracket line urcorner newline \
+             line shell-level line flexline openbracket path closebracket line urcorner newline \
              llcorner line rc openbracket time closebracket line vcs line change-root pipe space
          zstyle ':prompt:ganneff:right:full:setup' items \
              pipe line openbracket date closebracket line lrcorner

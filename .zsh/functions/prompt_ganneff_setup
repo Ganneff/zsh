@@ -145,7 +145,8 @@ prompt_ganneff_setup () {
     setopt nolocaltraps
 
     # See if we can and should use extended characters to look nicer.
-    if zstyle -t ':prompt:ganneff' nicelines && [[ "$TERM" != dumb ]]; then
+    if zstyle -t ':prompt:ganneff' nicelines && [[ "$TERM" != dumb ]] \
+        && [[ "$TERM" != "linux" ]]; then
         typeset -A altchar
         set -A altchar ${(s..)terminfo[acsc]}
         # Some stuff to help us draw nice lines
@@ -307,7 +308,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
         percent           '% # '
         rc                '%(?..%? )'
         rc-always         '%?'
-        shell-level       '%(3L.+ .)'
+        shell-level       '%(2L.%L.)'
         time              '%D{%H:%M:%S}'
         user              '%n'
         vcs               '0'
@@ -361,7 +362,8 @@ prompt_ganneff_precmd () {
     if [[ ${promptsize} -lt ${TERMWIDTH} ]]; then
         # the q here should be ${PR_HBAR}, but for some reason zsh didn't like me,
         # so meh
-        if zstyle -t ':prompt:ganneff' nicelines && [[ "$TERM" != dumb ]]; then
+        if zstyle -t ':prompt:ganneff' nicelines && [[ "$TERM" != dumb ]] \
+            && [[ "$TERM" != "linux" ]]; then
             PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..q.)}"
         else
             PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..-.)}"

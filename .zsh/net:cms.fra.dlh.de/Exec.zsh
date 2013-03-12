@@ -1,3 +1,3 @@
 # -*- mode: sh;-*-
 
-xset b 25 150
+[[ -n "${DISPLAY}" ]] && xset b 25 150

@@ -9,20 +9,39 @@ cmd_exists ()
 
 preprint()
 {
-	local my_color i
-	my_color=${2-"$'%{\e[1;31m%}'"}
+	local my_color start stop pipe1 pipe2 hbar out
 
-	hbar=$T_
-	for i in {1..$((74 - ${#1} - 5))}; do
-		hbar=${hbar}$_t_q
-	done
-	hbar=${hbar}$_T
-
-	if [ "$1" != "" ]; then
-		print -Pn "${C_}$my_color;1${_C}${hbar}$T_$_t_u$_T${C_}0;$my_color${_C} $1 ${C_}0;$my_color;1${_C}$T_$_t_t$_t_q$_T\r${C_}0${_C}"
-	else
-		print -Pn "${C_}$my_color;1${_C}${hbar}$T_$_t_q$_t_q$_t_q$_t_q$_t_q$_T${C_}0${_C}"
-	fi
+    if [[ "$COLORS" == "true" ]]; then
+	    my_color=${2:-${BOLD_RED}}
+    else
+        my_color=${2:-""}
+    fi
+    if [[ $LINEDRAW == "true" ]]; then
+        # Some stuff to help us draw nice lines
+        start="$terminfo[smacs]"
+        stop="$terminfo[rmacs]"
+        hbar="${start}${(l:$(( 74 - ${#1} - 5 ))::q:)}${stop}"
+        pipe1="u"
+        pipe2="t"
+        draw="q"
+    else
+        start=""
+        stop=""
+        hbar="${start}${(l:$((74 - ${#1} - 5))::-:)}${stop}"
+        pipe1="|"
+        pipe2="|"
+        draw="-"
+    fi
+    out="${my_color}${hbar}${start}"
+    
+	if [[ "${1}" != "" ]]; then
+        out+="${pipe1}${stop}${my_color} $1 ${my_color}${start}${pipe2}"
+    else
+        out+="${draw}${draw}${draw}${draw}"
+    fi
+    out+="${draw}${stop}${NO_COLOR}\r"
+    
+    print -Pn $out
 }
 
 normal_user ()
@@ -69,24 +88,3 @@ if is434; then
         fi
     }
 fi
-
-docolors()
-{
-    if zrcautoload colors && colors 2>/dev/null ; then
-        for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-            eval BOLD_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
-            eval $color='%{$fg[${(L)color}]%}'
-            (( count = $count + 1 ))
-        done
-        NO_COLOR="%{${reset_color}%}"
-    else
-        BLUE=$'%{\e[1;34m%}'
-        RED=$'%{\e[1;31m%}'
-        GREEN=$'%{\e[1;32m%}'
-        CYAN=$'%{\e[1;36m%}'
-        WHITE=$'%{\e[1;37m%}'
-        MAGENTA=$'%{\e[1;35m%}'
-        YELLOW=$'%{\e[1;33m%}'
-        NO_COLOR=$'%{\e[0m%}'
-    fi
-}
