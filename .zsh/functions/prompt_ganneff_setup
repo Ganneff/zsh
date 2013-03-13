@@ -175,6 +175,9 @@ prompt_ganneff_help () {
     \${PR_NO_COLOR} resets color.
     Using the \${PR_XXX} values instead of zsh's internal \%F{xxx} allows
     the usage of the colors style to turn of prompt colors easily.
+
+    Last note: You really want to have "setopt promptsubst", otherwise you
+    won't like this prompt.
 __EOF0__
 }
 
