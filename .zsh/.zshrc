@@ -21,7 +21,8 @@ debug "Starting zsh"
 # Want to use colors in log output...
 autoload -U colors && colors
 
-
+# Idea copied from https://github.com/hugues/zdotdir/blob/master/zshrc
+# AUTHOR: Hugues Hiegel <hugues@hiegel.fr>
 # Most of my config is splitted into files and directories
 if [ -d ${ZDOTDIR} ]; then
     for script in ${ZDOTDIR}/??_*.zsh;  do
