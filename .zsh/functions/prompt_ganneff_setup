@@ -488,12 +488,10 @@ ganneff_prompt_addto () {
             || new=${ganneff_prompt_token_default[$it]}
 
         # Now check if there is the wish for a precmd function and if so,
-        # fulfill it.
-        if is435; then
-            zstyle -s ":prompt:ganneff:extra:$it" precmd prefunc
-            if [[ -n "${prefunc}" ]]; then
-                add-zsh-hook precmd ${prefunc}
-            fi
+        # run it
+        zstyle -s ":prompt:ganneff:extra:$it" precmd prefunc
+        if [[ -n "${prefunc}" ]]; then
+            ${prefunc} || true
         fi
 
         typeset -g "${target}=${(P)target}${apre}"
