@@ -8,8 +8,8 @@ if is437; then
          zstyle ':prompt:ganneff' vcs_info true
          zstyle ':prompt:ganneff' set_vcs_info_defaults true
          zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
-         zstyle ':prompt:ganneff' colors true
-         zstyle ':prompt:ganneff' nicelines true
+         zstyle ':prompt:ganneff' colors ${COLORS}
+         zstyle ':prompt:ganneff' nicelines ${LINEDRAW}
          zstyle ':prompt:ganneff' battery none
          zstyle ':prompt:ganneff:right:setup' use-rprompt true
          zstyle ':prompt:ganneff:left:full:setup' items \
@@ -24,9 +24,11 @@ if is437; then
 
         zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
 
-#        zstyle ':prompt:ganneff:left:items:ganneff' pre '${PR_RED}'
-#        zstyle ':prompt:ganneff:left:items:ganneff' post '${PR_NO_COLOR}'
-#        zstyle ':prompt:ganneff:left:items:ganneff' token '$BLABLA'
+#        zstyle ':prompt:ganneff:extra:ganneff' pre '${PR_RED}'
+#        zstyle ':prompt:ganneff:extra:ganneff' post '${PR_NO_COLOR}'
+#        zstyle ':prompt:ganneff:extra:ganneff' token '$BLABLA'
+#        zstyle ':prompt:ganneff:extra:ganneff' precmd jj_blabla
+
         prompt ganneff
     fi
 else

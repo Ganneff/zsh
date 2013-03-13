@@ -85,6 +85,12 @@ is434(){
     return 1
 }
 
+is435(){
+    [[ $ZSH_VERSION == 4.3.<5->* || $ZSH_VERSION == 4.<4->* \
+                                 || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
 is437(){
     [[ $ZSH_VERSION == 4.3.<7->* || $ZSH_VERSION == 4.<4->* \
                                  || $ZSH_VERSION == <5->* ]] && return 0

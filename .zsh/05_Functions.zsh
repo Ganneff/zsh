@@ -41,7 +41,7 @@ preprint()
     fi
     out+="${draw}${stop}${NO_COLOR}\r"
     
-    print -Pn $out
+    print -Pn -- $out
 }
 
 normal_user ()
