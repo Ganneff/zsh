@@ -11,15 +11,15 @@ ZSH=${HOME}/.zsh
 
 debug ()
 {
-    [ "${DEBUG}" = "no" ] && return
+    [[ "${DEBUG}" = "no" ]] && return
     msg=${1:-""}
     nl=${2:-""}
     echo ${nl} "${msg}$reset_color"
 }
 
+# May want to use colors in log output...
+[[ "${DEBUG}" = "no" ]] && autoload -U colors && colors
 debug "Starting zsh"
-# Want to use colors in log output...
-autoload -U colors && colors
 
 # Idea copied from https://github.com/hugues/zdotdir/blob/master/zshrc
 # AUTHOR: Hugues Hiegel <hugues@hiegel.fr>
