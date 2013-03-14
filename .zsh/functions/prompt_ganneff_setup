@@ -6,7 +6,7 @@
 #   - The "design" is taken from Phil!'s ZSH prompt, as found on
 #     http://aperiodic.net/phil/prompt/
 #
-#   - The technic using zstyle is inspired by the prompt as used by
+#   - The tech using zstyle is inspired by the prompt as used by
 #     the grml-live system <http://grml.org>, see
 #     http://git.grml.org/?p=grml-etc-core.git;a=summary for details
 #     on theirs.
