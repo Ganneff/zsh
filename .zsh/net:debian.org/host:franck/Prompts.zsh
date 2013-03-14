@@ -2,9 +2,9 @@
 
 # Want one more piece in my prompt here, dinstall status
 zstyle ':prompt:ganneff:left:full:setup' items \
-    ulcorner line openbracket user at host pts closebracket line history \
-    line dinstall line shell-level line flexline openbracket path closebracket line urcorner newline \
-    llcorner line rc openbracket time closebracket line vcs line change-root pipe space
+    ulcorner line openparentheses user at host pts closeparentheses line history \
+    line dinstall line shell-level line flexline openparentheses path closeparentheses line urcorner newline \
+    llcorner line rc openparentheses time closeparentheses line vcs line change-root pipe space
 
 zstyle ':prompt:ganneff:extra:dinstall' pre '${PR_CYAN}'
 zstyle ':prompt:ganneff:extra:dinstall' post '${PR_NO_COLOR}'
