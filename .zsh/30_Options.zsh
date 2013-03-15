@@ -234,18 +234,13 @@ UnsetOPT CLOBBER
 # will be made local in just the same way as any other parameter.
 UnsetOPT GLOBAL_EXPORT
 
-# Automatically use menu completion after the second consecutive request
-# for completion, for example by pressing the tab key repeatedly. This
-# option is overridden by MENU_COMPLETE.
-UnsetOPT AUTO_MENU
-
 # On an ambiguous completion, instead of listing possibilities or
 # beeping, insert the first match immediately.  Then when completion
 # is requested again, remove the first match and insert the second
 # match, etc.  When there are no more matches, go back to the first one
 # again.  reverse-menu-complete may be used to loop through the list in
 # the other direction. This option overrides AUTO_MENU.
-SetOPT MENU_COMPLETE
+UnsetOPT MENU_COMPLETE
 
 # Beep on error in ZLE.
 UnsetOPT BEEP
