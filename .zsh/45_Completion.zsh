@@ -23,7 +23,7 @@ zstyle -e ':completion:*:approximate:*' max-errors \
     'reply=( $(( ($#PREFIX+$#SUFFIX)/3 )) numeric )'
 
 ## formatting and messages
-#zstyle ':completion:*' verbose yes
+zstyle ':completion:*' verbose yes
 #zstyle ':completion:*:descriptions' format $'%{\e[0;31m%}%d%{\e[0m%}'
 zstyle ':completion:*:descriptions' format $'%{\e[0;31m%}%UCompleting %d%{\e[0m%}:%u'
 zstyle ':completion:*:messages' format $'%{\e[0;31m%}%d%{\e[0m%}'
@@ -44,10 +44,6 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' group-order ''
 
 zstyle ':completion:*' accept-exact '*(N)'
-
-## completion caching
-zstyle ':completion::complete:*' use-cache 1
-zstyle ':completion::complete:*' cache-path ${ZDOTDIR}/.zcompcache
 
 ## determine in which order the names (files) should be
 ## listed and completed when using menu completion.
@@ -91,6 +87,7 @@ zstyle ':completion:*:processes' command 'ps -au$USER'
 
 ## add colors to processes for kill completion
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:*:kill:*' verbose yes
 
 # host completion
 if is42; then
@@ -158,6 +155,10 @@ zstyle ':completion:*:ssh:*' group-order users hosts-domain hosts-host users hos
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
+
+## completion caching
+zstyle ':completion::complete:*' use-cache 1
+zstyle ':completion::complete:*' cache-path ${ZDOTDIR}/.zcompcache
 
 compinit -d ${ZDOTDIR}/var/.zcompdump
 
