@@ -14,5 +14,5 @@ zstyle ':prompt:ganneff:extra:dinstall' precmd jj_update_dinstall
 zmodload zsh/mapfile
 
 jj_update_dinstall () {
-    DINSTALL="${${(z)${(f)mapfile[/srv/ftp.debian.org/web/dinstall.status]}[2]}[3,99]}"
+    DINSTALL="${${(z)${(f)mapfile[/srv/ftp.debian.org/web/dinstall.status]}[2]}[3,-1]}"
 }
