@@ -5,3 +5,5 @@ var
 zsh-install.sh
 run
 .zdirs
+*.zwc
+*.zwc.old
