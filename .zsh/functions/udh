@@ -1,14 +1,57 @@
 # -*- mode:sh -*-
 
+emulate -LR zsh
+setopt extendedglob
+setopt globdots
+setopt numericglobsort
+
+autoload -Uz relative
+zmodload zsh/stat
+
+
 local SPECBASE=${HOME}/.dotfiles
 local CRONBASE=${HOME}/.crontabs
+local startdir=$(pwd)
+local STATEFILE=${HOME}/.config/mr/update
+
+local linktarget entry file base dirn opt force diff now age max
 
 if [ "$ZDOTDIR" = "" ]; then
     echo "Sorry, need to run within a configured zsh environment"
     return
 fi
-cd ${HOME}
-mr update
+cd -q ${HOME}
+
+while getopts "f" opt; do
+  case $opt in
+      (f)
+          force=1
+          ;;
+      (*)
+          return 1
+          ;;
+  esac
+done
+shift $(( OPTIND - 1 ))
+
+if (( force )); then
+    mr update
+else
+    if [[ ! -f ${STATEFILE} ]]; then
+        touch ${STATEFILE}
+    fi
+    age=$(zstat +ctime ${STATEFILE})
+    now=$(date +%s)
+    (( diff = now - age ))
+    (( max = 1 * 60 * 60 ))
+    if [[ $diff -gt $max ]]; then
+        mr update
+    else
+        echo "Too early retry"
+        return
+    fi
+fi
+touch ${STATEFILE}
 
 # Now we check if we have something specific for this host, that we need
 # to link into the homedir
@@ -63,8 +106,6 @@ for entry in $workdirs[@]; do
     dirn=${dirn//distri:$DISTRI/}
     dirn=${dirn//user:$USER/}
     dirn=${dirn//user:$SUDO_USER/}
-#    dirn=${${(j:/:)dirn}//\/\/##/}
-#    dirn=${${(j:/:)dirn}//\/##/}
 
     echo "... ${HOME}/${dirn}/${base}"
 
@@ -86,20 +127,22 @@ for entry in $workdirs[@]; do
         fi
     fi
 
-    if ln --help 2>/dev/null | grep -- --relative >/dev/null; then
-        LNOPTS="-r"
-    fi
-
-    if [ -n "${dirn}" ]; then
+    linktarget=$(relative "${entry}" "${HOME}/${dirn}")
+    # The same can be done with ln - current sid or later versions.
+    # (as of 2013-16-03)
+#    if ln --help 2>/dev/null | grep -- --relative >/dev/null; then
+#        LNOPTS="-r"
+#    fi
+    if [[ -n ${dirn} ]]; then
         mkdir -p "${HOME}/${dirn}"
-        if [ ! -L ${HOME}/${dirn}/${base} ]; then
+        if [[ ! -L ${HOME}/${dirn}/${base} ]]; then
             echo "Linking ${entry} to ${HOME}/${dirn}/${base}"
-            /bin/ln -s $LNOPTS ${entry} ${HOME}/${dirn}
+            /bin/ln -s "${linktarget}" "${HOME}/${dirn}"
         fi
     else
-        if [ ! -L ${HOME}/${dirn}/${base} ]; then
+        if [[ ! -L ${HOME}/${dirn}/${base} ]]; then
             echo "Linking ${entry} to ${HOME}/${dirn}"
-            /bin/ln -s $LNOPTS ${entry} ${HOME}/${base}
+            /bin/ln -s "${linktarget}" "${HOME}/${base}"
         fi
     fi
 done
@@ -116,3 +159,4 @@ if [ -f "${CRONBASE}/${HOST}.${DOMAIN}" ]; then
     fi
 fi
 
+cd -q ${startdir}
