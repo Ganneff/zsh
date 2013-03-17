@@ -39,6 +39,7 @@ HISTSIZE=$(( $SAVEHIST * 1.10 ))
 
 ## maximum size of the directory stack.
 DIRSTACKSIZE=20
+DIRSTACKFILE=${ZDOTDIR}/var/.zdirs
 # $zdirstore is the file used to persist the stack
 zdirstore=${ZDOTDIR}/var/.zdirstore
 is434 && dirpersistrestore
