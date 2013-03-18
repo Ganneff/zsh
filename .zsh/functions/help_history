@@ -1,7 +1,7 @@
 # -*- mode:sh -*-
 echo -e "
 
-!42       # re-run command 42
+!42      # re-run command 42
 !!       # re-run last command
 !v       # re-run last command that started with 'v'
 !?foo?   # re-run last command that had the string "foo" anywhere in it
@@ -10,4 +10,5 @@ echo -e "
 !$       # last  argument  of last command
 !!*      # all   arguments of last command
 
+!-n      # history line x lines ago (!-5 => history 5 commands ago)
 "
