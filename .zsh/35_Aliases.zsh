@@ -21,7 +21,6 @@ alias git='LANG=C git'
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 
 alias psql='LANG=C LD_PRELOAD=/lib/libreadline.so.5 psql'
-alias tmux='TMPDIR=/tmp tmux'
 
 alias logout='noglob logout'
 
