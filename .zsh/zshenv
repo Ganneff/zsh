@@ -31,7 +31,6 @@ export fpath
 # though a subshell may not know about functions.
 # PATH should already be exported, but in case not. . .
 path=(
-    lala
     "$HOME/bin"
     /usr/local/bin
     /bin
