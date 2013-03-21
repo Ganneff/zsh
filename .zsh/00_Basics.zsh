@@ -7,6 +7,23 @@ local _umask
 zstyle -s ':ganneff:config' umask _umask
 _umask=${_umask:-022}
 umask $_umask
+# Tiny helper function to set variables/values according to styles
+# removed after config load
+setvar () {
+    variable=$1
+    default=$2
+    command=${3:-0}
+
+    local tempvar
+    zstyle -s ':ganneff:config' ${variable} tempvar
+    tempvar=${tempvar:-${default}}
+    if (( ${command} )); then
+        ${variable} ${tempvar}
+    else
+        export ${variable}=${tempvar}
+    fi
+}
+
 
 # Want a halfway sane terminal
 [[ -t 0 ]] && /bin/stty erase  "^H" intr  "^C" susp "^Z" dsusp "^Y" stop "^S" start "^Q" kill "^U"  >& /dev/null
