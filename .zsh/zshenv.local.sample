@@ -1,17 +1,82 @@
 # -*- mode: sh;-*-
 
-# This file contains settings local to the system.
-# Note that this is read very early, so you can not depend on anything
-# that is set in the zsh config. If you want that, use the file
-# ${ZDOTDIR}/zshlate or $ZDOTDIR/zlogin. zlogin is read whenever the
-# shell is a login shell, zshlate is used on all interactive shells.
+## This file contains settings local to the system.
+## Note that this is read very early, so you can not depend on anything
+## that is set in the zsh config. If you want that, use the file
+## ${ZDOTDIR}/zshlate or $ZDOTDIR/zlogin. zlogin is read whenever the
+## shell is a login shell, zshlate is used on all interactive shells.
 
-# Output some more information during zshell startup
+## Output some more information during zshell startup
 DEBUG=${DEBUG:-no}
 
+########################################################################
+## The following styles are defined.                                  ##
+## Values shown are the defaults taken if the style is unset          ##
+########################################################################
 
-# The following styles are defined.
-# Values shown are the defaults taken if the style is unset
-
-# Set a sane umask
+## Set a sane umask
 # zstyle ':ganneff:config' umask '022'
+
+########################################################################
+### Prompt setup                                                     ###
+## use vcs_info in prompt
+zstyle ':prompt:ganneff' vcs_info true
+
+## use defaults set by me?
+zstyle ':prompt:ganneff' set_vcs_info_defaults true
+
+## if set_vcs_info_defaults is false, you may want to enable some of the
+## following lines or whichever combination you like of it. See the
+## vcs_info documentation for what they mean.
+# zstyle ':vcs_info:*' max-exports 1
+# zstyle ':vcs_info:*' use-prompt-escapes
+# zstyle ':vcs_info:*' use_simple
+# zstyle ':vcs_info:*' stagedstr      "!"
+# zstyle ':vcs_info:*' unstagedstr    "?"
+# zstyle ':vcs_info:*' check-for-changes true
+
+## change vcs_info formats for the prompt
+# zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "${PR_YELLOW}%b%{${PR_RED}%}:${PR_YELLOW}%r${PR_NO_COLOR}"
+# zstyle ':vcs_info:*' formats "(${PR_YELLOW}%s${PR_NO_COLOR})-[${PR_GREEN}%b${PR_NO_COLOR}]%m%u%c "
+# zstyle ':vcs_info:*' actionformats "(${PR_YELLOW}%s${PR_NO_COLOR})-[${PR_GREEN}%b${PR_NO_COLOR}-${PR_RED}(%a)${PR_NO_COLOR}]%m%u%c "
+# zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
+
+## Use color in prompt.
+## COLORS is defined as true/false in 01_Terminfo.zsh depending on
+## capabilities of the terminal. If unset then defined by those.
+# zstyle ':prompt:ganneff' colors true/false
+
+## If drawing lines, make them "nice looking".
+## LINEDRAW is defined as true/false in 01_Terminfo.zsh depending on
+## capabilities of the terminal. If unset then defined by those.
+#zstyle ':prompt:ganneff' nicelines true/false
+
+## Populate prompt info item "battery"
+## If `none' then no battery function at all.
+## If either `ibam' or `acpi' then use those tools to gather
+## the current battery level.
+# zstyle ':prompt:ganneff' battery none
+
+## If true (default), use a right side prompt
+#zstyle ':prompt:ganneff:right:setup' use-rprompt true
+
+## Define list of items for the prompt. See prompt -h ganneff
+## for more information.
+# zstyle ':prompt:ganneff:left:full:setup' items \
+#     ulcorner line openparentheses user at host colon pts closeparentheses line history \
+#     line shell-level line flexline openparentheses path closeparentheses line urcorner newline \
+#     llcorner line rc openparentheses time closeparentheses line vcs line change-root pipe space
+# zstyle ':prompt:ganneff:right:full:setup' items \
+#     pipe line openparentheses date closeparentheses line lrcorner
+# zstyle ':prompt:ganneff:left:small:setup' items \
+#     ulcorner line openparentheses user at host closeparentheses line openparentheses path closeparentheses newline \
+#     llcorner line rc openparentheses time closeparentheses line vcs line pipe space
+
+## Override the token of an item
+zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
+
+# Example of an extra defined item.
+# zstyle ':prompt:ganneff:extra:ganneff' pre '${PR_RED}'
+# zstyle ':prompt:ganneff:extra:ganneff' post '${PR_NO_COLOR}'
+# zstyle ':prompt:ganneff:extra:ganneff' token '$BLABLA'
+# zstyle ':prompt:ganneff:extra:ganneff' precmd jj_blabla
