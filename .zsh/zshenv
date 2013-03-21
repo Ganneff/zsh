@@ -28,17 +28,17 @@ DEBUG=${DEBUG:-no}
 fpath=( $HOME/.zsh/functions $HOME/zsh "$fpath[@]" )
 # Only unique entries please.
 typeset -U fpath
+fpath=( ${^fpath}(N-/) )
 export fpath
 
 # Include function path in script path so that we can run them even
 # though a subshell may not know about functions.
 # PATH should already be exported, but in case not. . .
 path=(
-    "$HOME/bin"
+    "$lpath[@]"
     /usr/local/bin
     /bin
     /usr/bin
-    /srv/qa.debian.org/mia
     /usr/X11/bin
     /usr/bin/X11
     /usr/local/X11/bin
@@ -58,13 +58,21 @@ if [ "`id -u`" = "0" ] || ! [ -x /usr/bin/id ]; then
     )
 fi
 
+manpath=(
+    "$lmanpath[@]"
+    /usr/share/man
+    /usr/local/share/man
+    "$manpath[@]"
+)
+
 # Only unique entries please.
-typeset -U path
+typeset -gU path
+typeset -gU manpath
+
 # Remove entries that don't exist on this system.  Just for sanity's
 # sake more than anything.
 path=( ${^path}(N-/) )
-
-export PATH USER HOST DOMAIN UID
+manpath=( ${^manpath}(N-/) )
 
 # Command to use when redirecting from/to a null command.
 # READNULLCMD is redefined in .zshrc for interactive shells.
@@ -76,3 +84,5 @@ if [[ ${+ORIGGID} -eq 0 ]]; then
     export ORIGGID="$GID"
 fi
 
+# Just to make damn sure they are there.
+export PATH USER HOST DOMAIN UID OSNAME DISTRI
