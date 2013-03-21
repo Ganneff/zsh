@@ -220,7 +220,7 @@ prompt_ganneff_setup () {
         if [[ -n "${BLUE}" ]] && [[ -n "${YELLOW}" ]]; then
             # Two defined, so we assume someone already defined themself
             # the colors. We just use them and not setup our own.
-            for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+            for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE BLACK GREY; do
                 eval PR_$color='%{${(P)color}%}'
                 eval PR_BOLD_$color='%{$terminfo[bold]${(LP)color}%}'
             done
@@ -230,7 +230,7 @@ prompt_ganneff_setup () {
             # This duplicates docolors from 01_Terminfo.zsh, but is here to have
             # prompt_ganneff_setup not require anything else from my dotfiles
             if autoload -Uz colors && colors 2>/dev/null ; then
-                for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE; do
+                for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE BLACK GREY; do
                     eval PR_$COLOR='%{$fg_no_bold[${(L)COLOR}]%}'
                     eval PR_BOLD_$COLOR='%{$fg_bold[${(L)COLOR}]%}'
                 done

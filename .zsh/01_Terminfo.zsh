@@ -48,7 +48,7 @@ __ () {
 docolors()
 {
     if autoload -Uz colors && colors 2>/dev/null ; then
-        for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE; do
+        for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE GREY; do
             eval $COLOR='%{$fg_no_bold[${(L)COLOR}]%}'
             eval BOLD_$COLOR='%{$fg_bold[${(L)COLOR}]%}'
         done

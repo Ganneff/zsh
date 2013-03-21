@@ -23,7 +23,6 @@ if is437; then
             llcorner line rc openparentheses time closeparentheses line vcs line pipe space
 
         zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
-
         #        zstyle ':prompt:ganneff:extra:ganneff' pre '${PR_RED}'
         #        zstyle ':prompt:ganneff:extra:ganneff' post '${PR_NO_COLOR}'
         #        zstyle ':prompt:ganneff:extra:ganneff' token '$BLABLA'
