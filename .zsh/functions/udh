@@ -165,4 +165,11 @@ if (( force )); then
             crontab "${CRONBASE}/${HOST}.${DOMAIN}"
         fi
     fi
+
+    if [[ ! -f ${ZDOTDIR}/zshenv.local ]] || [[ ! -L ${ZDOTDIR}/zshenv.local ]]; then
+        echo "Linking zshenv.local.sample to zshenv.local"
+        cd ${ZDOTDIR}
+        ln -s zshenv.local.sample zshenv.local
+    fi
+
 fi

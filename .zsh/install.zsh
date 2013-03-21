@@ -64,9 +64,10 @@ if [[ $1 == "MAGIC" ]]; then
     rm -f ~/.zshrc
     rm -f ~/.zshenv
     ln -s .zsh/zshenv.home ~/.zshenv
-    autoload -Uz relative
-    linktarget=$(relative "${HOME}/zshenv.local" "${HOME}/zshenv.local.sample")
-    /bin/ln -s "${linktarget}" "${HOME}/zshenv.local.sample"
+    if [[ ! -f ${ZDOTDIR}/zshenv.local ]] || [[ ! -L ${ZDOTDIR}/zshenv.local ]]; then
+        cd ${ZDOTDIR}
+        ln -s zshenv.local.sample zshenv.local
+    fi
     print $OK
     print "$fg[green]Disabling old udh cronjob...${reset_color} "
     crontab -l|sed -e 's_\(#\?[0-9][0-9] [/6*]* \* \* \* $HOME/bin/udh >/dev/null\)_#off#\1_'|crontab
