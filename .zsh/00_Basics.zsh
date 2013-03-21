@@ -37,7 +37,7 @@ WATCHFMT='%n %a %l from %m at %t.'
 # autoload wrapper - use this one instead of autoload directly
 # We need to define this function as early as this, because autoloading
 # 'is-at-least()' needs it.
-function zrcautoload() {
+zrcautoload() {
     emulate -L zsh
     setopt extended_glob
     local fdir ffile
