@@ -438,13 +438,14 @@ prompt_ganneff_precmd () {
 
     zstyle -t ':prompt:ganneff' vcs_info && vcs_info
     local -a left_items right_items
-    left_items=(ulcorner line openbracket user at host colon pts closebracket line history flexline
-                         openbracket path closebracket line urcorner newline
-                llcorner line rc openbracket time closebracket line vcs line change-root pipe space)
+
+    left_items=(ulcorner line openparantheses user at host colon pts closeparantheses line history
+        line shell-level line flexline openparentheses path closeparentheses line urcorner newline
+        llcorner line rc openparentheses time closeparentheses line vcs line change-root pipe space)
     PR_PS1=""; nomore=0
     ganneff_prompt_addto PS1 full "${left_items[@]}"
     if zstyle -T ":prompt:ganneff:right:setup" use-rprompt; then
-        right_items=(space pipe line openbracket date closebracket line lrcorner)
+        right_items=(pipe line openparentheses date closeparentheses line lrcorner)
         ganneff_prompt_addto RPS1 full "${right_items[@]}"
     fi
 
@@ -453,16 +454,17 @@ prompt_ganneff_precmd () {
     if [[ ${promptsize} -lt ${TERMWIDTH} ]]; then
         # the q here should be ${PR_HBAR}, but for some reason zsh didn't like me,
         # so meh
-        if zstyle -t ':prompt:ganneff' nicelines && [[ "$TERM" != dumb ]] \
-            && [[ "$TERM" != "linux" ]]; then
+        if zstyle -t ':prompt:ganneff' nicelines && \
+            [[ "$TERM" != dumb ]] && [[ "$TERM" != "linux" ]]; then
             PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..q.)}"
         else
             PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..-.)}"
         fi
     else
         # Small size prompt is needed
-        left_items=(ulcorner line openbracket user at host closebracket line openbracket path closebracket newline
-            llcorner line rc openbracket time closebracket line vcs line pipe space)
+        left_items=(ulcorner line openparentheses user at host closeparentheses line openparentheses
+            path closeparentheses newline
+            llcorner line rc openparentheses time closeparentheses line vcs line pipe space)
         ganneff_prompt_addto PS1 small "${left_items[@]}"
         # And with a small prompt, we don't show the right size at all.
         RPS1=""
@@ -558,8 +560,8 @@ ganneff_prompt_addto () {
 prompt_ganneff_battery() {
     zstyle -s ':prompt:ganneff' battery pr_battery
     case $pr_battery in
-	    ibam)
-		    local ACPIDATA=$(ibam --percentbattery 2>/dev/null || echo "")
+        ibam)
+            local ACPIDATA=$(ibam --percentbattery 2>/dev/null || echo "")
             PERCENT=${${ACPIDATA[(f)1]}[(w)-2]}
             ;;
         acpi)
