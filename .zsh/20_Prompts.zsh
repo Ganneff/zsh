@@ -5,29 +5,12 @@
 # That is, anything >= 4.3.7, the older ones keep using my old way.
 if is437; then
     if zrcautoload promptinit && promptinit 2>/dev/null ; then
-        zstyle ':prompt:ganneff' vcs_info true
-        zstyle ':prompt:ganneff' set_vcs_info_defaults true
-        zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
-        zstyle ':prompt:ganneff' colors ${COLORS}
-        zstyle ':prompt:ganneff' nicelines ${LINEDRAW}
-        zstyle ':prompt:ganneff' battery none
-        zstyle ':prompt:ganneff:right:setup' use-rprompt true
-        zstyle ':prompt:ganneff:left:full:setup' items \
-            ulcorner line openparentheses user at host colon pts closeparentheses line history \
-            line shell-level line flexline openparentheses path closeparentheses line urcorner newline \
-            llcorner line rc openparentheses time closeparentheses line vcs line change-root pipe space
-        zstyle ':prompt:ganneff:right:full:setup' items \
-            pipe line openparentheses date closeparentheses line lrcorner
-        zstyle ':prompt:ganneff:left:small:setup' items \
-            ulcorner line openparentheses user at host closeparentheses line openparentheses path closeparentheses newline \
-            llcorner line rc openparentheses time closeparentheses line vcs line pipe space
-
-        zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
-        #        zstyle ':prompt:ganneff:extra:ganneff' pre '${PR_RED}'
-        #        zstyle ':prompt:ganneff:extra:ganneff' post '${PR_NO_COLOR}'
-        #        zstyle ':prompt:ganneff:extra:ganneff' token '$BLABLA'
-        #        zstyle ':prompt:ganneff:extra:ganneff' precmd jj_blabla
-
+        if ! zstyle -t ':prompt:ganneff' colors; then
+            zstyle ':prompt:ganneff' colors ${COLORS}
+        fi
+        if ! zstyle -t ':prompt:ganneff' nicelines; then
+            zstyle ':prompt:ganneff' nicelines ${LINEDRAW}
+        fi
         prompt ganneff
     fi
 else
