@@ -53,7 +53,9 @@ prompt_ganneff_help () {
     The available items are: at, battery, change-root, date, history,
     host, jobs, newline, path, percent, rc, rc-always, shell-level,
     time, user, vcs, ulcorner, llcorner, urcorner, lrcorner, line, pts,
-    openbracket, closebracket, pipe, space, flexline
+    privileges, openparentheses, closeparentheses, openbracket,
+    closebracket, openbraces, closebraces, openanglebracket,
+    closeanglebracket, colon, pipe, space, flexline
 
     Most of those should be self-explanatory, some may need more:
      line     - Draws a single line character
