@@ -1,13 +1,36 @@
 # -*- mode: sh;-*-
 
-## This file contains settings local to the system.
-## Note that this is read very early, so you can not depend on anything
-## that is set in the zsh config. If you want that, use the file
-## ${ZDOTDIR}/zshlate or $ZDOTDIR/zlogin. zlogin is read whenever the
-## shell is a login shell, zshlate is used on all interactive shells.
+## This file contains settings local to the system.  Note that this is
+## read very early, so you can not depend on anything that is set
+## somewhere in this zsh config. If you want that, use the file
+## ${ZDOTDIR}/zshlate or $ZDOTDIR/zlogin.
+## zlogin is read whenever the shell is a login shell, zshlate is
+## used on all interactive shells.
+
+## The contents here consist of a mix of variables and zstyle lines.
+## Feel free to add your own at the bottom.
 
 ## Output some more information during zshell startup
 DEBUG=${DEBUG:-no}
+
+## The following entries are added to the PATH variable, in front of
+## anything else. Non-existing directories are ignored, so you can
+## list more than the current machine has.
+## If you don't want any additions, make it an empty array
+typeset -a lpath
+lpath=(
+    "$HOME/bin"
+    /sbin
+    /usr/sbin
+    /srv/qa.debian.org/mia
+)
+
+## Same goes for man and info path
+typeset -a lmanpath
+lmanpath=(
+    ~/man
+    ~/local/share/man
+)
 
 ########################################################################
 ## The following styles are defined.                                  ##
@@ -16,6 +39,69 @@ DEBUG=${DEBUG:-no}
 
 ## Set a sane umask
 # zstyle ':ganneff:config' umask '022'
+
+## check every 5 min for login/logout activity
+# zstyle ':ganneff:config' LOGCHECK 300
+
+## The format of login/logout reports
+# zstyle ':ganneff:config' WATCHFMT '%n %a %l from %m at %t.'
+
+## The two variables COLORS and LINEDRAW, by default, are set according
+## to the capabilities of your terminal. COLORS if it supports colors
+## (tput colors > 0), ## LINEDRAW, who would have thought, if it can
+## draw "nice-looking" lines (tput acsc exists and NOT linux console).
+## If you want to overwrite that detection, enable the following styles.
+# zstyle ':ganneff:config' COLORS false
+# zstyle ':ganneff:config' LINEDRAW true/false
+
+## Store the dirstack between sessions and restore it
+# zstyle ':ganneff:config' dirpersiststore true
+
+## Maximum number of events stored in the history file
+## HISTSIZE is set to 1.10 times the size of this, to have the
+## difference as a cushion for saving duplicated history events, so dupe
+## expiration can happen without killing (old) unique entries
+# zstyle ':ganneff:config' SAVEHIST 50000
+
+## The preferred pager
+# zstyle ':ganneff:config' PAGER "$(which less)"
+
+## some options for less
+# zstyle ':ganneff:config' LESS '-X -R -f -j 3'
+
+## use solarized colorscheme for ls?
+# zstyle ':ganneff:config' solarizedls true
+
+## on very wide displays it is annoying to have too wide manpages.
+## set to 0 if you want them really wide
+# zstyle ':ganneff:config' MANWIDTH 0
+
+## The format of process time reports with the time builtin.
+# zstyle ':ganneff:config' TIMEFMT "%J  %U user %S system %P cpu %*E total | Mem: %M kb max"
+
+## Preferred list of locales to set. The first found is taken, you
+## should end with C in case there is no locale configured.
+#zstyle ':ganneff:config' locales "LANG de_DE.utf8 en_GB.utf8 C.UTF-8 C" \
+#    "LC_MESSAGES en_GB.utf8 de_DE.utf8 C.UTF-8 C"
+
+## Use zsh syntax hilighting (input line coloring)
+# zstyle ':ganneff:config' zsh-syntax-hilight true
+
+## Preferred list of editors to use as $EDITOR.
+## If you want arguments to the command, give them inside ""
+# zstyle ':ganneff:config' editors "emacs-snapshot -Q -D -nw" \
+#     "emacs24 -Q -D -nw" \
+#     "emacs23 -Q -D -nw" \
+#     "emacs22 -Q -D -nw" \
+#     mcedit \
+#     vim vi \
+#     editor
+
+## Want to (try) using emacsclient?
+# zstyle ':ganneff:config' emacsclient true
+
+## Want to have a fortune at zsh start?
+# zstyle ':ganneff:config' fortune true
 
 ########################################################################
 ### Prompt setup                                                     ###
@@ -55,7 +141,7 @@ zstyle ':prompt:ganneff' set_vcs_info_defaults true
 ## If `none' then no battery function at all.
 ## If either `ibam' or `acpi' then use those tools to gather
 ## the current battery level.
-# zstyle ':prompt:ganneff' battery none
+zstyle ':prompt:ganneff' battery none
 
 ## If true (default), use a right side prompt
 #zstyle ':prompt:ganneff:right:setup' use-rprompt true

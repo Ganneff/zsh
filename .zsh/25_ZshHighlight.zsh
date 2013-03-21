@@ -3,7 +3,7 @@
 # Use zsh syntax highlighting
 #
 
-if is434; then
+if is434 && zstyle -T ':ganneff:config' zsh-syntax-hilight; then
     if [ -d $ZDOTDIR/zsh-syntax-highlighting ]; then
 	    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 	    source $ZDOTDIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

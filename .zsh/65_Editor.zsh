@@ -5,7 +5,8 @@ mkdir -p $ZDOTDIR/run/
 __ () {
     local -a editors
     local editor
-    editors=(
+    zstyle -a ':ganneff:config' editors editors \
+        || editors=(
         "emacs-snapshot -Q -D -nw" # Fast emacs
         "emacs24 -Q -D -nw" # Fast emacs
         "emacs23 -Q -D -nw" # Fast emacs
@@ -32,19 +33,19 @@ EOF
 } && __
 
 [[ -z $EDITOR ]] || {
-    alias e=$EDITOR
     # Maybe use emacsclient?
-    (( $+commands[emacsclient] )) && {
-        export ALTERNATE_EDITOR=$EDITOR
-        export EDITOR=$ZDOTDIR/run/eeditor-$HOST-$UID
-        cat <<EOF >| $EDITOR
+    if zstyle -T ':ganneff:config' emacsclient; then
+        (( $+commands[emacsclient] )) && {
+            export ALTERNATE_EDITOR=$EDITOR
+            export EDITOR=$ZDOTDIR/run/eeditor-$HOST-$UID
+            cat <<EOF >| $EDITOR
 #!/bin/sh
 exec emacsclient -t "\$@"
 EOF
-        chmod +x $EDITOR
-        # Maybe with -n
-        alias e="emacsclient -t"
-    }
+            chmod +x $EDITOR
+            alias e=$EDITOR
+        }
+    fi
 }
 
 unset VISUAL

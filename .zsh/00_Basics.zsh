@@ -3,10 +3,6 @@
 # No core dumps
 ulimit -c 0
 
-local _umask
-zstyle -s ':ganneff:config' umask _umask
-_umask=${_umask:-022}
-umask $_umask
 # Tiny helper function to set variables/values according to styles
 # removed after config load
 setvar () {
@@ -24,6 +20,7 @@ setvar () {
     fi
 }
 
+setvar umask 022 1
 
 # Want a halfway sane terminal
 [[ -t 0 ]] && /bin/stty erase  "^H" intr  "^C" susp "^Z" dsusp "^Y" stop "^S" start "^Q" kill "^U"  >& /dev/null
@@ -31,8 +28,8 @@ setvar () {
 # watch for everybody but me
 watch=(notme)
 # check every 5 min for login/logout activity
-LOGCHECK=300
-WATCHFMT='%n %a %l from %m at %t.'
+setvar LOGCHECK 302
+setvar WATCHFMT '%n %a %l from %m at %t.'
 
 # autoload wrapper - use this one instead of autoload directly
 # We need to define this function as early as this, because autoloading

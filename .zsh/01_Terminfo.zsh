@@ -91,6 +91,6 @@ __ () {
         fi
     fi
 
-    export COLORS
-    export LINEDRAW
+    setvar COLORS ${COLORS}
+    setvar LINEDRAW ${LINEDRAW}
 } && __

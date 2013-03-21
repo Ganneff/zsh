@@ -76,7 +76,7 @@ else
 fi
 
 # Taken from oh-my-zsh
-if is434; then
+if zstyle -T ':ganneff:config' dirpersiststore && is434; then
     function dirpersiststore () {
         dirs -p | perl -e 'foreach (reverse <STDIN>) {chomp;s/([& ])/\\$1/g ;print "if [ -d $_ ]; then pushd -q $_; fi\n"}' >| $zdirstore
     }

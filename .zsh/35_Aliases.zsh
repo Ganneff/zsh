@@ -77,7 +77,9 @@ alias zuntrace='typeset -f +t'
 alias gitolite_spi='ssh git@git.spi-inc.org'
 
 # Make popd changes permanent without having to wait for logout
-alias popd="popd;dirpersiststore"
+if zstyle -T ':ganneff:config' dirpersiststore && is434; then
+    alias popd="popd;dirpersiststore"
+fi
 
 # git related
 # Aliases
