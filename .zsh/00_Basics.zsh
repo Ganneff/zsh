@@ -40,11 +40,6 @@ function zrcautoload() {
     fi
     return 0
 }
-# Load is-at-least() for more precise version checks Note that this test
-# will *always* fail, if the is-at-least function could not be marked
-# for autoloading. But is-at-least exists since Fri Feb 11 19:46:46 2000
-# +0000, so if you really have an older zsh you really want to upgrade.
-zrcautoload is-at-least || is-at-least() { return 1 }
 
 # Some things need to be done very early
 # the following helper functions have been taken from the grml zshrc
