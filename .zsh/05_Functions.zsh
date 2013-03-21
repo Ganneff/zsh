@@ -33,14 +33,14 @@ preprint()
         draw="-"
     fi
     out="${my_color}${hbar}${start}"
-    
+
 	if [[ "${1}" != "" ]]; then
         out+="${pipe1}${stop}${my_color} $1 ${my_color}${start}${pipe2}"
     else
         out+="${draw}${draw}${draw}${draw}"
     fi
     out+="${draw}${stop}${NO_COLOR}\r"
-    
+
     print -Pn -- $out
 }
 
