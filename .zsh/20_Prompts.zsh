@@ -5,34 +5,34 @@
 # That is, anything >= 4.3.7, the older ones keep using my old way.
 if is437; then
     if zrcautoload promptinit && promptinit 2>/dev/null ; then
-         zstyle ':prompt:ganneff' vcs_info true
-         zstyle ':prompt:ganneff' set_vcs_info_defaults true
-         zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
-         zstyle ':prompt:ganneff' colors ${COLORS}
-         zstyle ':prompt:ganneff' nicelines ${LINEDRAW}
-         zstyle ':prompt:ganneff' battery none
-         zstyle ':prompt:ganneff:right:setup' use-rprompt true
-         zstyle ':prompt:ganneff:left:full:setup' items \
-             ulcorner line openparentheses user at host pts closeparentheses line history \
-             line shell-level line flexline openparentheses path closeparentheses line urcorner newline \
-             llcorner line rc openparentheses time closeparentheses line vcs line change-root pipe space
-         zstyle ':prompt:ganneff:right:full:setup' items \
-             pipe line openparentheses date closeparentheses line lrcorner
-         zstyle ':prompt:ganneff:left:small:setup' items \
-             ulcorner line openparentheses user at host closeparentheses line openparentheses path closeparentheses newline \
-             llcorner line rc openparentheses time closeparentheses line vcs line pipe space
+        zstyle ':prompt:ganneff' vcs_info true
+        zstyle ':prompt:ganneff' set_vcs_info_defaults true
+        zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
+        zstyle ':prompt:ganneff' colors ${COLORS}
+        zstyle ':prompt:ganneff' nicelines ${LINEDRAW}
+        zstyle ':prompt:ganneff' battery none
+        zstyle ':prompt:ganneff:right:setup' use-rprompt true
+        zstyle ':prompt:ganneff:left:full:setup' items \
+            ulcorner line openparentheses user at host pts closeparentheses line history \
+            line shell-level line flexline openparentheses path closeparentheses line urcorner newline \
+            llcorner line rc openparentheses time closeparentheses line vcs line change-root pipe space
+        zstyle ':prompt:ganneff:right:full:setup' items \
+            pipe line openparentheses date closeparentheses line lrcorner
+        zstyle ':prompt:ganneff:left:small:setup' items \
+            ulcorner line openparentheses user at host closeparentheses line openparentheses path closeparentheses newline \
+            llcorner line rc openparentheses time closeparentheses line vcs line pipe space
 
         zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
 
-#        zstyle ':prompt:ganneff:extra:ganneff' pre '${PR_RED}'
-#        zstyle ':prompt:ganneff:extra:ganneff' post '${PR_NO_COLOR}'
-#        zstyle ':prompt:ganneff:extra:ganneff' token '$BLABLA'
-#        zstyle ':prompt:ganneff:extra:ganneff' precmd jj_blabla
+        #        zstyle ':prompt:ganneff:extra:ganneff' pre '${PR_RED}'
+        #        zstyle ':prompt:ganneff:extra:ganneff' post '${PR_NO_COLOR}'
+        #        zstyle ':prompt:ganneff:extra:ganneff' token '$BLABLA'
+        #        zstyle ':prompt:ganneff:extra:ganneff' precmd jj_blabla
 
         prompt ganneff
     fi
 else
-# And the old way
+    # And the old way
     # how often should the periodic function be called? I take every 30seconds here.
     # Important: The periodic function is only called when
     #   - the defined time $PERIOD elapsed
@@ -43,14 +43,14 @@ else
     # But for sanity reasons - make this conditional on existance of tools, but never
     # overwrite existing values
     if which yacpi > /dev/null; then
-            (( ${+PERIOD} )) || export PERIOD=30
-            LAPTOP=yacpi
+        (( ${+PERIOD} )) || export PERIOD=30
+        LAPTOP=yacpi
     elif which ibam > /dev/null; then
-            (( ${+PERIOD} )) || export PERIOD=30
-            LAPTOP=ibam
+        (( ${+PERIOD} )) || export PERIOD=30
+        LAPTOP=ibam
     else
-            (( ${+PERIOD} )) || unset PERIOD
-            unset LAPTOP
+        (( ${+PERIOD} )) || unset PERIOD
+        unset LAPTOP
     fi
 
     # the following is for prompt and gets modified in periodic()
@@ -78,13 +78,13 @@ else
         # change vcs_info formats for the prompt
         if [[ "$TERM" == dumb ]]; then
             zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] "
-               zstyle ':vcs_info:*' formats       "(%s%)-[%b] "
+            zstyle ':vcs_info:*' formats       "(%s%)-[%b] "
         else
             # these are the same, just with a lot of colours:
             #	zstyle ':vcs_info:*' actionformats "$%s${PR_YELLOW})${PR_CYAN}-${PR_YELLOW}[${PR_GREEN}%b${PR_YELLOW}|${PR_RED}%a${PR_YELLOW}]${PR_NO_COLOUR}"
-               zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b%{$fg[red]%}:%{$fg[yellow]%}%r"
-               zstyle ':vcs_info:git*' formats "%{$fg[yellow]%}%s %{$reset_color%} %{$fg[green]%}%b%{$reset_color%}%m%u%c%{$reset_color%} "
-               zstyle ':vcs_info:git*' actionformats "%{$fg[yellow]%}%s%{$reset_color%} %{$fg[green]%}%b%{$reset_color%} $fg[red]%}(%a)%{$reset_color%} %m%u%c%{$reset_color%} "
+            zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b%{$fg[red]%}:%{$fg[yellow]%}%r"
+            zstyle ':vcs_info:git*' formats "%{$fg[yellow]%}%s %{$reset_color%} %{$fg[green]%}%b%{$reset_color%}%m%u%c%{$reset_color%} "
+            zstyle ':vcs_info:git*' actionformats "%{$fg[yellow]%}%s%{$reset_color%} %{$fg[green]%}%b%{$reset_color%} $fg[red]%}(%a)%{$reset_color%} %m%u%c%{$reset_color%} "
         fi
     fi
 
@@ -101,7 +101,7 @@ else
     # root in any case, because that encourages me to not use root for
     # anything I don't have to use it for.
     if [[ "$ORIGGID" != "$EGID" ]]; then
-      # Set for either normal prompt and xterm title bars.
+        # Set for either normal prompt and xterm title bars.
         GNAME=$(grpname $EGID)
         if [[ "$TERM" = "xterm" ]]; then
             psvar[5]=":$GNAME"
