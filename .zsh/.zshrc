@@ -78,4 +78,4 @@ if [ ! -z "$SUDO_USER" ]; then
     [ "`pwd`" = ~$SUDO_USER ] && cd
 fi
 
-[[ -f ${ZDOTDIR}/.zshlate ]] && source ${ZDOTDIR}/.zshlate
+[[ -f ${ZDOTDIR}/.zshlate ]] && source ${ZDOTDIR}/.zshlate || /bin/true
