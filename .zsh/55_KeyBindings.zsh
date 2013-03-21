@@ -110,3 +110,5 @@ zle -N magic-angle-brackets
 
 # Show what the completion system is trying to complete with at a given point
 bindkey '^Xh' _complete_help
+
+bindkey " " magic-space
