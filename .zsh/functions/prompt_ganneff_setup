@@ -438,7 +438,7 @@ prompt_ganneff_precmd () {
 
     zstyle -t ':prompt:ganneff' vcs_info && vcs_info
     local -a left_items right_items
-    left_items=(ulcorner line openbracket user at host pts closebracket line history flexline
+    left_items=(ulcorner line openbracket user at host colon pts closebracket line history flexline
                          openbracket path closebracket line urcorner newline
                 llcorner line rc openbracket time closebracket line vcs line change-root pipe space)
     PR_PS1=""; nomore=0
