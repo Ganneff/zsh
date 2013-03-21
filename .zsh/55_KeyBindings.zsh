@@ -1,65 +1,91 @@
 # -*- mode: sh;-*-
-
 ###
 # Key Bindings
-# set to emacs style
+zmodload zsh/terminfo
+typeset -gA key_info
+key_info=(
+  'Control'   '\C-'
+  'Escape'    '\e'
+  'Meta'      '\M-'
+  'Backspace' "^?"
+  'Delete'    "^[[3~"
+  'F1'        "$terminfo[kf1]"
+  'F2'        "$terminfo[kf2]"
+  'F3'        "$terminfo[kf3]"
+  'F4'        "$terminfo[kf4]"
+  'F5'        "$terminfo[kf5]"
+  'F6'        "$terminfo[kf6]"
+  'F7'        "$terminfo[kf7]"
+  'F8'        "$terminfo[kf8]"
+  'F9'        "$terminfo[kf9]"
+  'F10'       "$terminfo[kf10]"
+  'F11'       "$terminfo[kf11]"
+  'F12'       "$terminfo[kf12]"
+  'Insert'    "$terminfo[kich1]"
+  'Home'      "$terminfo[khome]"
+  'PageUp'    "$terminfo[kpp]"
+  'End'       "$terminfo[kend]"
+  'PageDown'  "$terminfo[knp]"
+  'Up'        "$terminfo[kcuu1]"
+  'Left'      "$terminfo[kcub1]"
+  'Down'      "$terminfo[kcud1]"
+  'Right'     "$terminfo[kcuf1]"
+  'BackTab'   "$terminfo[kcbt]"
+)
+# Set empty $key_info values to an invalid UTF-8 sequence to induce silent
+# bindkey failure.
+for key in "${(k)key_info[@]}"; do
+  if [[ -z "$key_info[$key]" ]]; then
+    key_info["$key"]='�'
+  fi
+done
+
+# First set it back to known defaults
+bindkey -d
+
+# now, our main map is the emacs style
 bindkey -e
-# change some defaults
-bindkey '^Z' push-input            # "suspend" current line
-case "$TERM" in
-    linux)  # Linux console
-        bindkey '\e[1~' beginning-of-line       # Home
-        bindkey '\e[4~' end-of-line             # End
-        bindkey '\e[3~' delete-char             # Del
-        bindkey '\e[2~' overwrite-mode          # Insert
-        ;;
-    screen) # The textmode window manager
-        # In Linux console
-        bindkey '\e[1~' beginning-of-line       # Home
-        bindkey '\e[4~' end-of-line             # End
-        bindkey '\e[3~' delete-char             # Del
-        bindkey '\e[2~' overwrite-mode          # Insert
-        bindkey '\e[7~' beginning-of-line       # home
-        bindkey '\e[8~' end-of-line             # end
-        # In rxvt
-        bindkey '\eOc' forward-word             # ctrl cursor right
-        bindkey '\eOd' backward-word            # ctrl cursor left
-        ;;
-    rxvt*)
-        bindkey '\e[7~' beginning-of-line       # home
-        bindkey '\e[8~' end-of-line             # end
-        bindkey '\eOc' forward-word             # ctrl cursor right
-        bindkey '\eOd' backward-word            # ctrl cursor left
-        bindkey '\e[3~' delete-char
-        bindkey '\e[2~' overwrite-mode          # Insert
-        ;;
-    *xterm*)
-        bindkey '\e[H'  beginning-of-line        # Home
-        bindkey '\e[F'  end-of-line             # End
-        # I need the next two when in rxvt via ssh.
-        bindkey '\e[7~' beginning-of-line       # home
-        bindkey '\e[8~' end-of-line             # end
-        bindkey '\e[3~' delete-char             # Del
-        bindkey '\e[2~' overwrite-mode          # Insert
-        bindkey "^[[5C" forward-word          # ctrl cursor right
-        bindkey "^[[5D" backward-word         # ctrl cursor left
-        ;;
-esac
+
+bindkey "$key_info[Home]"                    beginning-of-line
+bindkey "$key_info[End]"                     end-of-line
+bindkey "$key_info[Insert]"                  overwrite-mode
+bindkey "$key_info[Delete]"                  delete-char
+bindkey "$key_info[Backspace]"               backward-delete-char
+bindkey "$key_info[Left]"                    backward-char
+bindkey "$key_info[Right]"                   forward-char
+
+# Setup some more bindings to be more like emacs.
+for key ("$key_info[Escape]"{B,b}) bindkey -M emacs "$key" emacs-backward-word
+for key ("$key_info[Escape]"{F,f}) bindkey -M emacs "$key" emacs-forward-word
+bindkey -M emacs "$key_info[Escape]$key_info[Left]" emacs-backward-word
+bindkey -M emacs "$key_info[Escape]$key_info[Right]" emacs-forward-word
+
+# Kill to the beginning of the line.
+for key in "$key_info[Escape]"{K,k} bindkey -M emacs "$key" backward-kill-line
+
+# Redo.
+bindkey -M emacs "$key_info[Escape]_" redo
+
+# "suspend" current line
+bindkey "$key_info[Control]Z" push-input
+
+# Bind Shift + Tab to go to the previous menu item.
+bindkey "$key_info[BackTab]" reverse-menu-complete
 
 #k# Insert a timestamp on the command line (yyyy-mm-dd)
 zle -N insert-datestamp
-bindkey '^Ed' insert-datestamp
+bindkey "$key_info[Control]Ed" insert-datestamp
 
 #k# Put the current command line into a \kbd{sudo} call
 zle -N sudo-command-line
-bindkey "^Os" sudo-command-line
+bindkey "$key_info[Control]Os" sudo-command-line
 
 ## This function allows you type a file pattern,
 ## and see the results of the expansion at each step.
 ## When you hit return, they will be inserted into the command line.
 if is4 && zrcautoload insert-files && zle -N insert-files; then
     #k# Insert files and test globbing
-    bindkey "^Xf" insert-files ## C-x-f
+    bindkey "$key_info[Control]Xf" insert-files ## C-x-f
 fi
 
 ## This set of functions implements a sort of magic history searching.
@@ -72,12 +98,9 @@ fi
 ## the rest of the line.
 if is4 && zrcautoload predict-on && zle -N predict-on; then
     #zle -N predict-off
-    bindkey "^X^R" predict-on ## C-x C-r
+    bindkey "$key_info[Control]X$key_info[Control]R" predict-on ## C-x C-r
     #bindkey "^U" predict-off ## C-u
 fi
-
-# used when you press M-? on a command line
-alias which-command='whence -a'
 
 # in 'foo bar | baz' make a second ^W not eat 'bar |', but only '|'
 # this has the disadvantage that in 'bar|baz' it eats all of it.
@@ -85,7 +108,7 @@ typeset WORDCHARS='|'$WORDCHARS
 
 # press ctrl-x ctrl-e for editing command line in $EDITOR or $VISUAL
 if is4 && zrcautoload edit-command-line && zle -N edit-command-line; then
-    bindkey '\C-x\C-e' edit-command-line
+    bindkey '$key_info[Control]x$key_info[Control]e' edit-command-line
 fi
 
 # move cursor between chars when typing '', "", (), [], and {}
@@ -109,6 +132,6 @@ zle -N magic-curly-brackets
 zle -N magic-angle-brackets
 
 # Show what the completion system is trying to complete with at a given point
-bindkey '^Xh' _complete_help
+bindkey '$key_info[Control]Xh' _complete_help
 
 bindkey " " magic-space
