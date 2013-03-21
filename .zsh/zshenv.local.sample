@@ -1,0 +1,17 @@
+# -*- mode: sh;-*-
+
+# This file contains settings local to the system.
+# Note that this is read very early, so you can not depend on anything
+# that is set in the zsh config. If you want that, use the file
+# ${ZDOTDIR}/zshlate or $ZDOTDIR/zlogin. zlogin is read whenever the
+# shell is a login shell, zshlate is used on all interactive shells.
+
+# Output some more information during zshell startup
+DEBUG=${DEBUG:-no}
+
+
+# The following styles are defined.
+# Values shown are the defaults taken if the style is unset
+
+# Set a sane umask
+# zstyle ':ganneff:config' umask '022'

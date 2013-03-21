@@ -16,8 +16,11 @@ HOST=$HOST:r:r
 HOST=${HOST:-$(hostname -s)}
 DOMAIN=${DOMAIN:-$(hostname -d 2>&-)}
 [ "$DOMAIN" = "" -o "$DOMAIN" = "localdomain" -o "$DOMAIN" = "(none)" ] && DOMAIN=$(grep "^search " /etc/resolv.conf | cut -d' ' -f2)
+[[ -f /etc/debian_version ]] && DISTRI="Debian"
 
-[ -f /etc/debian_version ] && DISTRI="Debian"
+# Local settings and styles can go here and (usually) overwrite
+# things defined by me later.
+[[ -f ${ZDOTDIR}/zshenv.local ]] && source ${ZDOTDIR}/zshenv.local
 
 DEBUG=${DEBUG:-no}
 

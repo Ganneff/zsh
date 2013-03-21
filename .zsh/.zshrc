@@ -77,3 +77,5 @@ if [ ! -z "$SUDO_USER" ]; then
     export HOME=~$USER
     [ "`pwd`" = ~$SUDO_USER ] && cd
 fi
+
+[[ -f ${ZDOTDIR}/.zshlate ]] && source ${ZDOTDIR}/.zshlate

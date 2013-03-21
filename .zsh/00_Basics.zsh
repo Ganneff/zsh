@@ -3,7 +3,10 @@
 # No core dumps
 ulimit -c 0
 
-umask 022
+local _umask
+zstyle -s ':ganneff:config' umask _umask
+_umask=${_umask:-022}
+umask $_umask
 
 # Want a halfway sane terminal
 [[ -t 0 ]] && /bin/stty erase  "^H" intr  "^C" susp "^Z" dsusp "^Y" stop "^S" start "^Q" kill "^U"  >& /dev/null
