@@ -64,6 +64,7 @@ if [[ $1 == "MAGIC" ]]; then
     rm -f ~/.zshrc
     rm -f ~/.zshenv
     ln -s .zsh/zshenv.home ~/.zshenv
+    autoload -Uz relative
     linktarget=$(relative "${HOME}/zshenv.local" "${HOME}/zshenv.local.sample")
     /bin/ln -s "${linktarget}" "${HOME}/zshenv.local.sample"
     print $OK
