@@ -333,6 +333,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
         closeanglebracket  ''
         pipe               ''
         space              ''
+        colon              ''
         flexline           '${PR_SHIFT_IN}'
     )
 
@@ -371,6 +372,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
         closeanglebracket ''
         pipe              ''
         space             ''
+        colon             ''
         flexline          '${PR_SHIFT_OUT}'
     )
 
@@ -396,7 +398,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
         urcorner          '${PR_URCORNER}'
         lrcorner          '${PR_LRCORNER}'
         line              '${PR_HBAR}'
-        pts               ':%y'
+        pts               '%y'
         privileges        '%#'
         openparentheses   '('
         closeparentheses  ')'
@@ -408,6 +410,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
         closeanglebracket '>'
         pipe              '|'
         space             ' '
+        colon             ':'
         flexline          'PR_FLEXLINE'
     )
 

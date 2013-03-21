@@ -13,7 +13,7 @@ if is437; then
         zstyle ':prompt:ganneff' battery none
         zstyle ':prompt:ganneff:right:setup' use-rprompt true
         zstyle ':prompt:ganneff:left:full:setup' items \
-            ulcorner line openparentheses user at host pts closeparentheses line history \
+            ulcorner line openparentheses user at host colon pts closeparentheses line history \
             line shell-level line flexline openparentheses path closeparentheses line urcorner newline \
             llcorner line rc openparentheses time closeparentheses line vcs line change-root pipe space
         zstyle ':prompt:ganneff:right:full:setup' items \
