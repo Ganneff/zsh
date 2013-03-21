@@ -116,14 +116,11 @@ if ! [[ ${ZSH_VERSION} == 3.1.<7->*      \
      || ${ZSH_VERSION} == <4->.<->*   ]] ; then
 
     printf '-!-\n'
-    printf '-!- In this configuration we try to make use of features, that only\n'
-    printf '-!- require version 3.1.7 of the shell; That way this setup can be\n'
-    printf '-!- used with a wide range of zsh versions, while using fairly\n'
-    printf '-!- advanced features in all supported versions.\n'
-    printf '-!-\n'
-    printf '-!- However, you are running zsh version %s.\n' "$ZSH_VERSION"
-    printf '-!-\n'
+    printf '-!- In this configuration we try to only enable features supported by the shell\n'
+    printf '-!- version found on the system. However you are running a particular old zsh\n'
+    printf '-!- "version %s.\n' "$ZSH_VERSION"
     printf '-!- While this *may* work, it might as well fail.\n'
+    printf '-!-\n'
     printf '-!- Please consider updating to at least version 3.1.7 of zsh.\n'
     printf '-!-\n'
     printf '-!- DO NOT EXPECT THIS TO WORK FLAWLESSLY!\n'
