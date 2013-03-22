@@ -76,15 +76,21 @@ else
 fi
 
 # Taken from oh-my-zsh
-if zstyle -T ':ganneff:config' dirpersiststore && is434; then
-    function dirpersiststore () {
-        dirs -p | perl -e 'foreach (reverse <STDIN>) {chomp;s/([& ])/\\$1/g ;print "if [ -d $_ ]; then pushd -q $_; fi\n"}' >| $zdirstore
-    }
-    add-zsh-hook zshexit dirpersiststore
-
-    function dirpersistrestore () {
-        if [ -f $zdirstore ]; then
-            source $zdirstore
+function dirpersistrestore () {
+    if [ -f ${DIRSTACKFILE} ]; then
+        dirstack=( ${(f)"$(< ${DIRSTACKFILE} )"} )
+        if zstyle -t ':ganneff:config' dirstackhandling dirpersist; then
+            cd -q ${dirstack[-1]}
         fi
-    }
+    fi
+}
+
+function dirpersiststore () {
+    print -l ${(Oau)dirstack} ${PWD} >| ${DIRSTACKFILE}
+}
+
+if is434; then
+    add-zsh-hook zshexit dirpersiststore
+else
+    echo "Sorry, zsh version too old"
 fi

@@ -15,10 +15,8 @@ HISTSIZE=$(( $SAVEHIST * 1.10 ))
 
 ## maximum size of the directory stack.
 DIRSTACKSIZE=20
-DIRSTACKFILE=${ZDOTDIR}/var/.zdirs
-if zstyle -T ':ganneff:config' dirpersiststore && is434;then
-    # $zdirstore is the file used to persist the stack
-    zdirstore=${ZDOTDIR}/var/.zdirstore
+DIRSTACKFILE=${ZDOTDIR}/var/.zdirstore
+if zstyle -T ':ganneff:config' dirstackhandling dirpersist dirstack; then
     dirpersistrestore
 fi
 
