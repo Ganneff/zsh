@@ -83,7 +83,7 @@ bindkey "$key_info[Control]Os" sudo-command-line
 ## This function allows you type a file pattern,
 ## and see the results of the expansion at each step.
 ## When you hit return, they will be inserted into the command line.
-if is4 && zrcautoload insert-files && zle -N insert-files; then
+if is4 && autoload insert-files && zle -N insert-files; then
     #k# Insert files and test globbing
     bindkey "$key_info[Control]Xf" insert-files ## C-x-f
 fi
@@ -96,7 +96,7 @@ fi
 ## line doesn't match something in the history, adding a key performs
 ## standard completion - though editing in the middle is liable to delete
 ## the rest of the line.
-if is4 && zrcautoload predict-on && zle -N predict-on; then
+if is4 && autoload predict-on && zle -N predict-on; then
     #zle -N predict-off
     bindkey "$key_info[Control]X$key_info[Control]R" predict-on ## C-x C-r
     #bindkey "^U" predict-off ## C-u
@@ -107,7 +107,7 @@ fi
 typeset WORDCHARS='|'$WORDCHARS
 
 # press ctrl-x ctrl-e for editing command line in $EDITOR or $VISUAL
-if is4 && zrcautoload edit-command-line && zle -N edit-command-line; then
+if is4 && autoload edit-command-line && zle -N edit-command-line; then
     bindkey '$key_info[Control]x$key_info[Control]e' edit-command-line
 fi
 

@@ -28,30 +28,6 @@ watch=(notme)
 setvar LOGCHECK 302
 setvar WATCHFMT '%n %a %l from %m at %t.'
 
-# autoload wrapper - use this one instead of autoload directly
-# We need to define this function as early as this, because autoloading
-# 'is-at-least()' needs it.
-zrcautoload() {
-    emulate -L zsh
-    setopt extended_glob
-    local fdir ffile
-    local -i ffound
-
-    ffile=$1
-    (( ffound = 0 ))
-    for fdir in ${fpath} ; do
-        [[ -e ${fdir}/${ffile} ]] && (( ffound = 1 ))
-    done
-
-    (( ffound == 0 )) && return 1
-    if [[ $ZSH_VERSION == 3.1.<6-> || $ZSH_VERSION == <4->* ]] ; then
-        autoload -U ${ffile} || return 1
-    else
-        autoload ${ffile} || return 1
-    fi
-    return 0
-}
-
 # Some things need to be done very early
 # the following helper functions have been taken from the grml zshrc
 # (wherever they got them from)
@@ -149,9 +125,11 @@ if ! [[ ${ZSH_VERSION} == 3.1.<7->*      \
     function zstyle() { : }
 fi
 
+# Now that FPATH is set correctly, do autoloaded functions.
+# autoload all functions in $FPATH - that is, all files in
+# each component of the array $fpath.  If there are none, feed the list
+# it prints into /dev/null.
 for paths in "$fpath[@]"; do
-    for func in "$paths"/*(N:t); do
-        zrcautoload $func
-    done
+    autoload -U "$paths"/*(N:t) >/dev/null
 done
 unset paths

@@ -13,15 +13,15 @@ is4 && zmodload -i  ${ZSHMODPREFIX}datetime
 
 
 # Funky run-help hooks
-zrcautoload run-help-git
-zrcautoload run-help-svn
+autoload run-help-git
+autoload run-help-svn
 
 # escape URLs automagically
-zrcautoload -U url-quote-magic
+autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
 ## Allow known mime types to be used as 'command'
 if is42; then
-    zrcautoload -U zsh-mime-setup
+    autoload -U zsh-mime-setup
     zsh-mime-setup
 fi

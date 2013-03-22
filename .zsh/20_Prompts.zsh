@@ -4,7 +4,7 @@
 # a much nicer prompt setup, should zsh be recent enough to support it.
 # That is, anything >= 4.3.7, the older ones keep using my old way.
 if is437; then
-    if zrcautoload promptinit && promptinit 2>/dev/null ; then
+    if autoload promptinit && promptinit 2>/dev/null ; then
         if ! zstyle -t ':prompt:ganneff' colors; then
             zstyle ':prompt:ganneff' colors ${COLORS}
         fi
@@ -48,7 +48,7 @@ else
 
     # gather version control information for inclusion in a prompt
     # we will only be using one variable, so let the code know now.
-    if is439 && zrcautoload vcs_info && vcs_info; then
+    if is439 && autoload vcs_info && vcs_info; then
         zstyle ':vcs_info:*' max-exports 1
         zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
         zstyle ':vcs_info:*' use-prompt-escapes
