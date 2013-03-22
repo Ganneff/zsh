@@ -112,6 +112,12 @@ is439(){
     return 1
 }
 
+is4311(){
+    [[ $ZSH_VERSION == 4.3.<11->* || $ZSH_VERSION == 4.<4->* \
+                                  || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
 isdarwin(){
     [[ $OSNAME == Darwin* ]] && return 0
     return 1

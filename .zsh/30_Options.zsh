@@ -204,14 +204,14 @@ SetOPT   EXTENDED_HISTORY
 
 # By default, shell history that is read in from files is split into
 # words on all white space.  This means that arguments with quoted
-# whitespace are not correctly handled, with the consequence that ref‐
-# erences to words in history lines that have been read from a file may
-# be inaccurate.  When this option is set, words read in from a history
-# file are divided up in a similar fashion to normal shell command line
-# handling.  Although this produces more accurately delimited words, if
-# the size of the history file is large this can be slow.  Trial and
-# error is necessary to decide.
-SetOPT HIST_LEX_WORDS
+# whitespace are not correctly handled, with the consequence that
+# references to words in history lines that have been read from a file
+# may be inaccurate.  When this option is set, words read in from a
+# history file are divided up in a similar fashion to normal shell
+# command line handling.  Although this produces more accurately
+# delimited words, if the size of the history file is large this can be
+# slow.  Trial and error is necessary to decide.
+is4311 && SetOPT HIST_LEX_WORDS
 
 # When writing out the history file, by default zsh uses ad-hoc file
 # locking to avoid known problems with locking on some operating
