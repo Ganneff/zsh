@@ -113,6 +113,9 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 ## Want to have a fortune at zsh start?
 # zstyle ':ganneff:config' fortune true
 
+## Want to see how long it (roughly) took to load?
+# zstyle ':ganneff:config' starttime false
+
 ########################################################################
 ### Prompt setup                                                     ###
 ## use vcs_info in prompt

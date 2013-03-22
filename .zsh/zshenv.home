@@ -23,5 +23,9 @@ ZDOTDIR=${ZDOTDIR:-"${HOME}/.zsh"}
 ## set options to turn on tracing and expansion of commands contained in the prompt
 #setopt xtrace prompt_subst
 
+# Store "starttime" of shell in case user wants to see how long loading took
+_start_time=$(( $(( $(date +%s) * 1000000000 )) + $(date +%N) ))
+# Variable is removed on end of shell load
+
 # Don't do anything more in here, do everything inside
 # $ZDOTDIR!

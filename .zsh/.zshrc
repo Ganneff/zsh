@@ -98,3 +98,11 @@ fi
 [[ -f ${ZDOTDIR}/.zshlate ]] && source ${ZDOTDIR}/.zshlate || true
 unfunction debug
 unfunction maybe_compile
+
+if zstyle -t ':ganneff:config' starttime true; then
+    end_time=$(( $(( $(date +%s) * 1000000000 )) + $(date +%N) ))
+    duration=$(( $end_time - $_start_time ))
+    echo "ZSH startup took roughly $(( $duration / 1000000.0 ))ms"
+    unset end_time; unset duration
+fi
+unset _start_time
