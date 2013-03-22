@@ -29,7 +29,8 @@ zrecompile -q -p -R ${ZDOTDIR}/.zshrc -- -M ${ZDOTDIR}/var/.zcompdump
 # Most of my config is splitted into files and directories
 if [ -d ${ZDOTDIR} ]; then
     for script in ${ZDOTDIR}/??_*.zsh;  do
-        debug "Loading ${${script:t:r}/??_/}... " -n
+        lscript=${script:t:r}
+        debug "Loading ${lscript/??_/}... " -n
         zrecompile -q -p -U -R ${script}
         source $script
         debug "$fg_no_bold[green]done"
@@ -69,6 +70,12 @@ if [ -d ${ZDOTDIR} ]; then
                 debug "$fg_no_bold[green]done"
             fi
         done
+        if [[ -f ${ZDOTDIR}/${lscript}.zsh.local ]]; then
+            debug "Loading local ${lscript/??_/}... " -n
+            zrecompile -q -p -U -R ${lscript}.zsh.local
+            source ${script}.local
+            debug "$fg_no_bold[green]done"
+        fi
     done
 fi
 
