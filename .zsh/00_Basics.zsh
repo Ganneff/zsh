@@ -22,9 +22,6 @@ setvar () {
 
 setvar umask 022 1
 
-# Want a halfway sane terminal
-[[ -t 0 ]] && /bin/stty erase  "^H" intr  "^C" susp "^Z" dsusp "^Y" stop "^S" start "^Q" kill "^U"  >& /dev/null
-
 # watch for everybody but me
 watch=(notme)
 # check every 5 min for login/logout activity

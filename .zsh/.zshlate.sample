@@ -1,0 +1,4 @@
+# -*- mode: sh;-*-
+
+# Maybe you will need this.
+[[ -t 0 ]] && /bin/stty erase "^?" "^H" intr  "^C" susp "^Z" dsusp "^Y" stop "^S" start "^Q" kill "^U"  >& /dev/null
