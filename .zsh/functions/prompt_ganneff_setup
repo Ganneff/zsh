@@ -273,7 +273,11 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
     # selection prompt used within a select loop.
     PS3='?# '
     # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
-    PS4='+%N:%i:%_> '
+    # Not changed if the option xtrace is on, assuming that a trace prompt is then
+    # already defined.
+    if [[ ${options[xtrace]} == off ]]; then
+        PS4='+%N:%i:%_> '
+    fi
 
     if zstyle -t ':prompt:ganneff' vcs_info && \
         is439 && autoload -Uz vcs_info && vcs_info; then

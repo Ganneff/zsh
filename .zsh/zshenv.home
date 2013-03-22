@@ -1,3 +1,4 @@
+# -*- mode: sh;-*-
 ############
 #
 # .zshenv
@@ -6,6 +7,21 @@
 ############
 ZDOTDIR=${ZDOTDIR:-"${HOME}/.zsh"}
 [ -r "${ZDOTDIR}/zshenv" ] && . "${ZDOTDIR}/zshenv"
+
+# If you want to "profile" the shell initialization, enable
+# the following lines.
+# Don't have this enabled for normal use, its pretty distracting and
+# also changes some initialization behaviour (re prompts)
+
+## Set the trace prompt to be like
+## YYYY-MM-DD HH:MM:SS scriptname(function):line>
+#PS4='%D{%Y-%m-%d %H:%M:%S} %x(%N):%i> '
+## save file stderr to file descriptor 3 and redirect stderr (including trace
+## output) to a tempfile
+#INITLOG=$(mktemp --tmpdir=/tmp zshlog.XXXXX.${USER}.$(date +%s))
+#exec 3>&2 2>${INITLOG}
+## set options to turn on tracing and expansion of commands contained in the prompt
+#setopt xtrace prompt_subst
 
 # Don't do anything more in here, do everything inside
 # $ZDOTDIR!
