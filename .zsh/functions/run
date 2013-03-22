@@ -1,0 +1,21 @@
+# Run command in background and GUI notify when done
+run () {
+	cmd=($argv[1] $argv[2,-1])
+	runit &
+}
+
+runit() {
+	printable=()
+	for piece in $cmd; do
+		if [[ -n "${piece//[^ ]/}" ]]; then
+			printable+=('"'"$piece"'"')
+		else
+			printable+=($piece)
+		fi
+	done
+	{
+	${cmd}
+	} 2>&1 && notify-send "$printable" "done" || notify-send "$printable" "error $?" &
+}
+
+run "$@"
