@@ -95,6 +95,6 @@ if [ ! -z "$SUDO_USER" ]; then
     [ "`pwd`" = ~$SUDO_USER ] && cd
 fi
 
-[[ -f ${ZDOTDIR}/.zshlate ]] && source ${ZDOTDIR}/.zshlate || /bin/true
+[[ -f ${ZDOTDIR}/.zshlate ]] && source ${ZDOTDIR}/.zshlate || true
 unfunction debug
 unfunction maybe_compile
