@@ -96,3 +96,5 @@ if [ ! -z "$SUDO_USER" ]; then
 fi
 
 [[ -f ${ZDOTDIR}/.zshlate ]] && source ${ZDOTDIR}/.zshlate || /bin/true
+unfunction debug
+unfunction maybe_compile
