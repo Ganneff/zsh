@@ -6,7 +6,7 @@
 #
 ############
 ZDOTDIR=${ZDOTDIR:-"${HOME}/.zsh"}
-[ -r "${ZDOTDIR}/zshenv" ] && . "${ZDOTDIR}/zshenv"
+[ -r "${ZDOTDIR}/zshenv" ] && source "${ZDOTDIR}/zshenv"
 
 # If you want to "profile" the shell initialization, enable
 # the following lines.
