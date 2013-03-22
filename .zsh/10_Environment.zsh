@@ -61,7 +61,7 @@ fi
 
 # set variable debian_chroot if running in a chroot with /etc/debian_chroot
 if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
-    debian_chroot="chroot: $(cat /etc/debian_chroot)"
+    debian_chroot="chroot: $(</etc/debian_chroot)"
 fi
 
 # The format of process time reports with the time builtin.
