@@ -9,20 +9,30 @@
 # Base directory for all plugins, themes, functions, whatever
 ZSH=${HOME}/.zsh
 
-debug ()
-{
-    [[ "${DEBUG}" = "no" ]] && return
-    msg=${1:-""}
-    nl=${2:-""}
-    echo ${nl} "${msg}$reset_color"
-}
+if [[ ${DEBUG} != no ]]; then
+    debug () {
+        [[ "${DEBUG}" = "no" ]] && return
+        msg=${1:-""}
+        nl=${2:-""}
+        echo ${nl} "${msg}$reset_color"
+    }
+else
+    debug () {}
+    # May want to use colors in log output...
+    autoload -U colors && colors
+fi
 
-# May want to use colors in log output...
-[[ "${DEBUG}" = "no" ]] && autoload -U colors && colors
 debug "Starting zsh"
 
-autoload -Uz zrecompile
-zrecompile -q -p -R ${ZDOTDIR}/.zshrc -- -M ${ZDOTDIR}/var/.zcompdump
+if zstyle -T ':ganneff:config' zrecompile; then
+    autoload -Uz zrecompile
+    zrecompile -q -p -R ${ZDOTDIR}/.zshrc -- -M ${ZDOTDIR}/var/.zcompdump
+    maybe_compile () {
+        zrecompile -q -p -U -R ${1}
+    }
+else
+    maybe_compile () {}
+fi
 
 # Idea copied from https://github.com/hugues/zdotdir/blob/master/zshrc
 # AUTHOR: Hugues Hiegel <hugues@hiegel.fr>
@@ -31,7 +41,7 @@ if [ -d ${ZDOTDIR} ]; then
     for script in ${ZDOTDIR}/??_*.zsh;  do
         lscript=${script:t:r}
         debug "Loading ${lscript/??_/}... " -n
-        zrecompile -q -p -U -R ${script}
+        maybe_compile ${script}
         source $script
         debug "$fg_no_bold[green]done"
         for i in "net:$DOMAIN"                                     \
@@ -65,14 +75,14 @@ if [ -d ${ZDOTDIR} ]; then
             #debug "Checking $specific_script... "
             if [ -r ${specific_script} ]; then
                 debug "Loading $i/${${specific_script:t:r}/??_/}... " -n
-                zrecompile -q -p -U -R ${specific_script}
+                maybe_compile ${specific_script}
                 source ${specific_script}
                 debug "$fg_no_bold[green]done"
             fi
         done
         if [[ -f ${ZDOTDIR}/${lscript}.zsh.local ]]; then
             debug "Loading local ${lscript/??_/}... " -n
-            zrecompile -q -p -U -R ${lscript}.zsh.local
+            maybe_compile ${lscript}.zsh.local
             source ${script}.local
             debug "$fg_no_bold[green]done"
         fi
