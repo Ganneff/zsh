@@ -15,15 +15,7 @@ function UnsetOPT() {
 function SetOPTifExists() {
 	local option=${(L)1//_/} # lowercase and no '_'
 
-	case "$option" in
-		"no"*)
-			option=${option/no/}
-			# resets $1 and $2
-			set $option off
-			;;
-	esac
-
-	if ( echo ${(k)options} | grep $option >/dev/null ); then
+    if [[ -n ${options[$option]} ]]; then
 		# option exists, set it.
 		case "$2" in
 			on)

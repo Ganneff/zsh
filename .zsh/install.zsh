@@ -1,6 +1,6 @@
 # -*- sh -*-
 
-autoload colors ; colors
+autoload -U colors ; colors
 
 # Install or update my ZSH config on a remote host.
 # Needs Git and makeself locally
