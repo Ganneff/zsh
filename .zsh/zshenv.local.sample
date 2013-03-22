@@ -60,7 +60,7 @@ lmanpath=(
 ## last. The other way, dirstack, will restore the stack, but not
 ## change the directory your shell starts in (so usually it will be ~).
 ## Value is dirpersist or dirstack
-zstyle ':ganneff:config' dirstackhandling dirstack
+zstyle ':ganneff:config' dirstackhandling dirpersist
 
 ## Maximum number of events stored in the history file
 ## HISTSIZE is set to 1.10 times the size of this, to have the
