@@ -1,6 +1,6 @@
 # -*- mode: sh;-*-
 
-export SHELL=`which zsh`
+export SHELL=$(which zsh)
 
 if [ -w $ZDOTDIR ]; then
     mkdir -p ${ZDOTDIR}/var
@@ -24,6 +24,8 @@ export GPG_TTY=$(tty)
 
 setvar PAGER "$(which less)"
 setvar LESS '-X -R -f -j 3'
+READNULLCMD=${PAGER}
+NULLCMD=${PAGER}
 
 if [[ ${COLORS} == "true" ]]; then
     # grep with colors
@@ -38,17 +40,20 @@ if [[ ${COLORS} == "true" ]]; then
     fi
 fi
 
-READNULLCMD=${PAGER}
-NULLCMD=${PAGER}
-
 (( ${+DEBFULLNAME} )) || export DEBFULLNAME='Joerg Jaspert'
 (( ${+DEBNAME} )) || export DEBNAME='Joerg Jaspert'
 (( ${+DEBEMAIL} )) || export DEBEMAIL='joerg@debian.org'
 (( ${+TMPDIR} )) || export TMPDIR="$HOME/tmp"
 [[ -f "$HOME/.local/share/mc/skins/solarized.ini" ]] && export MC_SKIN="solarized"
 
-# If its installed - use lesspipe
-[ -x /bin/lesspipe ] && eval $(lesspipe)
+# If its installed - use lesspipe (or maybe lessfile)
+if is-callable lesspipe; then
+    if zstyle -t ':ganneff:config' lesstool lessfile; then
+        eval $(lessfile)
+    else
+        eval $(lesspipe)
+    fi
+fi
 
 ## Use a default width of 80 for manpages for more convenient reading
 if zstyle -t ':ganneff:config' MANWIDTH 0; then

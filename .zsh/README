@@ -100,3 +100,7 @@ The prompt i use is based on various others.
 
 - The winch function as seen in the prompt theme "bart", delivered
   with zsh
+
+- The is-{alias,builtin,callable,command,function} and zpgrep function
+  have been taken from "zoppo", see [[https://github.com/zoppo][zoppo]] for more of it, which is
+  licensed "under WTFPL unless otherwise noted".

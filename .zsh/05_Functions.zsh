@@ -2,11 +2,6 @@
 
 ## 	User-defined functions
 #
-cmd_exists ()
-{
-	\which -p $1 >/dev/null 2>&1
-}
-
 preprint()
 {
 	local my_color start stop pipe1 pipe2 hbar out
@@ -44,24 +39,9 @@ preprint()
     print -Pn -- $out
 }
 
-normal_user ()
-{
-	if [ -e /etc/login.defs ]; then
-		eval `grep -v '^[$#]' /etc/login.defs | grep "^UID_" | tr -d '[:blank:]' | sed 's/^[A-Z_]\+/&=/'`
-		[ \( $UID -ge $UID_MIN \) ]
-	else
-		[ "`whoami`" != "root" ]
-	fi
-}
-
-privileged_user ()
-{
-	! normal_user
-}
-
 _jj_chpwd()
 {
-	if ( cmd_exists git && test -d .git ); then
+	if ( is-callable git && test -d .git ); then
 		# Shows tracked branches and modified files
 		git checkout HEAD 2>&1 | sed 's/^/   /'
 	fi
@@ -75,7 +55,7 @@ else
     }
 fi
 
-# Taken from oh-my-zsh
+# Idea taken from oh-my-zsh, but code is different
 function dirpersistrestore () {
     if [ -f ${DIRSTACKFILE} ]; then
         dirstack=( ${(f)"$(< ${DIRSTACKFILE} )"} )
