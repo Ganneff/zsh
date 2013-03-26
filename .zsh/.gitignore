@@ -7,3 +7,4 @@ run
 .zdirs
 *.zwc
 *.zwc.old
+zshenv.local
