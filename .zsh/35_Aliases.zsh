@@ -63,8 +63,8 @@ alias -g SO='| sort'
 alias -g CD='| colordiff | less -R'
 
 if [ -x /usr/bin/recode ]; then
-        alias unix2dos='recode lat1..ibmpc'
-        alias dos2unix='recode ibmpc..lat1'
+    alias unix2dos='recode lat1..ibmpc'
+    alias dos2unix='recode ibmpc..lat1'
 fi
 
 # used when you press M-? on a command line
@@ -128,15 +128,15 @@ alias gsd='git svn dcommit'
 # Usage example: git pull origin $(current_branch)
 #
 current_branch() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || \
-  ref=$(git rev-parse --short HEAD 2> /dev/null) || return
-  echo ${ref#refs/heads/}
+    ref=$(git symbolic-ref HEAD 2> /dev/null) || \
+    ref=$(git rev-parse --short HEAD 2> /dev/null) || return
+    echo ${ref#refs/heads/}
 }
 
 current_repository() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || \
-  ref=$(git rev-parse --short HEAD 2> /dev/null) || return
-  echo $(git remote -v | cut -d':' -f 2)
+    ref=$(git symbolic-ref HEAD 2> /dev/null) || \
+    ref=$(git rev-parse --short HEAD 2> /dev/null) || return
+    echo $(git remote -v | cut -d':' -f 2)
 }
 
 # these aliases take advantage of the previous function
