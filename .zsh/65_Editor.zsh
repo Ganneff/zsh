@@ -15,7 +15,7 @@ __ () {
         "vim" "vi"        # vi
         "editor")         # fallback
     for editor in $editors; do
-        (( $+commands[$editor[(w)1]] )) && {
+        is-callable $editor[(w)1] && {
             # Some programs may not like to have arguments
             if [[ $editor == *\ * ]]; then
                 export EDITOR=$ZDOTDIR/run/editor-$HOST-$UID
@@ -35,7 +35,7 @@ EOF
 [[ -z $EDITOR ]] || {
     # Maybe use emacsclient?
     if zstyle -T ':ganneff:config' emacsclient; then
-        (( $+commands[emacsclient] )) && {
+        is-callable emacsclient && {
             export ALTERNATE_EDITOR=$EDITOR
             export EDITOR=$ZDOTDIR/run/eeditor-$HOST-$UID
             cat <<EOF >| $EDITOR
