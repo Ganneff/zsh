@@ -49,7 +49,7 @@ lmanpath=(
 ## Do you want to have zsh compile your startup files?
 ## It may make it faster. It may make it slower. Check yourself.
 ## This uses zrecompile, so changed files are automagically detected
-zstyle ':ganneff:config' zrecompile false
+# zstyle ':ganneff:config' zrecompile false
 
 ## The two variables COLORS and LINEDRAW, by default, are set according
 ## to the capabilities of your terminal. COLORS if it supports colors

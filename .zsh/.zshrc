@@ -24,7 +24,7 @@ fi
 
 debug "Starting zsh"
 
-if zstyle -T ':ganneff:config' zrecompile; then
+if zstyle -t ':ganneff:config' zrecompile true; then
     autoload -Uz zrecompile
     zrecompile -q -p -R ${ZDOTDIR}/.zshrc -- -M ${ZDOTDIR}/var/.zcompdump
     maybe_compile () {
