@@ -1,6 +1,6 @@
 # -*- mode: sh;-*-
 
-(( $+commands[locale] )) && __() {
+is-command locale && __() {
     local locales
     local locale
 

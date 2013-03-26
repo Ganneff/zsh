@@ -4,7 +4,7 @@
 __() {
     local terminfo
     local termpath
-    if which tic >/dev/null; then
+    if is-callable tic >/dev/null; then
         for terminfo in $ZSH/terminfo/*.terminfo(.N); do
             # We assume that the file is named appropriately for this to work
             termpath=~/.terminfo/${(@)${terminfo##*/}[1]}/${${terminfo##*/}%%.terminfo}

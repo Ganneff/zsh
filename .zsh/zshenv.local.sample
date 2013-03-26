@@ -116,6 +116,16 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 ## Want to see how long it (roughly) took to load?
 # zstyle ':ganneff:config' starttime false
 
+## Should we use lessfile or lesspipe (if installed)?
+## Difference is in the handling, see the manpages for details, but
+## one of them uses pipes and one files to hand their output to less.
+## Which results in one of them having you waiting until they are finished,
+## while the other shows you results fast - but then doesn't let less show
+## you how far (in %) you are in the output.
+## Defaults to lesspipe
+# zstyle ':ganneff:config' lesstool lesspipe
+
+
 ########################################################################
 ### Prompt setup                                                     ###
 ## use vcs_info in prompt
