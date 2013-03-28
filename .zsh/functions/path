@@ -1,14 +1,30 @@
 # -*- mode:sh -*-
 
-# From http://zanshin.net/2013/02/02/zsh-configuration-from-the-ground-up/
+# idea from
+# http://zanshin.net/2013/02/02/zsh-configuration-from-the-ground-up/
 # -------------------------------------------------------------------
 # display a neatly formatted path
 # -------------------------------------------------------------------
 
-echo $PATH | tr ":" "\n" | \
-    awk "{ sub(\"/usr\", \"$fg_no_bold[green]/usr$reset_color\"); \
-sub(\"/bin\", \"$fg_no_bold[blue]/bin$reset_color\"); \
-sub(\"/opt\", \"$fg_no_bold[cyan]/opt$reset_color\"); \
-sub(\"/sbin\", \"$fg_no_bold[magenta]/sbin$reset_color\"); \
-sub(\"/local\", \"$fg_no_bold[yellow]/local$reset_color\"); \
-print }"
+emulate -L zsh
+local pcolor ppath arg
+
+arg=${1:-"path"}
+
+typeset -A pcolor
+zstyle -a ':ganneff:config' pcolor pcolor || \
+    pcolor=(
+    /usr   green
+    /bin   blue
+    /opt   cyan
+    /sbin  magenta
+    /local yellow
+    /zsh   white
+)
+
+ppath=${(P)arg}
+for key value in ${(kv)pcolor}; do
+    ppath=${(%)${(@)ppath//${key}/${(P)${(U)value}}${key}${reset_color}}}
+done
+
+print -l ${=ppath}

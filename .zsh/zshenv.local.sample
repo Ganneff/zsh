@@ -125,6 +125,19 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 ## Defaults to lesspipe
 # zstyle ':ganneff:config' lesstool lesspipe
 
+# We have a little function "path". Call that and it displays your path
+# variable nicely colored. Call it with argument (say, fpath) and it does
+# it for that path. Define the colors and elements to style in this array
+# (or live with defaults).
+# Actually it can be used for any array, just set the pcolor style with the
+# right matches and the color for it...
+# zstyle ':ganneff:config' pcolor /usr green \
+#     /bin   blue     \
+#     /opt   cyan     \
+#     /sbin  magenta  \
+#     /local yellow   \
+#     /zsh   white
+
 
 ########################################################################
 ### Prompt setup                                                     ###
