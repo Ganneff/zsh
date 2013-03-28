@@ -108,7 +108,7 @@ typeset WORDCHARS='|'$WORDCHARS
 
 # press ctrl-x ctrl-e for editing command line in $EDITOR or $VISUAL
 if is4 && autoload edit-command-line && zle -N edit-command-line; then
-    bindkey '$key_info[Control]x$key_info[Control]e' edit-command-line
+    bindkey "$key_info[Control]x$key_info[Control]e" edit-command-line
 fi
 
 # move cursor between chars when typing '', "", (), [], and {}
@@ -132,6 +132,6 @@ zle -N magic-curly-brackets
 zle -N magic-angle-brackets
 
 # Show what the completion system is trying to complete with at a given point
-bindkey '$key_info[Control]Xh' _complete_help
+bindkey "$key_info[Control]Xh" _complete_help
 
 bindkey " " magic-space
