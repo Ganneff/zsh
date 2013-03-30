@@ -89,6 +89,10 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 ## The format of process time reports with the time builtin.
 # zstyle ':ganneff:config' TIMEFMT "%J  %U user %S system %P cpu %*E total | Mem: %M kb max"
 
+## Report time statistics if command runs longer than 30 seconds
+## (combined user/system execution times)
+# zstyle ':ganneff:config' REPORTTIME 30
+
 ## Preferred list of locales to set. The first found is taken, you
 ## should end with C in case there is no locale configured.
 #zstyle ':ganneff:config' locales "LANG de_DE.utf8 en_GB.utf8 C.UTF-8 C" \
