@@ -13,8 +13,9 @@ don't remember anymore. Also, many of which are probably small enough
 that no copyright would apply.
 
 Where I still remember where it is from, I tried to mark them as such,
-giving credit where its due. If you find something in here thats from
-you and want to be mentioned, just mail me.
+giving credit where its due. Those I know off are also listed at the end
+of this README file. If you find something in here thats from you and
+want to be mentioned, just mail me.
 
 For stuff that is from me, use the following license terms:
 
@@ -101,6 +102,10 @@ The prompt i use is based on various others.
 - The winch function as seen in the prompt theme "bart", delivered
   with zsh
 
+** Various
 - The is-{alias,builtin,callable,command,function} and zpgrep function
   have been taken from "zoppo", see [[https://github.com/zoppo][zoppo]] for more of it, which is
   licensed "under WTFPL unless otherwise noted".
+
+- zbell function is Written by Jean-Philippe Ouellet <jpo@vt.edu>
+  and available under the ISC license.
