@@ -434,6 +434,31 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
 
     functions[TRAPWINCH]="${functions[TRAPWINCH]//prompt_ganneff_winch}
         prompt_ganneff_winch"
+
+    # Should we "ring the bell" when a command finishes?
+    zstyle -s ':prompt:ganneff' longbell _prompt_ganneff_belltime || \
+        _prompt_ganneff_belltime=600
+    if [[ ${_prompt_ganneff_belltime} -gt 0 ]]; then
+        # New shell, initialize the timestamp once
+        _prompt_ganneff_timestamp=${EPOCHSECONDS}
+        typeset -ga _prompt_ganneff_ignore
+        zstyle -a ':prompt:ganneff' bell_ignore _prompt_ganneff_ignore || \
+            _prompt_ganneff_ignore=( '$EDITOR' '$PAGER' sleep man ssh )
+        # In case the commands to ignore include variables (say $EDITOR), we want to
+        # store them once as variable - and once the variable expanded.
+        for (( i = 1; i <= ${#_prompt_ganneff_ignore}; i++ )) do
+            if (( ${${_prompt_ganneff_ignore[$i]}[(i)$]} <= ${#_prompt_ganneff_ignore[$i]} )); then
+                _prompt_ganneff_ignore+=(${(e)${_prompt_ganneff_ignore[$i]}})
+            fi
+        done
+        add-zsh-hook preexec prompt_ganneff_preexec
+    fi
+}
+
+# right before we begin to execute something, store the time it started at
+prompt_ganneff_preexec() {
+       _prompt_ganneff_timestamp=${EPOCHSECONDS}
+       _prompt_ganneff_lastcmd=${2}
 }
 
 prompt_ganneff_precmd () {
@@ -441,7 +466,7 @@ prompt_ganneff_precmd () {
     setopt nolocaltraps
 
     zstyle -t ':prompt:ganneff' vcs_info && vcs_info
-    local -a left_items right_items
+    local -a left_items right_items drop_words
 
     left_items=(ulcorner line openparantheses user at host colon pts closeparantheses line history
         line shell-level line flexline openparentheses path closeparentheses line urcorner newline
@@ -472,6 +497,29 @@ prompt_ganneff_precmd () {
         ganneff_prompt_addto PS1 small "${left_items[@]}"
         # And with a small prompt, we don't show the right size at all.
         RPS1=""
+    fi
+
+    # Should we "ring the bell" when a command finishes?
+    if (( _prompt_ganneff_timestamp )); then
+        ran_long=$(( ${EPOCHSECONDS} - ${_prompt_ganneff_timestamp} >= ${_prompt_ganneff_belltime} ))
+        if (( ran_long )); then
+            has_ignored_cmd=0
+            drop_words=(builtin command nocorrect noglob)
+            for cmd in ${(s:;:)_prompt_ganneff_lastcmd//|/;}; do
+                words=(${(z)cmd})
+                util=${words[1]}
+                if (( ${drop_words[(i)$util]} <= ${#drop_words} )); then
+                    util=${words[2]}
+                fi
+                if (( ${_prompt_ganneff_ignore[(i)$util]} <= ${#_prompt_ganneff_ignore} )); then
+                    has_ignored_cmd=1
+                    break
+                fi
+            done
+            if (( ! ${has_ignored_cmd} )); then
+                print -n "\a"
+            fi
+        fi
     fi
 }
 

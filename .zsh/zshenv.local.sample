@@ -167,6 +167,20 @@ zstyle ':prompt:ganneff' set_vcs_info_defaults true
 # zstyle ':vcs_info:*' actionformats "(${PR_YELLOW}%s${PR_NO_COLOR})-[${PR_GREEN}%b${PR_NO_COLOR}-${PR_RED}(%a)${PR_NO_COLOR}]%m%u%c "
 # zstyle ':vcs_info:*' disable cdv darcs mtn tla hg fossil p4
 
+## Similar to the zbell function included, this lets the prompt do it.
+## That way one can not forget to activate it. But as one might not want
+## it each and every time when a command runs a little longer, the
+## timeout here should be really high. I recommend something like 300 or
+## 600. Set it to 0 to turn this feature off entirely, default is 600
+# zstyle ':prompt:ganneff' longbell 600
+
+## The following list of commands is ignored, no bell is output if it
+## runs too long. $EDITOR, $PAGER, man and maybe ssh might be good
+## candidates and as such are the default.  If you put variables here,
+## we will additionally expand them at prompt setup time and so keep
+## both, the variable itself as well as the expanded command ignored.
+# zstyle ':prompt:ganneff' bell_ignore '$EDITOR' '$PAGER' sleep man ssh
+
 ## Use color in prompt.
 ## COLORS is defined as true/false in 01_Terminfo.zsh depending on
 ## capabilities of the terminal. If unset then defined by those.
