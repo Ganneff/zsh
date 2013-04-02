@@ -454,7 +454,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
         _prompt_ganneff_timestamp=${EPOCHSECONDS}
         typeset -ga _prompt_ganneff_ignore
         zstyle -a ':prompt:ganneff' bell_ignore _prompt_ganneff_ignore || \
-            _prompt_ganneff_ignore=( '$EDITOR' '$PAGER' sleep man ssh zsh )
+            _prompt_ganneff_ignore=( '$EDITOR' '$PAGER' sleep man ssh zsh watch )
         # In case the commands to ignore include variables (say $EDITOR), we want to
         # store them once as variable - and once the variable expanded.
         for (( i = 1; i <= ${#_prompt_ganneff_ignore}; i++ )) do

@@ -182,7 +182,7 @@ zstyle ':prompt:ganneff' set_vcs_info_defaults true
 ## candidates and as such are the default.  If you put variables here,
 ## we will additionally expand them at prompt setup time and so keep
 ## both, the variable itself as well as the expanded command ignored.
-# zstyle ':prompt:ganneff' bell_ignore '$EDITOR' '$PAGER' sleep man ssh zsh
+# zstyle ':prompt:ganneff' bell_ignore '$EDITOR' '$PAGER' sleep man ssh zsh watch
 
 ## Use color in prompt.
 ## COLORS is defined as true/false in 01_Terminfo.zsh depending on
