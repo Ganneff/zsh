@@ -40,12 +40,7 @@ if [[ ${COLORS} == "true" ]]; then
     fi
 fi
 
-(( ${+DEBFULLNAME} )) || export DEBFULLNAME='Joerg Jaspert'
-(( ${+DEBNAME} )) || export DEBNAME='Joerg Jaspert'
-(( ${+DEBEMAIL} )) || export DEBEMAIL='joerg@debian.org'
 (( ${+TMPDIR} )) || export TMPDIR="$HOME/tmp"
-[[ -f "$HOME/.local/share/mc/skins/solarized.ini" ]] && export MC_SKIN="solarized"
-
 # Ensure the tmpdir exists
 mkdir -p ${TMPDIR}
 
