@@ -3,17 +3,19 @@
 This is my zsh configuration. Well, more a framework of it.
 It is setting quite a lot of defaults, but at the same time
 tries to be as user configurable as makes sense. So most of the
-settings should be easy (enough) to adjust.
+settings should be easy (enough) to adjust. I've taken out the most
+personal stuff, if you want to see my full config you need to merge
+this repository together with the one over at [[http://git.ganneff.de/cgi-bin/gitweb.cgi?p%3Dzsh-ganneff.git%3Ba%3Dsummary][git.ganneff.de Git -
+zsh-ganneff.git/summary]]
 
 ** The boring stuff, license / copyright
-
 It is hard to say what exact license applies: It consists of a lot of
 snippets taken from a lot of places all over the net, many of which I
 don't remember anymore. Also, many of which are probably small enough
 that no copyright would apply.
 
-Where I still remember where it is from, I tried to mark them as such,
-giving credit where its due. Those I know off are also listed at the end
+For those I still remember where it is from, I tried to mark them as such,
+giving credit where its due. Those I know are also listed at the end
 of this README file. If you find something in here thats from you and
 want to be mentioned, just mail me.
 
@@ -80,11 +82,18 @@ There are 2 variables affecting the above ordering.
 Note: These variables do NOT affect /etc/zsh/zshenv, which is
       ALWAYS read!
 ** Howto
-For the impatient:
-#+BEGIN_SRC shell
+For the impatient. Assuming you are in your homedirectory, be careful,
+it will create a .zsh/ and a .zshenv then. You can also put them
+anywhere else you like, you only have to adjust the .zshenv symlink.
 
+#+BEGIN_SRC shell
+git clone git://git.ganneff.de/zsh.git
+ln -sf .zsh/zshenv.home ~/.zshenv
 #+END_SRC
 
+The config will detect where your checkout is, if you symlinked
+=~/.zshenv= to the checked out .zsh/zshenv.home, so you are not forced
+to put it directly in your home (besides the .zshenv).
 * Sources
 ** Prompt
 The prompt i use is based on various others.
