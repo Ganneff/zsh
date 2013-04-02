@@ -16,15 +16,14 @@ preprint()
         if isutf8 || isconsole; then
             start=""
             stop=""
-            hbar="─"
             PR_ULCORNER="┌"
             PR_LLCORNER="└"
             PR_LRCORNER="┘"
             PR_URCORNER="┐"
+            draw="─"
         else
             start="$terminfo[smacs]"
             stop="$terminfo[rmacs]"
-            hbar="q"
             pipe1="u"
             pipe2="t"
             draw="q"
@@ -32,18 +31,17 @@ preprint()
     else
         start=""
         stop=""
-        hbar="-"
         pipe1="|"
         pipe2="|"
         draw="-"
     fi
-    hbar="${start}${${(l:$(( 74 - ${#1} - 5 ))::X:)}//X/$hbar}${stop}"
+    hbar="${start}${${(l:$(( 74 - ${#1} - 5 ))::X:)}//X/$draw}${stop}"
     out="${my_color}${hbar}${start}"
 
 	if [[ "${1}" != "" ]]; then
         out+="${pipe1}${stop}${my_color} $1 ${my_color}${start}${pipe2}"
     else
-        out+="${draw}${draw}${draw}${draw}"
+        out+="${draw}${draw}"
     fi
     out+="${draw}${stop}${NO_COLOR}\r"
 
