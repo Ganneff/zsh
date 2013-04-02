@@ -82,13 +82,8 @@ __ () {
     fi
 
     # Is linedrawing supported?
-    if tput acsc >/dev/null; then
-        # For some reason the console says it can do, but then
-        # does not actually do so. At least, not with the way we are
-        # going later.
-        if [[ $TERM != "linux" ]]; then
-            LINEDRAW="true"
-        fi
+    if tput acsc >/dev/null || isutf8 || isconsole; then
+        LINEDRAW="true"
     fi
 
     setvar COLORS ${COLORS}

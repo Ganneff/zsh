@@ -196,17 +196,28 @@ prompt_ganneff_setup () {
 
     # See if we can and should use extended characters to look nicer.
     if zstyle -t ':prompt:ganneff' nicelines; then
-        typeset -A altchar
-        set -A altchar ${(s..)terminfo[acsc]}
-        # Some stuff to help us draw nice lines
-        PR_SET_CHARSET="%{$terminfo[enacs]%}"
-        PR_SHIFT_IN="%{$terminfo[smacs]%}"
-        PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
-        PR_HBAR=${altchar[q]:--}
-        PR_ULCORNER=${altchar[l]:--}
-        PR_LLCORNER=${altchar[m]:--}
-        PR_LRCORNER=${altchar[j]:--}
-        PR_URCORNER=${altchar[k]:--}
+        if [[ $(locale charmap) == "UTF-8" ]]; then
+            PR_SET_CHARSET=""
+            PR_SHIFT_IN=""
+            PR_SHIFT_OUT=""
+            PR_HBAR="─"
+            PR_ULCORNER="┌"
+            PR_LLCORNER="└"
+            PR_LRCORNER="┘"
+            PR_URCORNER="┐"
+        else
+            typeset -A altchar
+            set -A altchar ${(s..)terminfo[acsc]}
+            # Some stuff to help us draw nice lines
+            PR_SET_CHARSET="%{$terminfo[enacs]%}"
+            PR_SHIFT_IN="%{$terminfo[smacs]%}"
+            PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
+            PR_HBAR=${altchar[q]:--}
+            PR_ULCORNER=${altchar[l]:--}
+            PR_LLCORNER=${altchar[m]:--}
+            PR_LRCORNER=${altchar[j]:--}
+            PR_URCORNER=${altchar[k]:--}
+        fi
     else
         PR_SET_CHARSET=""
         PR_SHIFT_IN=""
@@ -481,14 +492,7 @@ prompt_ganneff_precmd () {
     # Now a kind-of-hack to reduce the prompt when we run out of space.
     promptsize=${#PR_PS1}
     if [[ ${promptsize} -lt ${TERMWIDTH} ]]; then
-        # the q here should be ${PR_HBAR}, but for some reason zsh didn't like me,
-        # so meh
-        if zstyle -t ':prompt:ganneff' nicelines && \
-            [[ "$TERM" != dumb ]] && [[ "$TERM" != "linux" ]]; then
-            PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..q.)}"
-        else
-            PR_FLEXLINE="${(l.(($TERMWIDTH - $promptsize ))..-.)}"
-        fi
+        PR_FLEXLINE=${${(el.(($TERMWIDTH - $promptsize ))..X.)}//X/$PR_HBAR}
     else
         # Small size prompt is needed
         left_items=(ulcorner line openparentheses user at host closeparentheses line openparentheses

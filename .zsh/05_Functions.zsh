@@ -13,20 +13,31 @@ preprint()
     fi
     if [[ $LINEDRAW == "true" ]]; then
         # Some stuff to help us draw nice lines
-        start="$terminfo[smacs]"
-        stop="$terminfo[rmacs]"
-        hbar="${start}${(l:$(( 74 - ${#1} - 5 ))::q:)}${stop}"
-        pipe1="u"
-        pipe2="t"
-        draw="q"
+        if isutf8 || isconsole; then
+            start=""
+            stop=""
+            hbar="─"
+            PR_ULCORNER="┌"
+            PR_LLCORNER="└"
+            PR_LRCORNER="┘"
+            PR_URCORNER="┐"
+        else
+            start="$terminfo[smacs]"
+            stop="$terminfo[rmacs]"
+            hbar="q"
+            pipe1="u"
+            pipe2="t"
+            draw="q"
+        fi
     else
         start=""
         stop=""
-        hbar="${start}${(l:$((74 - ${#1} - 5))::-:)}${stop}"
+        hbar="-"
         pipe1="|"
         pipe2="|"
         draw="-"
     fi
+    hbar="${start}${${(l:$(( 74 - ${#1} - 5 ))::X:)}//X/$hbar}${stop}"
     out="${my_color}${hbar}${start}"
 
 	if [[ "${1}" != "" ]]; then

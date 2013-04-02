@@ -104,6 +104,16 @@ isfreebsd(){
     return 1
 }
 
+isutf8(){
+    [[ $(locale charmap) == "UTF-8" ]] && return 0
+    return 1
+}
+
+isconsole(){
+    [[ $TERM == "linux" ]] && return 0
+    return 1
+}
+
 if ! [[ ${ZSH_VERSION} == 3.1.<7->*      \
      || ${ZSH_VERSION} == 3.<2->.<->*    \
      || ${ZSH_VERSION} == <4->.<->*   ]] ; then
