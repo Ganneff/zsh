@@ -46,6 +46,9 @@ fi
 (( ${+TMPDIR} )) || export TMPDIR="$HOME/tmp"
 [[ -f "$HOME/.local/share/mc/skins/solarized.ini" ]] && export MC_SKIN="solarized"
 
+# Ensure the tmpdir exists
+mkdir -p ${TMPDIR}
+
 # If its installed - use lesspipe (or maybe lessfile)
 if is-callable lesspipe; then
     if zstyle -t ':ganneff:config' lesstool lessfile; then
