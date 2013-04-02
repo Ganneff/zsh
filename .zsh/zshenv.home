@@ -5,7 +5,20 @@
 # Written by Joerg Jaspert <joerg@debian.org>
 #
 ############
-ZDOTDIR=${ZDOTDIR:-"${HOME}/.zsh"}
+# This assumes that $HOME/.zshenv is a symlink to
+# $ZDOTDIR/zshenv.home (as is my default).
+if zp=$(readlink -f ${HOME}/.zshenv 2>/dev/null); then
+    zp=${zp%/*}
+elif zp=$(greadlink -f ${HOME}/.zshenv 2>/dev/null); then
+    # MacOS readlink isn't up to the task, user needs to
+    # install the gnu coreutils for it
+    zp=${zp%/*}
+else
+    # If both fail, use the "traditional" way of hardcoding
+    zp="${HOME}/.zsh"
+fi
+ZDOTDIR=${ZDOTDIR:-$zp}
+
 [ -r "${ZDOTDIR}/zshenv" ] && source "${ZDOTDIR}/zshenv"
 
 # If you want to "profile" the shell initialization, enable
