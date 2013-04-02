@@ -142,6 +142,9 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 #     /local yellow   \
 #     /zsh   white
 
+## Want to see status of screen/tmux? Will list their sessions, if
+## any (and if they are installed)
+# zstyle ':ganneff:config' termstatus true
 
 ########################################################################
 ### Prompt setup                                                     ###
