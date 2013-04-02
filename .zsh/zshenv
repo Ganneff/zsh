@@ -25,7 +25,7 @@ DOMAIN=${DOMAIN:-$(hostname -d 2>&-)}
 DEBUG=${DEBUG:-no}
 
 # Path to search for autoloadable functions.
-fpath=( $HOME/.zsh/functions $HOME/zsh "$fpath[@]" )
+fpath=( ${ZDOTDIR}/functions "$fpath[@]" )
 # Only unique entries please.
 typeset -U fpath
 fpath=( ${^fpath}(N-/) )

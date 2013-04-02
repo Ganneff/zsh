@@ -7,7 +7,7 @@
 ############
 
 # Base directory for all plugins, themes, functions, whatever
-ZSH=${HOME}/.zsh
+ZSH=${ZDOTDIR}
 
 if [[ ${DEBUG} != no ]]; then
     debug () {
