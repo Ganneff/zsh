@@ -51,7 +51,7 @@ alias cpan='perl -MCPAN -e shell'
 alias rh='run-help'
 
 # No spellchecks here
-alias man='LANG=C nocorrect noglob man'
+alias man='nocorrect noglob man'
 alias mysql='nocorrect mysql'
 alias mkdir='nocorrect mkdir'
 alias mv='nocorrect mv'
