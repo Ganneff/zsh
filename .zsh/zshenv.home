@@ -18,6 +18,11 @@ else
     zp="${HOME}/.zsh"
 fi
 ZDOTDIR=${ZDOTDIR:-$zp}
+# In case the user did not symlink us, but copy, we fallback to
+# the traditional way too.
+if [[ ${HOME} == ${ZDOTDIR} ]]; then
+    ZDOTDIR="${HOME}/.zsh"
+fi
 
 [ -r "${ZDOTDIR}/zshenv" ] && source "${ZDOTDIR}/zshenv"
 
