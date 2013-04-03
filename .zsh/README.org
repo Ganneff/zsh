@@ -229,7 +229,7 @@ The prompt i use is based on various others.
   licensed "under WTFPL unless otherwise noted".
 
 - zbell function is Written by Jean-Philippe Ouellet <jpo@vt.edu>
-  and available under the ISC license.
+  and available under the ISC license, taken from [[https://gist.github.com/jpouellet/5278239][hist gist on github]]
 
 * Footnotes
 
