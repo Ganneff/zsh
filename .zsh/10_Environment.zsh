@@ -20,6 +20,9 @@ if zstyle -T ':ganneff:config' dirstackhandling dirpersist dirstack; then
     dirpersistrestore
 fi
 
+if zstyle -t ':ganneff:config' doagent; then
+    agent
+fi
 export GPG_TTY=$(tty)
 
 setvar PAGER "$(which less)"

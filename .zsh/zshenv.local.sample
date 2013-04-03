@@ -146,6 +146,28 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 ## any (and if they are installed)
 # zstyle ':ganneff:config' termstatus true
 
+## Easy way to setup ssh agent. Usually ssh-agent (or gpg-agent) should
+## be setup outside zsh, like at X login time, and just serve your
+## terminals with their zshs inside.
+## But there are situations one does not have that environment around
+## (say, login to a remote machine) and still want an agent.
+##
+## Should we setup the agent automagically on every zsh startup?
+## If false then we only setup the agent/kill_agent functions to be
+## there.
+## If true we also execute the agent function and may load the keys.
+# zstyle ':ganneff:config' doagent false
+
+## Which ssh keys to add to the agent? Empty if not given, then you can
+## manually do the ssh-add runs. Otherwise a list with path entries.
+# zstyle ':ganneff:config' agentfiles
+
+## Should we kill the agent at zsh exit?
+# zstyle ':ganneff:config' killagent true
+
+## Use ssh-agent or gpg-agent?
+# zstyle ':ganneff:config' agent gpg-agent
+
 ########################################################################
 ### Prompt setup                                                     ###
 ## use vcs_info in prompt

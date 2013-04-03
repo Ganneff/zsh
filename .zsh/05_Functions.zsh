@@ -83,3 +83,53 @@ if is434; then
 else
     echo "Sorry, zsh version too old"
 fi
+
+function agent() {
+    local agent agentfiles af
+    local _agent_ssh_env=${HOME}/.ssh/agentenv.${HOST}
+    typeset -a agentfiles
+
+    touch ${_agent_ssh_env}
+    chmod 0600 ${_agent_ssh_env}
+
+    zstyle -s ':ganneff:config' agent agent || agent=gpg-agent
+    case ${agent} in
+        gpg-agent)
+            if is-callable gpg-agent; then
+                eval $(gpg-agent --enable-ssh-support \
+                    --daemon \
+                    --write-env-file ${_agent_ssh_env})
+            else
+                print "gpg-agent binary not found"
+                return 1
+            fi
+            ;;
+        ssh-agent)
+            if is-callable ssh-agent; then
+                ssh-agent | sed s'/^echo/#echo/g' >| ${_agent_ssh_env}
+                source ${_agent_ssh_env}
+            else
+                print "ssh-agent binary not found"
+                return 1
+            fi
+            ;;
+        *)
+            print "Unknown agent ${agent}, not doing anything!"
+            ;;
+    esac
+
+    zstyle -a ':ganneff:config' agentfiles agentfiles || agentfiles = ()
+    for af in ${agentfiles}; do
+        ssh-add ${af}
+    done
+
+    if is434 && zstyle -T ':ganneff:config' killagent true; then
+        add-zsh-hook zshexit kill_agent
+    fi
+}
+
+function kill_agent() {
+    local _agent_ssh_env=${HOME}/.ssh/agentenv.${HOST}
+    kill -TERM ${SSH_AGENT_PID}
+    rm -f ${_agent_ssh_env}
+}
