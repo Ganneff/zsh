@@ -17,7 +17,8 @@ if zstyle -T ':ganneff:config' termstatus; then
         # 11 (or more)==sessions.
         # But of course there are bugs, and so 8 is also returned in
         # certain conditions when there are no sessions.
-        if [[ $? -ne 9 ]] || [[ $? -ne 8 ]]; then
+        # So lets work on "exit level higher than 9"...
+        if [[ $? -gt 9 ]]; then
             preprint "screen sessions" && echo
             screen -ls
             preprint && echo
