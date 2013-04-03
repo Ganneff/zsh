@@ -171,10 +171,10 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 ########################################################################
 ### Prompt setup                                                     ###
 ## use vcs_info in prompt
-zstyle ':prompt:ganneff' vcs_info true
+# zstyle ':prompt:ganneff' vcs_info true
 
 ## use defaults set by me?
-zstyle ':prompt:ganneff' set_vcs_info_defaults true
+# zstyle ':prompt:ganneff' set_vcs_info_defaults true
 
 ## if set_vcs_info_defaults is false, you may want to enable some of the
 ## following lines or whichever combination you like of it. See the
@@ -220,7 +220,7 @@ zstyle ':prompt:ganneff' set_vcs_info_defaults true
 ## If `none' then no battery function at all.
 ## If either `ibam' or `acpi' then use those tools to gather
 ## the current battery level.
-zstyle ':prompt:ganneff' battery none
+# zstyle ':prompt:ganneff' battery none
 
 ## If true (default), use a right side prompt
 #zstyle ':prompt:ganneff:right:setup' use-rprompt true
@@ -237,7 +237,7 @@ zstyle ':prompt:ganneff' battery none
 #     ulcorner line openparentheses user at host closeparentheses line openparentheses path closeparentheses newline \
 #     llcorner line rc openparentheses time closeparentheses line vcs line pipe space
 
-## Override the token of an item
+## Override the token of an item, here set the date one to also show day of year and week of year
 zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
 
 # Example of an extra defined item.

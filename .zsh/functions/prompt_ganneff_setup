@@ -290,9 +290,9 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
         PS4='+%N:%i:%_> '
     fi
 
-    if zstyle -t ':prompt:ganneff' vcs_info && \
+    if zstyle -T ':prompt:ganneff' vcs_info && \
         is439 && autoload -Uz vcs_info && vcs_info; then
-        if zstyle -t ':prompt:ganneff' set_vcs_info_defaults; then
+        if zstyle -T ':prompt:ganneff' set_vcs_info_defaults; then
             # gather version control information for inclusion in a prompt
             # we will only be using one variable, so let the code know now.
             zstyle ':vcs_info:*' max-exports 1
@@ -437,7 +437,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
     # correctly
     prompt_ganneff_winch
     local pr_battery
-    zstyle -s ':prompt:ganneff' battery pr_battery
+    zstyle -s ':prompt:ganneff' battery pr_battery || pr_battery="none"
     if [[ $pr_battery != "none" ]]; then
         add-zsh-hook precmd prompt_ganneff_battery
         prompt_ganneff_battery
@@ -476,7 +476,7 @@ prompt_ganneff_precmd () {
     emulate -L zsh
     setopt nolocaltraps
 
-    zstyle -t ':prompt:ganneff' vcs_info && vcs_info
+    zstyle -T ':prompt:ganneff' vcs_info && vcs_info
     local -a left_items right_items drop_words
 
     left_items=(ulcorner line openparantheses user at host colon pts closeparantheses line history
