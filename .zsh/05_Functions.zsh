@@ -133,3 +133,10 @@ function kill_agent() {
     kill -TERM ${SSH_AGENT_PID}
     rm -f ${_agent_ssh_env}
 }
+
+function Status Start Stop Restart Reload {
+    typeset script
+    for script in ${*}; {
+        sudo /etc/init.d/${script} ${0:l}
+    }
+}

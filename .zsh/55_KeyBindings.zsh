@@ -66,6 +66,9 @@ for key in "$key_info[Escape]"{K,k} bindkey -M emacs "$key" backward-kill-line
 # Redo.
 bindkey -M emacs "$key_info[Escape]_" redo
 
+# magic to rename files...
+bindkey "$key_info[Escape]m" copy-prev-shell-word
+
 # "suspend" current line
 bindkey "$key_info[Control]Z" push-input
 
