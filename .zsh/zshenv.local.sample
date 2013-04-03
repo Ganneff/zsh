@@ -84,7 +84,7 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 
 ## on very wide displays it is annoying to have too wide manpages.
 ## set to 0 if you want them really wide
-# zstyle ':ganneff:config' MANWIDTH 0
+# zstyle ':ganneff:config' MANWIDTH 80
 
 ## The format of process time reports with the time builtin.
 # zstyle ':ganneff:config' TIMEFMT "%J  %U user %S system %P cpu %*E total | Mem: %M kb max"
