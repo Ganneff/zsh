@@ -113,7 +113,7 @@ forced by zsh - somehow it needs to find the rest).
    magic.
    1. Depending on the zstyles/variables for debug and zrecompile,
       functions are setup to support them.
-   2. All files in =${ZDOTDIR}= matching the pattern /??_\*.zsh/ are
+   2. All files in =${ZDOTDIR}= matching the pattern /??_*.zsh/ are
       loaded.
       + The file itself is loaded
       + Then we check a number of subdirectories for the "basename" of
