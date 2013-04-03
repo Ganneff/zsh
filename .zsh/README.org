@@ -111,19 +111,19 @@ forced by zsh - somehow it needs to find the rest).
    actually can deal with.
 4. Next file loaded is =${ZDOTDIR}/.zshrc=, which contains the actual
    magic.
-   * Depending on the zstyles/variables for debug and zrecompile,
-     functions are setup to support them.
-   * All files in =${ZDOTDIR}= matching the pattern /??_*.zsh/ are
-     loaded.
-     + The file itself is loaded
-     + Then we check a number of subdirectories for the "basename" of
-       the file (the name matching the * in the above pattern)[fn:2]
-       and load the files from there. See [[*Variable%20shell%20configuration][Variable shell configuration]]
-       below for details.
-     + Last we check if the same file, with appended /.local/ exists
-       and load that.[fn:3]
-   * If it exists, =${ZDOTDIR}/.zshlate is loaded
-   * If configured too, the ZSH startup time is shown
+   1. Depending on the zstyles/variables for debug and zrecompile,
+      functions are setup to support them.
+   2. All files in =${ZDOTDIR}= matching the pattern /??_*.zsh/ are
+      loaded.
+      + The file itself is loaded
+      + Then we check a number of subdirectories for the "basename" of
+        the file (the name matching the * in the above pattern)[fn:2]
+        and load the files from there. See [[*Variable%20shell%20configuration][Variable shell configuration]]
+        below for details.
+      + Last we check if the same file, with appended /.local/ exists
+        and load that.[fn:3]
+   3. If it exists, =${ZDOTDIR}/.zshlate is loaded
+   4. If configured too, the ZSH startup time is shown
 
 ** zstyle options
 If the file =${ZDOTDIR}/zshenv.local= exists it will be read at the
