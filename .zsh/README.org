@@ -47,7 +47,6 @@ To correctly use this fileset for zsh, you need to understand the
 order in which things are loaded by zsh.
 
 Note: Wherever $ZDOTDIR is unset, $HOME is used instead
-
 - Always
   1. /etc/zsh/zshenv  This is not overridable and not affected by the
                       RCS/GLOBAL_RCS variables explained below!
@@ -81,6 +80,7 @@ There are 2 variables affecting the above ordering.
 
 Note: These variables do NOT affect /etc/zsh/zshenv, which is
       ALWAYS read!
+
 ** Howto
 For the impatient. Assuming you are in your homedirectory, be careful,
 it will create a .zsh/ and a .zshenv then. You can also put them
@@ -92,10 +92,122 @@ ln -sf .zsh/zshenv.home ~/.zshenv
 #+END_SRC
 
 The config will detect where your checkout is, if you symlinked
-=~/.zshenv= to the checked out .zsh/zshenv.home, so you are not forced
-to put it directly in your home (besides the .zshenv).
+=~/.zshenv= to the checked out =.zsh/zshenv.home=, so you are not forced
+to put it directly in your home (besides the =${HOME}/.zshenv= which is
+forced by zsh - somehow it needs to find the rest).
+
+** Startup described
+1. At startup zsh will read =~/.zshenv= which sets the environment to load
+   all the rest from =${ZDOTDIR}=. =${ZDOTDIR}= will be defined as the
+   directory to which the symlink =~/.zshenv= points[fn:1] or
+   =${HOME}/.zsh=. All other files are thus loaded from that directory.
+2. Next various variables are defined, ~${OSNAME}~, ~${USER}~, ~${UID}~,
+   ~${HOST}~, ~${DOMAIN}~ and ~${DISTRI}~ and then
+   =${ZDOTDIR}/zshenv.local= is loaded.
+3. ~${PATH}~ as well as ~${FPATH}~ is setup. Only unique entries and
+   entries that actually exist on the system are kept. That enables us
+   to define a wide range of possibilities in
+   =${ZDOTDIR}/zshenv.local= - the system will only get what it
+   actually can deal with.
+4. Next file loaded is =${ZDOTDIR}/.zshrc=, which contains the actual
+   magic.
+   * Depending on the zstyles/variables for debug and zrecompile,
+     functions are setup to support them.
+   * All files in =${ZDOTDIR}= matching the pattern /??_*.zsh/ are
+     loaded.
+     + The file itself is loaded
+     + Then we check a number of subdirectories for the "basename" of
+       the file (the name matching the * in the above pattern)[fn:2]
+       and load the files from there. See [[*Variable%20shell%20configuration][Variable shell configuration]]
+       below for details.
+     + Last we check if the same file, with appended /.local/ exists
+       and load that.[fn:3]
+   * If it exists, =${ZDOTDIR}/.zshlate is loaded
+   * If configured too, the ZSH startup time is shown
+
+** zstyle options
+If the file =${ZDOTDIR}/zshenv.local= exists it will be read at the
+very beginning of the zsh startup. At this point only ~${ZDOTDIR}~ and
+the basic ~${OSNAME}~, ~${USER}~, ~${UID}~, ~${HOST}~, ~${DOMAIN}~ and
+~${DISTRI}~ have been setup[fn:4], so it is generally not a good idea
+to do much in this file.
+
+For that reason the file is kept simple, if (maybe) long. You can
+either copy single statements out of =${ZDOTDIR}/zshenv.local.sample=
+or copy the whole file and then edit it.
+
+In general the values defined in that file are commented there, the
+following rules apply:
+
++ Commented entries show the default if the option is not given
++ Boolean values can be *true*, *yes*, *on*, *1* to enable them,
+  anything else to disable.
++ Any other value - see its description in the file
+
+** Variable shell configuration
+If you got a better name, tell me. But that is basically what we do:
+Configure zsh based on a series of variables. As already written in
+[[*Startup%20described][Startup described]] we setup a series of variables and load our
+configuration based on those. This allows us to overwrite or amend
+configuration depending on where we are - without having to touch the
+masterfiles. This configuration framework delivers one actual example
+for this, if you use it on a Debian system you will find extra aliases
+dealing with its packaging system.
+
+Using it is simple: Create the right directory, put a file in, restart
+zsh.
+
+Example:
+User bob wants to set an extra alias on machines inside the bob-lost.de
+domain, but only if that machine is running Debian. So he executes:
+#+BEGIN_SRC shell
+mkdir -p ~${ZDOTDIR}/net:bob-lost.de/distri:Debian
+echo 'alias ag=apt-get' >| ~${ZDOTDIR}/net:bob-lost.de/distri:Debian/Aliases.zsh
+#+END_SRC
+
+Example 2:
+User alice wants to adjust the named directory hash table on all her
+machines, and change one setopt on the machine weirdone.alice-wins.de,
+but only if that machine is running Debian linux, not if it is booted in
+kfreebsd or Hurd or RedHat or whatever. So she executes:
+#+BEGIN_SRC shell
+mkdir -p ${ZDOTDIR}/net:alice-wins.de/host:weirdone/sys:linux/distri:Debian
+echo 'hash -d foo=/home/alice/foo' >| ${ZDOTDIR}/40_Hashes.zsh.local
+echo 'setopt beep' >| ${ZDOTDIR}/net:alice-wins.de/host:weirdone/sys:linux/distri:Debian/Options.zsh
+#+END_SRC
+
+Of course those examples are constructed and not entirely real-world
+usable. So here is a real one, from me myself and I for you:
+On the host franck.debian.org I want a change in my default prompt,
+adding one variable information to it. So I have the file
+=${ZDOTDIR}/net:debian.org/host:franck/Prompts.zsh= with the following
+content:
+#+BEGIN_SRC shell
+# -*- mode: sh;-*-
+
+# Want one more piece in my prompt here, dinstall status
+zstyle ':prompt:ganneff:left:full:setup' items \
+    ulcorner line openparentheses user at host pts closeparentheses line history \
+    line dinstall line shell-level line flexline openparentheses path closeparentheses line urcorner newline \
+    llcorner line rc openparentheses time closeparentheses line vcs line change-root pipe space
+
+zstyle ':prompt:ganneff:extra:dinstall' pre '${PR_CYAN}'
+zstyle ':prompt:ganneff:extra:dinstall' post '${PR_NO_COLOR}'
+zstyle ':prompt:ganneff:extra:dinstall' token '$DINSTALL'
+zstyle ':prompt:ganneff:extra:dinstall' precmd jj_update_dinstall
+
+zmodload zsh/mapfile
+
+jj_update_dinstall () {
+    DINSTALL="${${(z)${(f)mapfile[/srv/ftp.debian.org/web/dinstall.status]}[2]}[3,-1]}"
+}
+#+END_SRC
+
+
+
 * Sources
 ** Prompt
+
 The prompt i use is based on various others.
 - The "design" is taken from Phil!'s ZSH prompt, as found on
   http://aperiodic.net/phil/prompt/
@@ -118,3 +230,15 @@ The prompt i use is based on various others.
 
 - zbell function is Written by Jean-Philippe Ouellet <jpo@vt.edu>
   and available under the ISC license.
+
+* Footnotes
+
+[fn:1] Actually, the symlink points to the file zshenv.home inside that directory
+
+[fn:2] For 01_Terminfo.zsh this would be Terminfo.zsh
+
+[fn:3] For 01_Terminfo.zsh this would be, who would have guessed, 01_Terminfo.zsh.local
+
+[fn:4] And maybe ~${PS4}~ and, ~${INITLOG}~ if you turned on tracing in =~/.zshenv=.
+
+
