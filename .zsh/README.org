@@ -88,23 +88,23 @@ anywhere else you like, you only have to adjust the .zshenv symlink.
 
 #+BEGIN_SRC shell
 git clone git://git.ganneff.de/zsh.git
-ln -sf .zsh/zshenv.home ~/.zshenv
+ln -sf .zsh/zshenv.home ${HOME}/.zshenv
 #+END_SRC
 
 The config will detect where your checkout is, if you symlinked
-=~/.zshenv= to the checked out =.zsh/zshenv.home=, so you are not forced
+=${HOME}/.zshenv= to the checked out =.zsh/zshenv.home=, so you are not forced
 to put it directly in your home (besides the =${HOME}/.zshenv= which is
 forced by zsh - somehow it needs to find the rest).
 
 ** Startup described
-1. At startup zsh will read =~/.zshenv= which sets the environment to load
+1. At startup zsh will read =${HOME}/.zshenv= which sets the environment to load
    all the rest from =${ZDOTDIR}=. =${ZDOTDIR}= will be defined as the
-   directory to which the symlink =~/.zshenv= points[fn:1] or
+   directory to which the symlink =${HOME}/.zshenv= points[fn:1] or
    =${HOME}/.zsh=. All other files are thus loaded from that directory.
-2. Next various variables are defined, ~${OSNAME}~, ~${USER}~, ~${UID}~,
-   ~${HOST}~, ~${DOMAIN}~ and ~${DISTRI}~ and then
+2. Next various variables are defined, /${OSNAME}/, /${USER}/, /${UID}/,
+   /${HOST}/, /${DOMAIN}/ and /${DISTRI}/ and then
    =${ZDOTDIR}/zshenv.local= is loaded.
-3. ~${PATH}~ as well as ~${FPATH}~ is setup. Only unique entries and
+3. /${PATH}/ as well as /${FPATH}/ is setup. Only unique entries and
    entries that actually exist on the system are kept. That enables us
    to define a wide range of possibilities in
    =${ZDOTDIR}/zshenv.local= - the system will only get what it
@@ -113,7 +113,7 @@ forced by zsh - somehow it needs to find the rest).
    magic.
    1. Depending on the zstyles/variables for debug and zrecompile,
       functions are setup to support them.
-   2. All files in =${ZDOTDIR}= matching the pattern /??_*.zsh/ are
+   2. All files in =${ZDOTDIR}= matching the pattern /??_\*.zsh/ are
       loaded.
       + The file itself is loaded
       + Then we check a number of subdirectories for the "basename" of
@@ -122,14 +122,14 @@ forced by zsh - somehow it needs to find the rest).
         below for details.
       + Last we check if the same file, with appended /.local/ exists
         and load that.[fn:3]
-   3. If it exists, =${ZDOTDIR}/.zshlate is loaded
+   3. If it exists, =${ZDOTDIR}/.zshlate= is loaded
    4. If configured too, the ZSH startup time is shown
 
 ** zstyle options
 If the file =${ZDOTDIR}/zshenv.local= exists it will be read at the
-very beginning of the zsh startup. At this point only ~${ZDOTDIR}~ and
-the basic ~${OSNAME}~, ~${USER}~, ~${UID}~, ~${HOST}~, ~${DOMAIN}~ and
-~${DISTRI}~ have been setup[fn:4], so it is generally not a good idea
+very beginning of the zsh startup. At this point only /${ZDOTDIR}/ and
+the basic /${OSNAME}/, /${USER}/, /${UID}/, /${HOST}/, /${DOMAIN}/ and
+/${DISTRI}/ have been setup[fn:4], so it is generally not a good idea
 to do much in this file.
 
 For that reason the file is kept simple, if (maybe) long. You can
@@ -161,8 +161,8 @@ Example:
 User bob wants to set an extra alias on machines inside the bob-lost.de
 domain, but only if that machine is running Debian. So he executes:
 #+BEGIN_SRC shell
-mkdir -p ~${ZDOTDIR}/net:bob-lost.de/distri:Debian
-echo 'alias ag=apt-get' >| ~${ZDOTDIR}/net:bob-lost.de/distri:Debian/Aliases.zsh
+mkdir -p ${ZDOTDIR}/net:bob-lost.de/distri:Debian
+echo 'alias ag=apt-get' >| ${ZDOTDIR}/net:bob-lost.de/distri:Debian/Aliases.zsh
 #+END_SRC
 
 Example 2:
@@ -239,6 +239,6 @@ The prompt i use is based on various others.
 
 [fn:3] For 01_Terminfo.zsh this would be, who would have guessed, 01_Terminfo.zsh.local
 
-[fn:4] And maybe ~${PS4}~ and, ~${INITLOG}~ if you turned on tracing in =~/.zshenv=.
+[fn:4] And maybe /${PS4}/ and, /${INITLOG}/ if you turned on tracing in =${HOME}/.zshenv=.
 
 
