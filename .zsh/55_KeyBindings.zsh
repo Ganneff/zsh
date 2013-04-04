@@ -40,97 +40,144 @@ for key in "${(k)key_info[@]}"; do
   fi
 done
 
+# Make sure the terminal is in application mode, when zle is
+# active. Only then are the values from $terminfo valid.
+if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
+    function zle-smkx () {
+        emulate -L zsh
+        printf '%s' ${terminfo[smkx]}
+    }
+    function zle-rmkx () {
+        emulate -L zsh
+        printf '%s' ${terminfo[rmkx]}
+    }
+    function zle-line-init () {
+        zle-smkx
+    }
+    function zle-line-finish () {
+        zle-rmkx
+    }
+    zle -N zle-line-init
+    zle -N zle-line-finish
+fi
+
 # First set it back to known defaults
 bindkey -d
 
 # now, our main map is the emacs style
 bindkey -e
 
-bindkey "$key_info[Home]"                    beginning-of-line
-bindkey "$key_info[End]"                     end-of-line
-bindkey "$key_info[Insert]"                  overwrite-mode
-bindkey "$key_info[Delete]"                  delete-char
-bindkey "$key_info[Backspace]"               backward-delete-char
-bindkey "$key_info[Left]"                    backward-char
-bindkey "$key_info[Right]"                   forward-char
+# First we define widgets that we later bind to keys
+# This depends on a zle widget by Max Mikhanosha which he posted to
+# zsh-users at http://www.zsh.org/mla/users/2008/msg00708.html
+define-pipe-widget insert_grep  "grep \"@@@\"" "grep -i \"@@@\"" "grep @@@" 
+define-pipe-widget insert_head "head" "head\n"
+define-pipe-widget insert_less "less @@@" "less\n"
 
-# Setup some more bindings to be more like emacs.
-for key ("$key_info[Escape]"{B,b}) bindkey -M emacs "$key" emacs-backward-word
-for key ("$key_info[Escape]"{F,f}) bindkey -M emacs "$key" emacs-forward-word
-bindkey -M emacs "$key_info[Escape]$key_info[Left]" emacs-backward-word
-bindkey -M emacs "$key_info[Escape]$key_info[Right]" emacs-forward-word
+zle -N beginning-of-somewhere beginning-or-end-of-somewhere
+zle -N end-of-somewhere beginning-or-end-of-somewhere
 
-# Kill to the beginning of the line.
-for key in "$key_info[Escape]"{K,k} bindkey -M emacs "$key" backward-kill-line
-
-# Redo.
-bindkey -M emacs "$key_info[Escape]_" redo
-
-# magic to rename files...
-bindkey "$key_info[Escape]m" copy-prev-shell-word
-
-# "suspend" current line
-bindkey "$key_info[Control]Z" push-input
-
-# Bind Shift + Tab to go to the previous menu item.
-bindkey "$key_info[BackTab]" reverse-menu-complete
-
-#k# Insert a timestamp on the command line (yyyy-mm-dd)
 zle -N insert-datestamp
-bindkey "$key_info[Control]Ed" insert-datestamp
-
-#k# Put the current command line into a \kbd{sudo} call
 zle -N sudo-command-line
-bindkey "$key_info[Control]Os" sudo-command-line
-
-## This function allows you type a file pattern,
-## and see the results of the expansion at each step.
-## When you hit return, they will be inserted into the command line.
-if is4 && autoload insert-files && zle -N insert-files; then
-    #k# Insert files and test globbing
-    bindkey "$key_info[Control]Xf" insert-files ## C-x-f
-fi
-
-## This set of functions implements a sort of magic history searching.
-## After predict-on, typing characters causes the editor to look backward
-## in the history for the first line beginning with what you have typed so
-## far.  After predict-off, editing returns to normal for the line found.
-## In fact, you often don't even need to use predict-off, because if the
-## line doesn't match something in the history, adding a key performs
-## standard completion - though editing in the middle is liable to delete
-## the rest of the line.
-if is4 && autoload predict-on && zle -N predict-on; then
-    #zle -N predict-off
-    bindkey "$key_info[Control]X$key_info[Control]R" predict-on ## C-x C-r
-    #bindkey "^U" predict-off ## C-u
-fi
-
-# press ctrl-x ctrl-e for editing command line in $EDITOR or $VISUAL
-if is4 && autoload edit-command-line && zle -N edit-command-line; then
-    bindkey "$key_info[Control]x$key_info[Control]e" edit-command-line
-fi
-
-# move cursor between chars when typing '', "", (), [], and {}
-magic-single-quotes() { if [[ $LBUFFER[-1] == \' ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
-magic-double-quotes() { if [[ $LBUFFER[-1] == \" ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
-magic-parentheses() { if [[ $LBUFFER[-1] == \( ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
-magic-square-brackets() { if [[ $LBUFFER[-1] == \[ ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
-magic-curly-brackets() { if [[ $LBUFFER[-1] == \{ ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
-magic-angle-brackets() { if [[ $LBUFFER[-1] == \< ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
-bindkey \' magic-single-quotes
-bindkey \" magic-double-quotes
-bindkey \) magic-parentheses
-bindkey \] magic-square-brackets
-bindkey \} magic-curly-brackets
-bindkey \> magic-angle-brackets
+zle -N jump_after_first_word
+zle -N inplaceMkDirs
 zle -N magic-single-quotes
 zle -N magic-double-quotes
 zle -N magic-parentheses
 zle -N magic-square-brackets
 zle -N magic-curly-brackets
 zle -N magic-angle-brackets
+# Magic history searching
+zle -N predict-on
+zle -N slash-backward-kill-word
+zle -N insert-files
+zle -N insert-unicode-char
+zle -C hist-complete complete-word _generic
+zstyle ':completion:hist-complete:*' completer _history
 
-# Show what the completion system is trying to complete with at a given point
-bindkey "$key_info[Control]Xh" _complete_help
+accept-line
 
-bindkey " " magic-space
+
+bind2maps emacs             -- Home      beginning-of-somewhere
+bind2maps       viins vicmd -- Home      vi-beginning-of-line
+bind2maps emacs             -- End       end-of-somewhere
+bind2maps       viins vicmd -- End       vi-end-of-line
+bind2maps emacs viins       -- Insert    overwrite-mode
+bind2maps             vicmd -- Insert    vi-insert
+bind2maps emacs             -- Delete    delete-char
+bind2maps       viins vicmd -- Delete    vi-delete-char
+bind2maps emacs viins vicmd -- Up        up-line-or-search
+bind2maps emacs viins vicmd -- Down      down-line-or-search
+bind2maps emacs             -- Left      backward-char
+bind2maps       viins vicmd -- Left      vi-backward-char
+bind2maps emacs             -- Right     forward-char
+bind2maps       viins vicmd -- Right     vi-forward-char
+bind2maps       viins vicmd -- Right     vi-forward-char
+bind2maps emacs             -- Backspace backward-delete-char
+bind2maps       viins vicmd -- Backspace vi-backward-delete-char
+
+# Setup some more bindings to be more like emacs.
+bind2maps emacs             -- -s "$key_info[Escape]b"                emacs-backward-word
+bind2maps viins vicmd       -- -s "$key_info[Escape]b"                vi-backward-word
+bind2maps emacs             -- -s "$key_info[Escape]f"                emacs-forward-word
+bind2maps viins vicmd       -- -s "$key_info[Escape]f"                vi-forward-word
+bind2maps emacs             -- -s "$key_info[Escape]$key_info[Left]"  emacs-backward-word
+bind2maps emacs             -- -s "$key_info[Escape]$key_info[Right]" emacs-forward-word
+#k# Kill to the beginning of the line.
+bind2maps emacs viins vicmd -- -s "$key_info[Escape]k"                backward-kill-line
+#k# Redo.
+bind2maps emacs             -- -s "$key_info[Escape]_"                redo
+#k# suspend current line
+bind2maps emacs viins vicmd -- -s "$key_info[Control]z"               push-input
+#k# Bind Shift + Tab to go to the previous menu item.
+bind2maps emacs viins vicmd -- -s "$key_info[BackTab]"                reverse-menu-complete
+#k# Insert a timestamp on the command line (yyyy-mm-dd)
+bind2maps emacs viins       -- -s "$key_info[Control]ed"              insert-datestamp
+#k# Append grep, multiple toggle options
+bind2maps emacs viins       -- -s "$key_info[Control]g"               insert_grep
+#k# Append head, multiple execute
+bind2maps emacs viins       -- -s "$key_info[Control]h"               insert_head
+#k# Append less, multiple execute
+bind2maps emacs viins       -- -s "$key_info[Control]f"               insert_less
+#k# Put the current command line into a \kbd{sudo} call
+bind2maps emacs viins       -- -s "$key_info[Control]os"              sudo-command-line
+#k# Copy the previous shell word - magic to rename files
+bind2maps emacs viins       -- -s "$key_info[Escape]m"                copy-prev-shell-word
+#k# mkdir -p <dir> from string under cursor or marked area
+bind2maps emacs viins       -- -s "$key_info[Control]xM"              inplaceMkDirs
+#k# Show what the completion system is trying to complete with at a given point
+bind2maps emacs viins       -- -s "$key_info[Control]Xh"              _complete_help
+bind2maps emacs viins       -- -s ' '                                 magic-space
+#k# Kill left-side word or everything up to next slash
+bind2maps emacs viins       -- -s "$key_info[Escape]v"                slash-backward-kill-word
+#k# Kill left-side word or everything up to next slash
+bind2maps emacs viins       -- -s "$key_info[Escape]$key_info[Backspace]" slash-backward-kill-word
+#k# Kill left-side word or everything up to next slash
+bind2maps emacs viins       -- -s "$key_info[Escape]$key_info[Delete]" slash-backward-kill-word
+#k# Trigger menu-complete
+bind2maps emacs viins       -- -s '\ei' menu-complete  # menu completion via esc-i
+#k# jump to after first word (for adding options)
+bind2maps emacs viins       -- -s '^x1' jump_after_first_word
+#k# complete word from history with menu
+bind2maps emacs viins       -- -s "^x^x" hist-complete
+# insert unicode character
+# usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an <A7>
+# See for example http://unicode.org/charts/ for unicode characters code
+#k# Insert Unicode character
+bind2maps emacs viins       -- -s '^xi' insert-unicode-char
+
+
+#k# Insert files and test globbing
+is4 && bind2maps emacs viins -- -s "$keyinfo[Control]Xf"              insert-files
+#k# Edit the current line in \kbd{\$EDITOR}
+is4 && bind2maps emacs viins -- -s "$key_info[Control]x$key_info[Control]e" edit-command-line
+#k# Magic history searching
+is4 && bind2maps emacs viins -- -s "$key_info[Control]X$key_info[Control]R" predict-on
+    #bindkey "^U" predict-off ## C-u
+
+bind2maps emacs viins vicmd -- -s \'                                  magic-single-quotes
+bind2maps emacs viins vicmd -- -s \"                                  magic-double-quotes
+bind2maps emacs viins vicmd -- -s \)                                  magic-parentheses
+bind2maps emacs viins vicmd -- -s \]                                  magic-square-brackets
+bind2maps emacs viins vicmd -- -s \}                                  magic-curly-brackets
+bind2maps emacs viins vicmd -- -s \>                                  magic-angle-brackets
