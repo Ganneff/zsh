@@ -168,6 +168,13 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 ## Use ssh-agent or gpg-agent?
 # zstyle ':ganneff:config' agent gpg-agent
 
+## zsh can do mime magic, so you can just enter a filename and
+## based on the mime magic, zsh will open it in the right application.
+## But it takes a bit to load, so if you want it, enable it.
+## (On my system its 1/3 of the entire zsh startup time with over 800 extra
+## function calls).
+# zstyle ':ganneff:config' mimesetup false
+
 ########################################################################
 ### Prompt setup                                                     ###
 ## use vcs_info in prompt

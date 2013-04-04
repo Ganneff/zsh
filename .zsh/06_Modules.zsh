@@ -21,7 +21,7 @@ autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
 ## Allow known mime types to be used as 'command'
-if is42; then
+if is42 && zstyle -t ':ganneff:config' mimesetup true; then
     autoload -U zsh-mime-setup
     zsh-mime-setup
 fi
