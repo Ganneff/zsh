@@ -105,10 +105,6 @@ if is4 && autoload predict-on && zle -N predict-on; then
     #bindkey "^U" predict-off ## C-u
 fi
 
-# in 'foo bar | baz' make a second ^W not eat 'bar |', but only '|'
-# this has the disadvantage that in 'bar|baz' it eats all of it.
-typeset WORDCHARS='|'$WORDCHARS
-
 # press ctrl-x ctrl-e for editing command line in $EDITOR or $VISUAL
 if is4 && autoload edit-command-line && zle -N edit-command-line; then
     bindkey "$key_info[Control]x$key_info[Control]e" edit-command-line

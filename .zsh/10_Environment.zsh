@@ -74,3 +74,7 @@ setvar TIMEFMT "%J  %U user %S system %P cpu %*E total | Mem: %M kb max"
 # Report time statistics if command runs longer than 30 seconds
 # (combined user/system execution times)
 setvar REPORTTIME 30
+
+# in 'foo bar | baz' make a second ^W not eat 'bar |', but only '|'
+# this has the disadvantage that in 'bar|baz' it eats all of it.
+typeset WORDCHARS='|'$WORDCHARS
