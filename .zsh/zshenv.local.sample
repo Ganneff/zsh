@@ -245,3 +245,31 @@ zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
 # zstyle ':prompt:ganneff:extra:ganneff' post '${PR_NO_COLOR}'
 # zstyle ':prompt:ganneff:extra:ganneff' token '$BLABLA'
 # zstyle ':prompt:ganneff:extra:ganneff' precmd jj_blabla
+
+
+########################################################################
+# Styles "imported" from "external" widgets                            #
+########################################################################
+
+## accept-line widget
+## A newly added command will may not be found or will cause false
+## correction attempts, if you got auto-correction set. By setting the
+## following style, we force accept-line() to rehash, if it cannot
+## find the first word on the command line in the $command[] hash.
+# zstyle ':acceptline:*' rehash true
+
+## If the command line is empty, we can either ignore enter, or clear
+## the screen. Pick your poison, default is ignore
+## Ignore enter?
+zstyle ':acceptline:empty' call_default false
+
+## Clear the screen?
+#zstyle ':acceptline:empty' default_action clear-screen
+
+# Warning issued when command not found, but a completion exists.
+zstyle ":acceptline:*" compwarnfmt \
+'The command %c will not execute, but a completion %f exists.
+Auto correction is set to ON, zsh will try to run the completion.
+This may lead to unexpected results.
+
+Hit enter again, to try execution anyway.'
