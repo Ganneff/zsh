@@ -80,7 +80,8 @@ function per-directory-history-toggle-history() {
 
 autoload per-directory-history-toggle-history
 zle -N per-directory-history-toggle-history
-bindkey '^G' per-directory-history-toggle-history
+#k# toggle per directory history
+bindkey '^X^G' per-directory-history-toggle-history
 
 #-------------------------------------------------------------------------------
 # implementation details
