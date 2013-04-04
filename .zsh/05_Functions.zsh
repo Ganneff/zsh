@@ -140,3 +140,10 @@ function Status Start Stop Restart Reload {
         sudo /etc/init.d/${script} ${0:l}
     }
 }
+# move cursor between chars when typing '', "", (), [], and {}
+magic-single-quotes() { if [[ $LBUFFER[-1] == \' ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-double-quotes() { if [[ $LBUFFER[-1] == \" ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-parentheses() { if [[ $LBUFFER[-1] == \( ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-square-brackets() { if [[ $LBUFFER[-1] == \[ ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-curly-brackets() { if [[ $LBUFFER[-1] == \{ ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
+magic-angle-brackets() { if [[ $LBUFFER[-1] == \< ]]; then zle self-insert; zle .backward-char; else zle self-insert; fi };
