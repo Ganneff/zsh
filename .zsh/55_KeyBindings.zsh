@@ -70,7 +70,7 @@ bindkey -e
 # First we define widgets that we later bind to keys
 # This depends on a zle widget by Max Mikhanosha which he posted to
 # zsh-users at http://www.zsh.org/mla/users/2008/msg00708.html
-define-pipe-widget insert_grep  "grep \"@@@\"" "grep -i \"@@@\"" "grep @@@" 
+define-pipe-widget insert_grep  "grep \"@@@\"" "grep -i \"@@@\"" "grep -v \"@@@\"" "grep @@@"
 define-pipe-widget insert_head "head" "head\n"
 define-pipe-widget insert_less "less @@@" "less\n"
 
