@@ -1,0 +1,99 @@
+# -*- mode:sh -*-
+
+# Widget from Max Mikhanosha posted to zsh-users list at
+# http://www.zsh.org/mla/users/2008/msg00708.html
+
+# define-pipe-widget <widget-name> "template1" "template2" ....
+#
+# Defines "pipe widget" templates. Its hard to describe the best way
+# is through an example:
+#
+# define-pipe-widget insert_grep  "grep \"@@@\"" "grep -i \"@@@\"" "grep @@@" 
+# define-pipe-widget insert_head "head" "head\n"
+#
+# bindkey "\M-g" insert_grep
+# bindkey "\M-h" insert_head
+#
+# Now pressing Alt-G will insert (| represents cursor position)
+#
+# On empty command line: grep "|"
+#
+# On non-empty command line: <old cmdline> | grep "|"
+#
+# Pressing Alt-G one more time cycles through choices
+# ie:
+#  ... |  grep "|"
+#  ... | grep -i "|"
+#  ... | grep
+#  
+# If template has \n in the end, then it will be auto-accepted:
+# 
+#      Alt-H does: ... | head <cursor here>
+#  2nd Alt-H does  ... | head<Enter>
+#
+declare -gA pipe_widgets
+function define-pipe-widget () {
+    local var=$1 
+    local templates=_${var}_templates
+    declare -ga $templates
+    shift
+    set -A $templates $@
+    zle -N $var insert-pipe-command
+}
+
+insert-pipe-command () {
+    emulate -L zsh
+    local var=$WIDGET
+    local templates=_${var}_templates
+    local before after auto_accept same patnum
+
+    set nomatch
+    # see if command line is same as in our last invocation
+    if [[ $CURSOR == ${pipe_widgets[cursor_$var]} 
+                && $HISTNO == $pipe_widgets[histno_$var] 
+                && $BUFFER == $pipe_widgets[buffer_$var] ]] ; then
+        (( patnum = ++pipe_widgets[patnum_$var] ))
+        # wrap around
+        if [[ $patnum -gt ${#${(P)templates}}  ]] ; then
+            (( patnum = pipe_widgets[patnum_$var] = 1 ))
+        fi
+        BUFFER=$pipe_widgets[buffer_before_$var]
+        CURSOR=$pipe_widgets[cursor_before_$var]
+    else
+       # start from scratch
+       (( patnum = pipe_widgets[patnum_$var] = 1 ))
+       pipe_widgets[buffer_before_$var]=$BUFFER
+       pipe_widgets[cursor_before_$var]=$CURSOR
+    fi
+    local tmp=${${(P)templates}[$patnum]}
+    if [[ $tmp == *\\n ]] ; then
+        auto_accept=1
+        tmp=$tmp[1,-3]
+    fi
+    # cursor in the end if not specified
+    if [[ $tmp != *@@@* ]] ; then
+        tmp="${tmp}@@@"
+    fi
+    before=${tmp%@@@*}
+    after=${tmp#*@@@}
+    if [[ -n ${LBUFFER## *} ]] ; then
+        RBUFFER+=" | "
+    else
+        if [[ $after == '' && $before[-1] != " " ]] ; then
+            before+=" "
+        fi
+        auto_accept=
+    fi
+    RBUFFER+=$before$after
+    CURSOR=$(( $#BUFFER - $#after))
+    # incase we were in vi mode
+    builtin zle vi-insert 
+    if [[ $auto_accept == 1 ]] ; then
+        builtin zle accept-line
+    fi
+    pipe_widgets[histno_$var]=$HISTNO
+    pipe_widgets[buffer_$var]=$BUFFER
+    pipe_widgets[cursor_$var]=$CURSOR
+}
+
+define-pipe-widget "$@"
