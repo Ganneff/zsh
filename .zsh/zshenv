@@ -25,8 +25,24 @@ DOMAIN=${DOMAIN:-$(hostname -d 2>&-)}
 
 DEBUG=${DEBUG:-no}
 
+# In case the user wants oh-my-zsh plugins, we add their path to the
+# fpath, as they often have completion functions.
+typeset -a ompath
+if [[ -d ${ZDOTDIR}/plugins/ohmy ]]; then
+    local -a omplug
+    zstyle -a ':ganneff:config' ohmyplugins omplug
+    for plug in ${omplug}; do
+        if [[ -f ${ZDOTDIR}/plugins/ohmy/${plug}/${plug}.plugin.zsh ]]; then
+            ompath+=(${ZDOTDIR}/plugins/ohmy/${plug})
+        fi
+    done
+fi
+unset omplug
+
 # Path to search for autoloadable functions.
-fpath=( ${ZDOTDIR}/functions "$fpath[@]" )
+fpath=( ${ZDOTDIR}/functions $ompath[@] $fpath[@] )
+unset ompath
+
 # Only unique entries please.
 typeset -U fpath
 fpath=( ${^fpath}(N-/) )

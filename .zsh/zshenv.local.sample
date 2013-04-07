@@ -175,6 +175,27 @@ zstyle ':ganneff:config' dirstackhandling dirpersist
 ## function calls).
 # zstyle ':ganneff:config' mimesetup false
 
+## List of plugins to load.
+## List their full path, relative to ${ZDOTDIR}/plugins here.
+## It doesn't matter where you get the plugins from, as long as they are
+## zsh files that can be sourced. As they can do everything, be careful
+## what you load.
+# zstyle ':ganneff:config' plugins git-extras.plugin.zsh \
+#    history-substring-search.zsh \
+#    per-directory-history.plugin.zsh
+
+## oh-my-zsh plugins can also be loaded, in case you like one of it.
+## Simply list their names here, and put their directories into
+## ${ZDOTDIR}/plugins/ohmy
+#zstyle ':ganneff:config' ohmyplugins extract
+
+## Allow plugins to bind keys? I really dislike if plugins overwrite my
+## keybindings, so I always do them myself. If you prefer to let them do
+## it, set it to true. If set to false, you most probably want a
+## ${ZDOTDIR}/80_KeyBindings.zsh.local (or one of the variable
+## subdirectories, Keybindings.zsh) to set the keybindings.
+# zstyle ':ganneff:config' pluginbindkeys false
+
 ########################################################################
 ### Prompt setup                                                     ###
 ## use vcs_info in prompt

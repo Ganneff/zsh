@@ -204,6 +204,26 @@ jj_update_dinstall () {
 #+END_SRC
 
 
+** Plugins
+This framework by default has most of its function included directly,
+configurable using the zstyle way described already. But there are as
+many different needs to a shell as there are users of it, so besides
+all the other flexibility already given, one can easily include
+"plugins" from wherever.
+
+Plugins are simply files that contain zsh code. Which can do whatever
+it wants with your shell, so be careful. One exception: Unless the
+zstyle /:ganneff:config:pluginbindkeys/ is true, plugins are forbidden to
+bind keys.
+
+Two ways to do it:
+1. Place the plugin you want to load into =${ZDOTDIR}/plugins= or any
+   subdirectory of it, and add the full path and filename, relative to
+   =${ZDOTDIR}/plugins= to the zstyle /ganneff:config:plugins/ in your
+   =${ZDOTDIR}/zshenv.local=.
+2. For oh-my-zsh style plugins, put the plugin directory into a
+   subdirectory of =${ZDOTDIR}/plugins/ohmy= and add the name to the
+   zstyle /ganneff:config:ohmyplugins/ in your =${ZDOTDIR}/zshenv.local=
 
 * Sources
 ** Prompt
