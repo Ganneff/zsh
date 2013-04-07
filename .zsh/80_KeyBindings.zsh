@@ -2,6 +2,7 @@
 ###
 # Key Bindings
 zmodload zsh/terminfo
+
 typeset -gA key_info
 key_info=(
   'Control'   '\C-'
@@ -95,8 +96,10 @@ zle -N insert-unicode-char
 zle -C hist-complete complete-word _generic
 zstyle ':completion:hist-complete:*' completer _history
 
-accept-line
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end  history-search-end
 
+accept-line
 
 bind2maps emacs             -- Home      beginning-of-somewhere
 bind2maps       viins vicmd -- Home      vi-beginning-of-line
@@ -106,8 +109,8 @@ bind2maps emacs viins       -- Insert    overwrite-mode
 bind2maps             vicmd -- Insert    vi-insert
 bind2maps emacs             -- Delete    delete-char
 bind2maps       viins vicmd -- Delete    vi-delete-char
-bind2maps emacs viins vicmd -- Up        up-line-or-search
-bind2maps emacs viins vicmd -- Down      down-line-or-search
+bind2maps emacs viins vicmd -- Up        history-substring-search-up
+bind2maps emacs viins vicmd -- Down      history-substring-search-down
 bind2maps emacs             -- Left      backward-char
 bind2maps       viins vicmd -- Left      vi-backward-char
 bind2maps emacs             -- Right     forward-char
@@ -115,6 +118,11 @@ bind2maps       viins vicmd -- Right     vi-forward-char
 bind2maps       viins vicmd -- Right     vi-forward-char
 bind2maps emacs             -- Backspace backward-delete-char
 bind2maps       viins vicmd -- Backspace vi-backward-delete-char
+
+#k# search history backward for entry beginning with typed text
+bind2maps emacs viins       -- PageUp history-beginning-search-backward-end
+#k# search history forward for entry beginning with typed text
+bind2maps emacs viins       -- PageDown history-beginning-search-forward-end
 
 # Setup some more bindings to be more like emacs.
 bind2maps emacs             -- -s "$key_info[Escape]b"                emacs-backward-word
@@ -154,21 +162,29 @@ bind2maps emacs viins       -- -s "$key_info[Escape]v"                slash-back
 bind2maps emacs viins       -- -s "$key_info[Escape]$key_info[Backspace]" slash-backward-kill-word
 #k# Kill left-side word or everything up to next slash
 bind2maps emacs viins       -- -s "$key_info[Escape]$key_info[Delete]" slash-backward-kill-word
+
 #k# Trigger menu-complete
-bind2maps emacs viins       -- -s '\ei' menu-complete  # menu completion via esc-i
+bind2maps emacs viins       -- -s '\ei'  menu-complete
 #k# jump to after first word (for adding options)
-bind2maps emacs viins       -- -s '^x1' jump_after_first_word
+bind2maps emacs viins       -- -s '^x1'  jump_after_first_word
 #k# complete word from history with menu
 bind2maps emacs viins       -- -s "^x^x" hist-complete
 # insert unicode character
 # usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an <A7>
 # See for example http://unicode.org/charts/ for unicode characters code
 #k# Insert Unicode character
-bind2maps emacs viins       -- -s '^xi' insert-unicode-char
-
+bind2maps emacs viins       -- -s '^xi'  insert-unicode-char
+#k# Toggle per directory history
+bind2maps emacs viins vicmd -- -s '^X^G' per-directory-history-toggle-history
+#k# search history backward for entry matching typed text
+bind2maps emacs             -- -s "$key_info[Control]P" history-substring-search-up
+bind2maps             vicmd -- -s "k"                   history-substring-search-up
+#k# search history forward for entry matching typed text
+bind2maps emacs             -- -s "$key_info[Control]N" history-substring-search-down
+bind2maps             vicmd -- -s "j"                   history-substring-search-down
 
 #k# Insert files and test globbing
-is4 && bind2maps emacs viins -- -s "$keyinfo[Control]Xf"              insert-files
+is4 && bind2maps emacs viins -- -s "$key_info[Control]Xf"              insert-files
 #k# Edit the current line in \kbd{\$EDITOR}
 is4 && bind2maps emacs viins -- -s "$key_info[Control]x$key_info[Control]e" edit-command-line
 #k# Magic history searching
