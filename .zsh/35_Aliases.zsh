@@ -56,12 +56,6 @@ alias mysql='nocorrect mysql'
 alias mkdir='nocorrect mkdir'
 alias mv='nocorrect mv'
 
-#global aliases. Handle with care!
-alias -g LS='| less'
-alias -g WC='| wc -l'
-alias -g SO='| sort'
-alias -g CD='| colordiff | less -R'
-
 if [ -x /usr/bin/recode ]; then
     alias unix2dos='recode lat1..ibmpc'
     alias dos2unix='recode ibmpc..lat1'
@@ -142,3 +136,12 @@ current_repository() {
 alias ggpull='git pull origin $(current_branch)'
 alias ggpush='git push origin $(current_branch)'
 alias ggpnp='git pull origin $(current_branch) && git push origin $(current_branch)'
+
+
+## global aliases. Handle with care!
+alias -g LS='| less'
+alias -g LL="2>&1 | less"
+alias -g WC='| wc -l'
+alias -g SO='| sort'
+alias -g CD='| colordiff | less -R'
+alias -g NE="2> /dev/null"
