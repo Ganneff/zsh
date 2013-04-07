@@ -173,7 +173,7 @@ function bind2maps () {
         shift
         sequence="$1"
     else
-        sequence="${key[$1]}"
+        sequence="${key_info[$1]}"
     fi
     widget="$2"
 
