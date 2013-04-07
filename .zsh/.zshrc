@@ -14,7 +14,7 @@ if [[ ${DEBUG} != no ]]; then
         [[ "${DEBUG}" = "no" ]] && return
         msg=${1:-""}
         nl=${2:-""}
-        echo ${nl} "${msg}$reset_color"
+        print ${nl} "${msg}$reset_color"
     }
 else
     debug () {}
