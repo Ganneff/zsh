@@ -251,6 +251,9 @@ The prompt i use is based on various others.
 - zbell function is Written by Jean-Philippe Ouellet <jpo@vt.edu>
   and available under the ISC license, taken from [[https://gist.github.com/jpouellet/5278239][hist gist on github]]
 
+- extract/ls_archive is from [[https://github.com/sorin-ionescu][Sorin Ionescu]] and available under the MIT
+  License.
+
 * Footnotes
 
 [fn:1] Actually, the symlink points to the file zshenv.home inside that directory
