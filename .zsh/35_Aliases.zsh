@@ -17,7 +17,7 @@ alias mmv='noglob mmv'
 alias cp='command cp -i'
 alias wget='noglob wget'
 alias cgrep='grep --color'
-alias git='LANG=C git'
+alias git='git'
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 
 is-callable psql && alias psql='LD_PRELOAD=/lib/libreadline.so.5 psql'
