@@ -35,7 +35,7 @@ zbell_timestamp=$EPOCHSECONDS
 # right before we begin to execute something, store the time it started at
 zbell_begin() {
 	zbell_timestamp=$EPOCHSECONDS
-	zbell_lastcmd=$1
+	zbell_lastcmd=$2
 }
 
 # when it finishes, if it's been running longer than $zbell_duration,
@@ -43,8 +43,14 @@ zbell_begin() {
 zbell_end() {
 	ran_long=$(( $EPOCHSECONDS - $zbell_timestamp >= $zbell_duration ))
 
+    local -a drop_words
+    drop_words=(builtin command nocorrect noglob nohup LANG=C)
+
 	has_ignored_cmd=0
 	for cmd in ${(s:;:)zbell_lastcmd//|/;}; do
+        for key in ${drop_words}; do
+            cmd=${cmd/${key}/}
+        done
 		words=(${(z)cmd})
 		util=${words[1]}
 		if (( ${zbell_ignore[(i)$util]} <= ${#zbell_ignore} )); then
