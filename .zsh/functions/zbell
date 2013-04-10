@@ -12,13 +12,13 @@
 # Made available under the ISC license.
 
 # only do this if we're in an interactive shell
-[[ -o interactive ]] || exit
+[[ -o interactive ]] || return
 
 # get $EPOCHSECONDS. builtins are faster than date(1)
-zmodload zsh/datetime || exit
+zmodload zsh/datetime || return
 
 # make sure we can register hooks
-autoload -Uz add-zsh-hook || exit
+autoload -Uz add-zsh-hook || return
 
 # initialize zbell_duration if not set
 (( ${+zbell_duration} )) || zbell_duration=15
