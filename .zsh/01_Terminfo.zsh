@@ -40,7 +40,7 @@ __ () {
         done
         unset LC__ORIGINALTERM
         export TERM
-        alias sudo="TERM=xterm command sudo"
+        alias xsudo="TERM=xterm command sudo"
     fi
 } && __
 
