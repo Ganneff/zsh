@@ -18,6 +18,11 @@ DIRSTACKSIZE=20
 if zstyle -t ':ganneff:config' dirstackhandling dirpersist dirstack; then
     DIRSTACKFILE=${ZDOTDIR}/var/.zdirstore
     dirpersistrestore
+    if is434; then
+        add-zsh-hook zshexit dirpersiststore
+    else
+        echo "Sorry, zsh version too old"
+    fi
 fi
 
 if zstyle -t ':ganneff:config' doagent; then

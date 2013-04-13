@@ -78,12 +78,6 @@ function dirpersiststore () {
     print -l ${(Oau)dirstack} ${PWD} >| ${DIRSTACKFILE}
 }
 
-if is434; then
-    add-zsh-hook zshexit dirpersiststore
-else
-    echo "Sorry, zsh version too old"
-fi
-
 function agent() {
     local agent agentfiles af
     local _agent_ssh_env=${HOME}/.ssh/agentenv.${HOST}
