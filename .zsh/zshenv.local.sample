@@ -22,7 +22,6 @@ lpath=(
     "$HOME/bin"
     /sbin
     /usr/sbin
-    /srv/qa.debian.org/mia
 )
 
 ## Same goes for man and info path
@@ -267,7 +266,7 @@ lmanpath=(
 #     llcorner line rc openparentheses time closeparentheses line vcs line pipe space
 
 ## Override the token of an item, here set the date one to also show day of year and week of year
-zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
+#zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
 
 # Example of an extra defined item.
 # zstyle ':prompt:ganneff:extra:ganneff' pre '${PR_RED}'
@@ -278,6 +277,7 @@ zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
 
 ########################################################################
 # Styles "imported" from "external" widgets                            #
+# The following may not show the default values.                       #
 ########################################################################
 
 ## accept-line widget
@@ -290,15 +290,17 @@ zstyle ':prompt:ganneff:*:items:date' token '%D{%Y-%m-%d [d:%j/w:%V]}'
 ## If the command line is empty, we can either ignore enter, or clear
 ## the screen. Pick your poison, default is ignore
 ## Ignore enter?
-zstyle ':acceptline:empty' call_default false
+# zstyle ':acceptline:empty' call_default false
+
+## OR
 
 ## Clear the screen?
 #zstyle ':acceptline:empty' default_action clear-screen
 
-# Warning issued when command not found, but a completion exists.
-zstyle ":acceptline:*" compwarnfmt \
-'The command %c will not execute, but a completion %f exists.
-Auto correction is set to ON, zsh will try to run the completion.
-This may lead to unexpected results.
-
-Hit enter again, to try execution anyway.'
+## Warning issued when command not found, but a completion exists.
+# zstyle ":acceptline:*" compwarnfmt \
+# 'The command %c will not execute, but a completion %f exists.
+# Auto correction is set to ON, zsh will try to run the completion.
+# This may lead to unexpected results.
+#  
+# Hit enter again, to try execution anyway.'
