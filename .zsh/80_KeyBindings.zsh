@@ -98,6 +98,7 @@ zstyle ':completion:hist-complete:*' completer _history
 
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end  history-search-end
+zle -N history-beginning-search-menu
 
 accept-line
 
@@ -182,6 +183,9 @@ bind2maps             vicmd -- -s "k"                   history-substring-search
 #k# search history forward for entry matching typed text
 bind2maps emacs             -- -s "$key_info[Control]N" history-substring-search-down
 bind2maps             vicmd -- -s "j"                   history-substring-search-down
+
+#k# search history and present a menu
+bind2maps emacs       vicmd -- -s "$key_info[Control]X$key_info[Control]X" history-beginning-search-menu
 
 #k# Insert files and test globbing
 is4 && bind2maps emacs viins -- -s "$key_info[Control]Xf"              insert-files
