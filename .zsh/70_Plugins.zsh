@@ -12,10 +12,10 @@ function bindkey() {
         # User allows plugins to bind keys
         builtin bindkey "$@"
         [[ "${DEBUG}" = "no" ]] && return
-        print -b -r "$fg_no_bold[cyan]plugin allowed to run${reset_color}: 'bindkey ${(q-)@}'"
+        print -b -r "$fg_no_bold[cyan]plugin allowed to run${reset_color}: 'bindkey ${(q)@}'"
     else
         [[ "${DEBUG}" = "no" ]] && return
-        print -b -r "$fg_no_bold[red]plugin forbidden to run${reset_color}: 'bindkey ${(q-)@}'"
+        print -b -r "$fg_no_bold[red]plugin forbidden to run${reset_color}: 'bindkey ${(q)@}'"
     fi
 }
 
