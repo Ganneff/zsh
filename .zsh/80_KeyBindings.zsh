@@ -75,30 +75,24 @@ define-pipe-widget insert_grep  "grep \"@@@\"" "grep -i \"@@@\"" "grep -v \"@@@\
 define-pipe-widget insert_head "head" "head\n"
 define-pipe-widget insert_less "less @@@" "less\n"
 
-zle -N beginning-of-somewhere beginning-or-end-of-somewhere
-zle -N end-of-somewhere beginning-or-end-of-somewhere
-
-zle -N insert-datestamp
-zle -N sudo-command-line
-zle -N jump_after_first_word
-zle -N inplaceMkDirs
-zle -N magic-single-quotes
-zle -N magic-double-quotes
-zle -N magic-parentheses
-zle -N magic-square-brackets
-zle -N magic-curly-brackets
-zle -N magic-angle-brackets
-# Magic history searching
-zle -N predict-on
-zle -N slash-backward-kill-word
-zle -N insert-files
-zle -N insert-unicode-char
-zle -C hist-complete complete-word _generic
 zstyle ':completion:hist-complete:*' completer _history
 
+zle -N beginning-of-somewhere beginning-or-end-of-somewhere
+zle -N end-of-somewhere beginning-or-end-of-somewhere
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end  history-search-end
-zle -N history-beginning-search-menu
+zle -C hist-complete complete-word _generic
+
+for widget in insert-datestamp sudo-command-line jump_after_first_word \
+    inplaceMkDirs magic-single-quotes magic-double-quotes \
+    magic-parentheses magic-square-brackets magic-curly-brackets \
+    magic-angle-brackets predict-on slash-backward-kill-word \
+    insert-files insert-unicode-char edit-command-line \
+    history-beginning-search-menu
+do
+    debug "Enabling zle widget: ${widget}"
+    zle -N ${widget}
+done
 
 accept-line
 
