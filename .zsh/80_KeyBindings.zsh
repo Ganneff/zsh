@@ -136,12 +136,6 @@ bind2maps emacs viins vicmd -- -s "$key_info[Control]z"               push-input
 bind2maps emacs viins vicmd -- -s "$key_info[BackTab]"                reverse-menu-complete
 #k# Insert a timestamp on the command line (yyyy-mm-dd)
 bind2maps emacs viins       -- -s "$key_info[Control]ed"              insert-datestamp
-#k# Append grep, multiple toggle options
-bind2maps emacs viins       -- -s "$key_info[Control]g"               insert_grep
-#k# Append head, multiple execute
-bind2maps emacs viins       -- -s "$key_info[Control]h"               insert_head
-#k# Append less, multiple execute
-bind2maps emacs viins       -- -s "$key_info[Control]f"               insert_less
 #k# Put the current command line into a \kbd{sudo} call
 bind2maps emacs viins       -- -s "$key_info[Control]os"              sudo-command-line
 #k# Copy the previous shell word - magic to rename files
@@ -189,9 +183,17 @@ is4 && bind2maps emacs viins -- -s "$key_info[Control]x$key_info[Control]e" edit
 is4 && bind2maps emacs viins -- -s "$key_info[Control]X$key_info[Control]R" predict-on
     #bindkey "^U" predict-off ## C-u
 
-bind2maps emacs viins vicmd -- -s \'                                  magic-single-quotes
-bind2maps emacs viins vicmd -- -s \"                                  magic-double-quotes
-bind2maps emacs viins vicmd -- -s \)                                  magic-parentheses
-bind2maps emacs viins vicmd -- -s \]                                  magic-square-brackets
-bind2maps emacs viins vicmd -- -s \}                                  magic-curly-brackets
-bind2maps emacs viins vicmd -- -s \>                                  magic-angle-brackets
+if [[ -z ${MC_SID} ]]; then
+    #k# Append grep, multiple toggle options
+    bind2maps emacs viins       -- -s "$key_info[Control]g"               insert_grep
+    #k# Append head, multiple execute
+    bind2maps emacs viins       -- -s "$key_info[Control]h"               insert_head
+    #k# Append less, multiple execute
+    bind2maps emacs viins       -- -s "$key_info[Control]f"               insert_less
+    bind2maps emacs viins vicmd -- -s \'                                  magic-single-quotes
+    bind2maps emacs viins vicmd -- -s \"                                  magic-double-quotes
+    bind2maps emacs viins vicmd -- -s \)                                  magic-parentheses
+    bind2maps emacs viins vicmd -- -s \]                                  magic-square-brackets
+    bind2maps emacs viins vicmd -- -s \}                                  magic-curly-brackets
+    bind2maps emacs viins vicmd -- -s \>                                  magic-angle-brackets
+fi
