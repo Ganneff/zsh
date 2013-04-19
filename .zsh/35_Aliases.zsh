@@ -187,7 +187,7 @@ alias ggpnp='git pull origin $(current_branch) && git push origin $(current_bran
 
 ## global aliases. Handle with care!
 alias -g LS='| less'
-alias -g LL="2>&1 | less"
+alias -g LL="|& less"
 alias -g WC='| wc -l'
 alias -g SO='| sort'
 alias -g CD='| colordiff | less -R'
