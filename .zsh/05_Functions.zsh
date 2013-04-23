@@ -56,14 +56,6 @@ _jj_chpwd()
 	fi
 }
 
-if is434 ; then
-    add-zsh-hook chpwd _jj_chpwd
-else
-    function chpwd() {
-        _jj_chpwd
-    }
-fi
-
 # Idea taken from oh-my-zsh, but code is different
 function dirpersistrestore () {
     if [ -f ${DIRSTACKFILE} ]; then

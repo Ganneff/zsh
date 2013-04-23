@@ -2,6 +2,15 @@
 
 export SHELL=$(which zsh)
 
+# Show some git info on cd
+if is434 ; then
+    add-zsh-hook chpwd _jj_chpwd
+else
+    function chpwd() {
+        _jj_chpwd
+    }
+fi
+
 if [ -w $ZDOTDIR ]; then
     mkdir -p ${ZDOTDIR}/var
 	HISTFILE=$ZDOTDIR/var/history.$USER.$HOST
