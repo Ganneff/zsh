@@ -20,6 +20,8 @@ fi
 
 # Size of history
 setvar SAVEHIST 50000
+# we keep histsize a bit larger than savehist, to give the history
+# deduplication room to actually work
 HISTSIZE=$(( $SAVEHIST * 1.10 ))
 
 ## maximum size of the directory stack.
