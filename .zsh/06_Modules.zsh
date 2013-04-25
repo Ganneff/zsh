@@ -20,6 +20,11 @@ autoload run-help-svn
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
+# we use extended_glob, which breaks some things in git. Like,
+# git log @{1}..@{1}. This module from Akinori MUSHA helps.
+autoload -Uz git-escape-magic
+git-escape-magic
+
 ## Allow known mime types to be used as 'command'
 if is42 && zstyle -t ':ganneff:config' mimesetup true; then
     autoload -U zsh-mime-setup

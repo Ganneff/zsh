@@ -254,6 +254,10 @@ The prompt i use is based on various others.
 - extract/ls_archive is from [[https://github.com/sorin-ionescu][Sorin Ionescu]] and available under the MIT
   License.
 
+- git-escape-magic is Copyright (c) 2011, 2012 Akinori MUSHA and
+  licensed under the 2-clause BSD license. It is available
+  [[https://github.com/knu/zsh-git-escape-magic][from his github]] repository.
+
 * Footnotes
 
 [fn:1] Actually, the symlink points to the file zshenv.home inside that directory
