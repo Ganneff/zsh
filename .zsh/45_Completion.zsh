@@ -95,21 +95,24 @@ if is42; then
     [[ -r ~/.ssh/debian_known_hosts ]] && _ssh_debian_hosts=(${${${${(f)"$(<$HOME/.ssh/debian_known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_debian_hosts=()
     [[ -r /etc/ssh/ssh_known_hosts ]] && _ssh_etc_hosts=(${${${${(f)"$(</etc/ssh/ssh_known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_etc_hosts=()
     [[ -r /etc/hosts ]] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
+    [[ -r ${HOME}/.ssh/config ]] && _ssh_config_hosts=(${=${${${${(@M)${(f)"$(<$HOME/.ssh/config)"}:#Host *}#Host }:#*\**}:#*\?*}}) || _ssh_config_hosts=()
 else
     _ssh_hosts=()
     _ssh_debian_hosts=()
     _ssh_etc_hosts=()
     _etc_hosts=()
+    _ssh_config_hosts=()
 fi
 hosts=(
     ${HOST}
+    "$_ssh_config_hosts[@]"
     "$_ssh_hosts[@]"
     "$_ssh_debian_hosts[@]"
     "$_ssh_etc_hosts[@]"
     "$_etc_hosts[@]"
     localhost
 )
-zstyle ':completion:*:hosts' hosts $hosts
+zstyle ':completion::*:*:*:hosts' hosts $hosts
 
 # Don't complete uninteresting users...
 zstyle ':completion:*:*:*:users' ignored-patterns \
