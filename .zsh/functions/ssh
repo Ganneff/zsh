@@ -6,20 +6,22 @@ _jj_ssh() {
     # appropriate termcap or terminfo file to handle the TERM you
     # provided. When connecting to random hosts, this may not be the
     # case if your TERM is somewhat special. A good fallback is
-    # xterm. Most terminals are compatible with xterm and all hosts have
-    # a termcap or terminfo file to handle xterm. Therefore, for some
-    # values of TERM, we fallback to xterm.
+    # xterm or rxvt.
+    # Most terminals are compatible with xterm and all hosts have
+    # a termcap or terminfo file to handle xterm. But as it is incompatible
+    # in some annoying ways with default rxvt, we fall back to rxvt.
+    # (Some keys are different).
     #
     # Now, you may connect to a host where your current TERM is fully
-    # supported and you will get xterm instead (which means 8 base
+    # supported and you will get rxvt instead (which means 8 base
     # colors only). There is no clean solution for this. You may want to
     # reexport the appropriate TERM when logged on the remote host or
     # use commands like this: ssh -t XXXXX env TERM=$TERM emacsclient -t
     # -c
     #
     # If the remote host uses the same zshrc than this one, there is
-    # something in `$ZSH/rc/00-terminfo.zsh` to restore the appropriate
-    # terminal (saved in `LC__ORIGINALTERM`).
+    # something in its config to restore the appropriate terminal (saved
+    # in `LC__ORIGINALTERM`).
     #
     # The problem is quite similar for LANG and LC_MESSAGES. We reset
     # them to C to avoid any problem with hosts not having your locally
@@ -27,7 +29,7 @@ _jj_ssh() {
     # http://vincent.bernat.im/en/blog/2011-zsh-zshrc.html
     #
     # Also, when the same ZSH configuration is used on the remote host,
-    # the locale is reset with the help of 12-Locale.zsh
+    # the locale is reset to useful values.
     case "$TERM" in
         rxvt-256color|rxvt-unicode|rxvt-unicode-256color)
             LC__ORIGINALTERM=$TERM TERM=rxvt LANG=C LC_MESSAGES=C command ssh "$@"
