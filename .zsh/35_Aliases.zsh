@@ -61,7 +61,6 @@ is-command mc && alias mc='mc -d -U'
 alias cpan='perl -MCPAN -e shell'
 alias rh='run-help'
 
-
 if [ -x /usr/bin/recode ]; then
     alias unix2dos='recode lat1..ibmpc'
     alias dos2unix='recode ibmpc..lat1'
