@@ -86,34 +86,34 @@ alias gbc='git checkout -b'
 #a# show details for git branches
 alias gbl='git branch -v'
 #a# show details for git branches incl. remotes
-alias gbL='git branch -av'
 alias gba='git branch -av'
 #a# delete git branch
-alias gbx='git branch -d'
+alias gbd='git branch -d'
 #a# Move/rename a branch
 alias gbm='git branch -m'
+
+# add
+#a# add changes to index
+alias ga='git add'
+#a# add changes, interactively choose hunks to add
+alias gap='git add --patch'
+#a# add changes, only files already in the indey
+alias gau='git add --update'
+
 
 # commit
 #a# commit changes in git
 alias gc='git commit -v'
-#a# commit anything changed
-alias gca='git commit -v -a'
 #a# amend last git commit
 alias gca='git commit -v --amend'
-#a# revert a commit
-alias gcr='git revert'
 
-#a# cherry-pick
-alias gcp='git cherry-pick'
+# push
+#a# push changes
+alias gp='git push'
+#a# push everything to origin
+alias gpoat='git push origin --all && git push origin --tags'
 
-alias ga='git add'
-alias gap='git add --patch'
-alias gau='git add --update'
-
-alias grh='git reset HEAD'
-alias grhh='git reset HEAD --hard'
-
-# clone/pull/fetch/push
+# fetch/clone/pull
 #a# fetch and merge from another repository (pull)
 alias gl='git pull'
 #a# fetch and rebase from another repository
@@ -122,68 +122,74 @@ alias gup='git pull --rebase'
 alias gf='git fetch'
 #a# clone another repository
 alias gcl='git clone'
-#a# push changes
-alias gp='git push'
-#a# push everything to origin
-alias gpoat='git push origin --all && git push origin --tags'
+
+# checkout
+#a# checkout a branch
+alias gco='git checkout'
+#a# switch to the master branch
+alias gcm='git checkout master'
+
+# merge
+#a# merge
+alias gm='git merge'
+#a# merge, but don't commit
+alias gmn='git merge --no-ff --no-commit'
+
+# diff
+#a# Show changes in the working tree
+alias gd='git diff'
+#a# Show changes in the index
+alias gdc='git diff --cached'
+#a# Show logs with differences each commit introduces
+alias gwc='git whatchanged -p --abbrev-commit --pretty=medium'
+
+alias gcs='git show'
+
+# log
+#a# Show 10 latest commit logs
+alias glg='git log --stat --max-count=10'
+#a# Show 10 latest commit logs with a text-based graph
+alias glgg='git log --graph --max-count=10'
+#a# Show all commits with a text-based graph
+alias glgga='git log --graph --decorate --all'
+
+# various
+#a# revert a commit
+alias gcr='git revert'
+#a# cherry-pick
+alias gcp='git cherry-pick'
+
+#a# reset HEAD
+alias grh='git reset HEAD'
+#a# reset HEAD discarding all changes to tracked files
+alias grhh='git reset HEAD --hard'
+
+#a# show working tree status
+alias gst='git status'
+
+
+#a# run git grep
+alias gg='git grep'
+
+
+# informational
+#a# list commit count summary
+alias gcount='git shortlog -sn'
+
+
+
 
 # remotes
+#a# list remotes
 alias gr='git remote'
+#a# list remotes including their fetch/push details
 alias grv='git remote -v'
 alias grmv='git remote rename'
 alias grrm='git remote remove'
-alias grset='git remote set-url'
-alias grup='git remote update'
-
-alias gcs='git show'
-alias gcR='git reset "HEAD^"'
-alias gco='git checkout'
-alias gcO='git checkout --patch'
-alias gm='git merge'
-
-alias gst='git status'
-alias gss='git status -s'
-
-alias gd='git diff'
-alias gdc='git diff --cached'
-
-alias gco='git checkout'
-alias gcm='git checkout master'
-alias gcount='git shortlog -sn'
-alias glg='git log --stat --max-count=5'
-alias glgg='git log --graph --max-count=5'
-alias glgga='git log --graph --decorate --all'
-alias gcfl='git config --list'
-alias gwc='git whatchanged -p --abbrev-commit --pretty=medium'
-alias gf='git ls-files | grep'
-alias gg='git grep'
 
 # Will cd into the top of the current repository
 # or submodule.
 alias grt='cd $(git rev-parse --show-toplevel || echo ".")'
-
-alias gsr='git svn rebase'
-alias gsd='git svn dcommit'
-
-# Will return the current branch name
-# Usage example: git pull origin $(current_branch)
-#
-current_branch() {
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || \
-    ref=$(git rev-parse --short HEAD 2> /dev/null) || return
-    echo ${ref#refs/heads/}
-}
-
-current_repository() {
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || \
-    ref=$(git rev-parse --short HEAD 2> /dev/null) || return
-    echo $(git remote -v | cut -d':' -f 2)
-}
-
-# these aliases take advantage of the previous function
-alias ggpull='git pull origin $(current_branch)'
-alias ggpush='git push origin $(current_branch)'
-alias ggpnp='git pull origin $(current_branch) && git push origin $(current_branch)'
 
 
 ## global aliases. Handle with care!
