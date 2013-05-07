@@ -12,21 +12,26 @@ alias lssmall='command ls -Srl *(.oL[1,10])' # display the smallest files
 alias lsnew='command ls -rl *(D.om[1,10])' # display the newest files
 alias lsold='command ls -rtlh *(D.om[-11,-1])' # display the oldest files
 
-alias mv='command mv -i'
-alias mmv='noglob mmv'
-alias cp='command cp -i'
+if zstyle -T ':ganneff:config' safemvcp false; then
+    alias mv='nocorrect command mv'
+    alias cp='nocorrect command cp'
+else
+    alias mv='nocorrect command mv -i'
+    alias cp='nocorrect command cp -i'
+fi
+# Number of aliases for commands we don't want to do globbing usually
 alias wget='noglob wget'
-alias cgrep='grep --color'
-alias git='git'
-alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 alias scp='noglob scp'
 
-is-callable psql && alias psql='LD_PRELOAD=/lib/libreadline.so.5 psql'
-
-alias logout='noglob logout'
+# No spellchecks for these
+alias man='nocorrect noglob man'
+alias mysql='nocorrect mysql'
+alias mkdir='nocorrect mkdir'
 
 # want to trace a shell function? ztrace $FUNCTIONNAME and there it goes.
+#a# trace a shell function
 alias ztrace='typeset -f -t'
+#a# no longer trace a shell function
 alias zuntrace='typeset -f +t'
 
 # overwrite cal
@@ -34,12 +39,14 @@ alias cal='cal -3'
 
 # convenient abbreviations
 alias c=clear
-
 alias d='dirs -v'
 
+# Various little cd helpers
 alias cd/='cd /'
 alias ..='cd ..'
 alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
 alias cd..='cd ..'
 alias cd...='cd ../..'
 alias cd....='cd ../../..'
@@ -47,15 +54,13 @@ alias cd.....='cd ../../../..'
 alias -- -='cd -'
 for index ({1..9}) alias "$index"="cd -${index}"; unset index
 
-alias mc='mc -d -U'
+# various
+alias cgrep='grep --color'
+alias rot13='tr a-zA-Z n-za-mN-ZA-M'
+is-command mc && alias mc='mc -d -U'
 alias cpan='perl -MCPAN -e shell'
 alias rh='run-help'
 
-# No spellchecks here
-alias man='nocorrect noglob man'
-alias mysql='nocorrect mysql'
-alias mkdir='nocorrect mkdir'
-alias mv='nocorrect mv'
 
 if [ -x /usr/bin/recode ]; then
     alias unix2dos='recode lat1..ibmpc'
@@ -64,10 +69,6 @@ fi
 
 # used when you press M-? on a command line
 alias which-command='whence -a'
-
-# zsh function tracing
-alias ztrace='typeset -f -t'
-alias zuntrace='typeset -f +t'
 
 # Make popd changes permanent without having to wait for logout
 if zstyle -T ':ganneff:config' dirstackhandling dirpersist dirstack; then
