@@ -40,7 +40,11 @@ _publish() {
     compttl2=(${=compttl})
 
     local -a tags
-    tags=( ${${${"${(f)mapfile[$history_file]}"##* }%/*}##*/} )
+    if [[ -e ${history_file} ]]; then
+        tags=( ${${${"${(f)mapfile[$history_file]}"##* }%/*}##*/} )
+    else
+        tags=()
+    fi
 
     _arguments -s \
         '-8[Add a AddDefaultCharset UTF-8 .htaccess file.]' \
