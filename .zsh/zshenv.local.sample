@@ -196,6 +196,10 @@ lmanpath=(
 ## subdirectories, Keybindings.zsh) to set the keybindings.
 # zstyle ':ganneff:config' pluginbindkeys false
 
+## Want to have -i option for mv/cp, ie. interactive, prompt before
+## overwriting?
+# zstyle ':ganneff:config' safemvcp false
+
 ########################################################################
 ### Prompt setup                                                     ###
 ## use vcs_info in prompt
