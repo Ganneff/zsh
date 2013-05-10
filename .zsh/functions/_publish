@@ -1,40 +1,63 @@
 #compdef publish
 #autoload
 
-# Complete publish
-#
+# Copyright (c) 2013 Joerg Jaspert
 # Author: Joerg Jaspert <joerg@debian.org>
 #
-_arguments -s \
-    '-8[Add a AddDefaultCharset UTF-8 .htaccess file.]' \
-    '-H[Show the history.]' \
-    '-s+[When reading data from stdin, use FN as filename to be published.]:target filename:' \
-    '-S[Make a screenshot of one window and publish.]' \
-    '-n[no-do. Just print what would have been done.]' \
-    '-q[Produce a QR code.]' \
-    '-r[Add --relative option to rsync retaining path names on remote host.]' \
-    '-t+[time to live in days]:days:' \
-    '-T+[directory name on the server (use this to re-publish under that name)]:tag:' \
-    '-x[Publish the contents of the xclipboard.]' \
-    '-h[display help]' \
-    '*::file:_files'
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
 
-# ,----
-# | usage: /home/ganneff/bin/publish [<src> [<src> ...]]
-# | 
-# | copy the file <src> to a server an report the URL.
-# | 
-# | OPTIONS:
-# |    -8        Add a AddDefaultCharset UTF-8 .htaccess file.
-# |    -H        Show the history.
-# |    -s FN     When reading data from stdin, use FN as filename to be published.
-# |    -S        Make a screenshot of one window and publish.
-# |    -h        Show this message.
-# |    -n        no-do.  Just print what would have been done.
-# |    -q        Produce a QR code.
-# |    -r        Add --relative option to rsync so that path names of the given
-# |              files are preserved at the remote host.
-# |    -t days   time to live in days
-# |    -T tag    directory name on the server (use this to re-publish under that name)
-# |    -x        Publish the contents of the xclipboard.
-# `----
+# Author: Florian Reitmeir
+# E-mail: florian@reitmeir.org
+
+_publish() {
+    zmodload zsh/mapfile
+    local history_file=~/.publish.history
+    local ttl=180
+    local compttl
+
+    [[ -e ~/.publish.cfg ]] && . ~/.publish.cfg
+
+    # Entirely random selection of what to put here...
+    compttl=${compttl:-"$((ttl / 3 )) $((ttl / 2)) $ttl $((ttl * 2)) $((ttl * 3))"}
+
+    local -a compttl2
+    compttl2=(${=compttl})
+
+    local -a tags
+    tags=( ${${${"${(f)mapfile[$history_file]}"##* }%/*}##*/} )
+
+    _arguments -s \
+        '-8[Add a AddDefaultCharset UTF-8 .htaccess file.]' \
+        '-H[Show the history.]' \
+        '-s+[When reading data from stdin, give filename to be published.]:target filename: ' \
+        '-S[Make a screenshot of one window and publish.]' \
+        '-n[no-do. Just print what would have been done.]' \
+        '-q[Produce a QR code.]' \
+        '-r[Add --relative option to rsync retaining path names on remote host.]' \
+        '-t+[time to live in days]:days:(${compttl2})' \
+        '-T+[directory name on the server (use this to re-publish under that name)]:tag:(${tags})' \
+        '-x[Publish the contents of the xclipboard.]' \
+        '-h[display help]' \
+        '*::file:_files'
+}
+
+_publish "$@"
