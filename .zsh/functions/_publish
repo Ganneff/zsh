@@ -25,9 +25,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-# Author: Florian Reitmeir
-# E-mail: florian@reitmeir.org
-
 _publish() {
     zmodload zsh/mapfile
     local history_file=~/.publish.history
