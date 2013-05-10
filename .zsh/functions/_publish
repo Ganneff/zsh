@@ -1,0 +1,40 @@
+#compdef publish
+#autoload
+
+# Complete publish
+#
+# Author: Joerg Jaspert <joerg@debian.org>
+#
+_arguments -s \
+    '-8[Add a AddDefaultCharset UTF-8 .htaccess file.]' \
+    '-H[Show the history.]' \
+    '-s+[When reading data from stdin, use FN as filename to be published.]:target filename:' \
+    '-S[Make a screenshot of one window and publish.]' \
+    '-n[no-do. Just print what would have been done.]' \
+    '-q[Produce a QR code.]' \
+    '-r[Add --relative option to rsync retaining path names on remote host.]' \
+    '-t+[time to live in days]:days:' \
+    '-T+[directory name on the server (use this to re-publish under that name)]:tag:' \
+    '-x[Publish the contents of the xclipboard.]' \
+    '-h[display help]' \
+    '*::file:_files'
+
+# ,----
+# | usage: /home/ganneff/bin/publish [<src> [<src> ...]]
+# | 
+# | copy the file <src> to a server an report the URL.
+# | 
+# | OPTIONS:
+# |    -8        Add a AddDefaultCharset UTF-8 .htaccess file.
+# |    -H        Show the history.
+# |    -s FN     When reading data from stdin, use FN as filename to be published.
+# |    -S        Make a screenshot of one window and publish.
+# |    -h        Show this message.
+# |    -n        no-do.  Just print what would have been done.
+# |    -q        Produce a QR code.
+# |    -r        Add --relative option to rsync so that path names of the given
+# |              files are preserved at the remote host.
+# |    -t days   time to live in days
+# |    -T tag    directory name on the server (use this to re-publish under that name)
+# |    -x        Publish the contents of the xclipboard.
+# `----
