@@ -109,7 +109,7 @@ function agent() {
         ssh-add ${af}
     done
 
-    if is434 && zstyle -T ':ganneff:config' killagent true; then
+    if is435 && zstyle -T ':ganneff:config' killagent true; then
         add-zsh-hook zshexit kill_agent
     fi
 }

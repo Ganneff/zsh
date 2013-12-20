@@ -3,7 +3,7 @@
 export SHELL=$(which zsh)
 
 # Show some git info on cd
-if is434 ; then
+if is435 ; then
     add-zsh-hook chpwd _jj_chpwd
 else
     function chpwd() {
@@ -29,7 +29,7 @@ DIRSTACKSIZE=20
 if zstyle -t ':ganneff:config' dirstackhandling dirpersist dirstack; then
     DIRSTACKFILE=${ZDOTDIR}/var/.zdirstore
     dirpersistrestore
-    if is434; then
+    if is435; then
         add-zsh-hook zshexit dirpersiststore
     else
         echo "Sorry, zsh version too old"

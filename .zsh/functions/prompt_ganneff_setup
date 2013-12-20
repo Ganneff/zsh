@@ -432,14 +432,14 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
     )
 
     PR_FLEXLINE=""
-    add-zsh-hook precmd prompt_ganneff_precmd
+    is435 && add-zsh-hook precmd prompt_ganneff_precmd
     # Call the winch function once to ensure the length gets calculated
     # correctly
     prompt_ganneff_winch
     local pr_battery
     zstyle -s ':prompt:ganneff' battery pr_battery || pr_battery="none"
     if [[ $pr_battery != "none" ]]; then
-        add-zsh-hook precmd prompt_ganneff_battery
+        is435 && add-zsh-hook precmd prompt_ganneff_battery
         prompt_ganneff_battery
     fi
 
@@ -462,7 +462,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
                 _prompt_ganneff_ignore+=(${(e)${_prompt_ganneff_ignore[$i]}})
             fi
         done
-        add-zsh-hook preexec prompt_ganneff_preexec
+        is435 && add-zsh-hook preexec prompt_ganneff_preexec
     fi
 }
 
