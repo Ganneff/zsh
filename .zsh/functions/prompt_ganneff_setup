@@ -642,10 +642,18 @@ prompt_ganneff_battery() {
     fi
 }
 
+is435(){
+    [[ $ZSH_VERSION == 4.3.<5->* || $ZSH_VERSION == 4.<4->* \
+                                 || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
 is439(){
     [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
                                  || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
+# Ensure the add-zsh-hook function is available
+is435 && autoload -Uz add-zsh-hook
 prompt_ganneff_setup "$@"
