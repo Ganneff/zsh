@@ -34,6 +34,15 @@ alias ztrace='typeset -f -t'
 #a# no longer trace a shell function
 alias zuntrace='typeset -f +t'
 
+# SSHs multisession can be controlled by giving commands to -O.
+# Valid ones are check, forward, cancel, exit and stop, see man ssh_config
+# for details on them
+alias sshx="ssh -O exit"
+alias sshc="ssh -O check"
+alias sshf="ssh -O forward"
+alias sshfc="ssh -O cancel"
+alias sshs="ssh -O stop"
+
 # overwrite cal
 alias cal='cal -3'
 
