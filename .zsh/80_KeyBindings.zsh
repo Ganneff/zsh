@@ -94,7 +94,13 @@ do
     zle -N ${widget}
 done
 
-accept-line
+# control+j: add new-line for multi-line edits in zle (needs exception for midnight commander)
+if [[ "$MC_SID" != "" || "$MC_CONTROL_PID" != "" ]]; then
+    bindkey "^J" accept-line
+else
+    bindkey "^J" self-insert
+    accept-line
+fi
 
 bind2maps emacs             -- Home      beginning-of-somewhere
 bind2maps       viins vicmd -- Home      vi-beginning-of-line
