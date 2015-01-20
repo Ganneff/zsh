@@ -127,6 +127,9 @@ alias gpoat='git push origin --all && git push origin --tags'
 alias gl='git pull'
 #a# fetch and rebase from another repository
 alias gup='git pull --rebase'
+#a# fetch and merge from another repository (pull), cleaning up
+#remote-tracking references that no longer exist on the remote
+alias glp='git pull --prune'
 #a# fetch another repository
 alias gf='git fetch'
 #a# clone another repository
