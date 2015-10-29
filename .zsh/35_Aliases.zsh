@@ -115,6 +115,10 @@ alias gau='git add --update'
 alias gc='git commit -v'
 #a# amend last git commit
 alias gca='git commit -v --amend'
+#a# fixup last git commit
+alias gcf='git commit --fixup @'
+#a# squash last git commit
+alias gcs='git commit --squash @'
 
 # push
 #a# push changes
@@ -155,7 +159,8 @@ alias gdc='git diff --cached'
 #a# Show logs with differences each commit introduces
 alias gwc='git whatchanged -p --abbrev-commit --pretty=medium'
 
-alias gcs='git show'
+#a# Show last commit
+alias gs='git show'
 
 # log
 #a# Show 10 latest commit logs
