@@ -119,6 +119,10 @@ alias gca='git commit -v --amend'
 alias gcf='git commit --fixup @'
 #a# squash last git commit
 alias gcs='git commit --squash @'
+#a# fixup last commit and push it directly
+alias gcfp='git commit --fixup @ && git push origin'
+#a# squash last git commit and push it directly
+alias gcsp='git commit --squash @ && git push origin'
 
 # push
 #a# push changes
