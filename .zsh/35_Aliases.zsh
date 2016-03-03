@@ -197,21 +197,28 @@ alias gg='git grep'
 #a# list commit count summary
 alias gcount='git shortlog -sn'
 
-
+# rebasing
+#a# rebase
+alias gr='git rebase'
+#a# rebase interactive on master
+alias gri='git rebase -i master'
+#a# continue rebase
+alias grc='git rebase --continue'
+#a# abort rebase
+alias gra='git rebase --abort'
 
 
 # remotes
 #a# list remotes
-alias gr='git remote'
+alias gre='git remote'
 #a# list remotes including their fetch/push details
-alias grv='git remote -v'
-alias grmv='git remote rename'
-alias grrm='git remote remove'
+alias grev='git remote -v'
+alias gremv='git remote rename'
+alias grerm='git remote remove'
 
 # Will cd into the top of the current repository
 # or submodule.
 alias grt='cd $(git rev-parse --show-toplevel || echo ".")'
-
 
 ## global aliases. Handle with care!
 alias -g LS='| less'
