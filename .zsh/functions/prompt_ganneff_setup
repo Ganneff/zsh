@@ -305,7 +305,7 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_CYAN}${PR_HBAR}${PR_SHIFT_OUT}${PR_NO_COLOR} '
             # change vcs_info formats for the prompt
             zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "${PR_YELLOW}%b%{${PR_RED}%}:${PR_YELLOW}%r${PR_NO_COLOR}"
             zstyle ':vcs_info:*' formats "(${PR_YELLOW}%s${PR_NO_COLOR})-[${PR_GREEN}%b${PR_NO_COLOR}]%m%u%c" "%R"
-            zstyle ':vcs_info:*' actionformats "(${PR_YELLOW}%s${PR_NO_COLOR})-[${PR_GREEN}%b${PR_NO_COLOR}-${PR_RED}(%a)${PR_NO_COLOR}]%m%u%c"
+            zstyle ':vcs_info:*' actionformats "(${PR_YELLOW}%s${PR_NO_COLOR})-[${PR_GREEN}%b${PR_NO_COLOR}-${PR_RED}(%a)${PR_NO_COLOR}]%m%u%c "
         fi
     fi
 
