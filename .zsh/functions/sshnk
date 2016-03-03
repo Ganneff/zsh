@@ -5,6 +5,6 @@
     local SSH_AGENT_PID
     eval `ssh-agent`
     ssh-add -c
-    ssh -o ControlPath=none -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$@"
+    ssh -o ControlPath=none -A -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$@"
     kill $SSH_AGENT_PID
 )
