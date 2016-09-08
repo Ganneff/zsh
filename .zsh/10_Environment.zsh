@@ -48,7 +48,7 @@ NULLCMD=${PAGER}
 
 if [[ ${COLORS} == "true" ]]; then
     # grep with colors
-    export GREP_OPTIONS='--color=auto'
+    alias grep='grep --color=auto'
 
     if zstyle -T ':ganneff:config' solarizedls; then
         # solarized ls colors
