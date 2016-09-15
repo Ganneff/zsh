@@ -59,9 +59,26 @@ if [[ ${COLORS} == "true" ]]; then
     fi
 fi
 
-(( ${+TMPDIR} )) || export TMPDIR="$HOME/tmp"
+# User wants us to check if there is a tmpfs mounted for them
+# (say /run/user/$uid), and if so, point TMPDIR there. We use
+# a subdir there to avoid interfering with other stuff
+if zstyle -T ':ganneff:config' runtmp; then
+    rudir="$(df -t tmpfs --output=target|grep ${UID} || true)/tmp"
+fi
+
+# Ignore existing TMPDIR variable and always repoint...
+if zstyle -T ':ganneff:config' resettmpdir; then
+    export TMPDIR="${rudir:-$HOME/tmp}"
+else
+    # ... or not
+    (( ${+TMPDIR} )) || export TMPDIR="${rudir:-$HOME/tmp}"
+fi
+
 # Ensure the tmpdir exists
 mkdir -p ${TMPDIR}
+
+# And adjust TMPPREFIX
+export TMPPREFIX="${TMPDIR}/zsh"
 
 # If its installed - use lesspipe (or maybe lessfile)
 if is-callable lesspipe; then

@@ -200,6 +200,16 @@ lmanpath=(
 ## overwriting?
 # zstyle ':ganneff:config' safemvcp false
 
+## If you want to point your temp directory to a tmpfs based one,
+## say on a systemd based system (where it ends up /run/user/$UID usually),
+## set this to true.
+# zstyle ':ganneff:config' runtmp true
+
+## If there is already a TMPDIR variable, we use its content, no matter
+## what the runtmp setting says. If you want to forcefully repoint the
+## tmpdir variable, no matter what, true is your friend here.
+# zstyle ':ganneff:config' resettmpdir true
+
 ########################################################################
 ### Prompt setup                                                     ###
 ## use vcs_info in prompt
