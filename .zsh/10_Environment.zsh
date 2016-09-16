@@ -63,15 +63,15 @@ fi
 # (say /run/user/$uid), and if so, point TMPDIR there. We use
 # a subdir there to avoid interfering with other stuff
 if zstyle -T ':ganneff:config' runtmp; then
-    rudir="$(df -t tmpfs --output=target|grep ${UID} || true)/tmp"
+    rudir="$(df -t tmpfs --output=target|grep ${UID} || true)"
 fi
 
 # Ignore existing TMPDIR variable and always repoint...
 if zstyle -T ':ganneff:config' resettmpdir; then
-    export TMPDIR="${rudir:-$HOME/tmp}"
+    export TMPDIR="${rudir:-$HOME}/tmp"
 else
     # ... or not
-    (( ${+TMPDIR} )) || export TMPDIR="${rudir:-$HOME/tmp}"
+    (( ${+TMPDIR} )) || export TMPDIR="${rudir:-$HOME}/tmp"
 fi
 
 # Ensure the tmpdir exists
