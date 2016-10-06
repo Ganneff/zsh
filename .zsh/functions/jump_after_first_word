@@ -8,5 +8,5 @@ words=(${(z)BUFFER})
 if (( ${#words} <= 1 )) ; then
     CURSOR=${#BUFFER}
 else
-    CURSOR=${#${words[1]}}
+    CURSOR=$(( ${#${words[1]}} + 1 ))
 fi
