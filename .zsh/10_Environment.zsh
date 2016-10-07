@@ -63,7 +63,12 @@ fi
 # (say /run/user/$uid), and if so, point TMPDIR there. We use
 # a subdir there to avoid interfering with other stuff
 if zstyle -T ':ganneff:config' runtmp; then
-    rudir="$(df -t tmpfs --output=target|grep ${UID} || true)"
+    dfversion=$(df --version|awk -F '.' '/coreutils/ {print $NF}')
+    if [[ ${dfversion} -lt 22 ]]; then
+        rudir="$(df -t tmpfs |grep ${UID} | awk '{print $NF}' || true)"
+    else
+        rudir="$(df -t tmpfs --output=target|grep ${UID} || true)"
+    fi
 fi
 
 # Ignore existing TMPDIR variable and always repoint...
