@@ -1,0 +1,1 @@
+../external/zsh-autosuggestions/zsh-autosuggestions.zsh

@@ -29,6 +29,7 @@ __ () {
             history-substring-search.zsh
             per-directory-history.plugin.zsh
             zaw.zsh
+            zsh-autosuggestions.zsh
         )
         for file in $plugins; do
             debug "PLUGIN: Trying to load ${file}"...

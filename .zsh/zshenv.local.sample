@@ -183,7 +183,8 @@ lmanpath=(
 # zstyle ':ganneff:config' plugins git-extras.plugin.zsh \
 #    history-substring-search.zsh \
 #    per-directory-history.plugin.zsh \
-#    zaw.zsh
+#    zaw.zsh \
+#    zsh-autosuggestion.zsh
 
 ## oh-my-zsh plugins can also be loaded, in case you like one of it.
 ## Simply list their names here, and put their directories into
