@@ -181,6 +181,11 @@ bind2maps             vicmd -- -s "j"                   history-substring-search
 #k# search history and present a menu
 bind2maps emacs       vicmd -- -s "$key_info[Control]X$key_info[Control]X" history-beginning-search-menu
 
+#k# Trigger zsh anything.el
+if which zaw >/dev/null; then
+    bind2maps emacs viins       -- -s "$key_info[Control]X;"              zaw
+fi
+
 #k# Insert files and test globbing
 is4 && bind2maps emacs viins -- -s "$key_info[Control]Xf"              insert-files
 #k# Edit the current line in \kbd{\$EDITOR}

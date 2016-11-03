@@ -28,6 +28,7 @@ __ () {
             git-extras.plugin.zsh
             history-substring-search.zsh
             per-directory-history.plugin.zsh
+            zaw.zsh
         )
         for file in $plugins; do
             debug "PLUGIN: Trying to load ${file}"...
