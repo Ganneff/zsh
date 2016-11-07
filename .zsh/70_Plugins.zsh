@@ -38,6 +38,10 @@ __ () {
         done
     fi
 
+    # If the zsh-autosuggestions gets loaded, set another var
+    (( ${plugins[(I)zsh-autosuggestions.zsh]} )) \
+        && setvar ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE 'fg=green'
+
     # And now (possibly) oh-my-zsh style plugins
     if [[ -d ${ZDOTDIR}/plugins/ohmy ]]; then
         typeset -a omplug
@@ -51,4 +55,3 @@ __ () {
 } && __
 
 unfunction bindkey
-

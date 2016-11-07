@@ -198,6 +198,11 @@ lmanpath=(
 ## subdirectories, Keybindings.zsh) to set the keybindings.
 # zstyle ':ganneff:config' pluginbindkeys false
 
+## Color to use when highlighting suggestions in the zsh-autosuggestion plugin
+## Uses format of `region_highlight`
+## More info: http://zsh.sourceforge.net/Doc/Release/Zsh-Line-Editor.html#Zle-Widgets
+#zstyle ':ganneff:config' ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE 'fg=green'
+
 ## Want to have -i option for mv/cp, ie. interactive, prompt before
 ## overwriting?
 # zstyle ':ganneff:config' safemvcp false
