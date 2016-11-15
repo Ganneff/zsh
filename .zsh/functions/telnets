@@ -2,10 +2,15 @@
 
 host=${1:-""}
 port=${2:-"443"}
+proto=${3:-""}
 
-if [[ $host = "" ]]; then
+if [[ -z $host ]]; then
     echo "Missing host argument"
     return
 fi
 
-openssl s_client -host ${host} -port ${port}
+if [[ -z ${proto} ]]; then
+    openssl s_client -host ${host} -port ${port}
+else
+    openssl s_client -host ${host} -port ${port} -starttls ${proto}
+fi
