@@ -608,6 +608,7 @@ ganneff_prompt_addto () {
                 ;;
             vcs)
                 v="vcs_info_msg_${new}_"
+                v=${v//[^a-z0-9\/]/-}
                 if (( ${+parameters[$v]} )) && [[ -n "${(P)v}" ]]; then
                     typeset -g "${target}=${(P)target}${(P)v}"
                 fi
