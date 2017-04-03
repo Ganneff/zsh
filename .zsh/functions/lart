@@ -1,0 +1,4 @@
+lart() {
+    ls -lart "$@"
+    lart="$(ls -rta "$@" | tail -n1)"
+}
