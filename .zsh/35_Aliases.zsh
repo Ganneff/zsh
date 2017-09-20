@@ -227,3 +227,7 @@ alias -g WC='| wc -l'
 alias -g SO='| sort'
 alias -g CD='| colordiff | less -R'
 alias -g NE="2> /dev/null"
+
+## docker related
+alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
+alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
