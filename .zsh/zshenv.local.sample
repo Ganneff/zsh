@@ -325,3 +325,21 @@ lmanpath=(
 # This may lead to unexpected results.
 #  
 # Hit enter again, to try execution anyway.'
+# Set the environment variables in the Environment file,
+# either 10_Environment.zsh.local for all places your config
+# runs, or in one of the net/distri/host specific subdirs Environment.zsh
+# Variable names are ENV_$PROFILENAME, so "profile work" turns out ENV_WORK
+# Example:
+# ENV_WORK=(
+#    "EMAIL"  "user@example.com"
+#    "FOOBAR  "BAZ"
+# )
+# General switch to easily turn on/off
+#zstyle ':ganneff:config' chpwdprofiles false
+#
+# First match wins, so put more specific ones to the top
+#zstyle ':chpwd:profiles:/home/joerg/devel/ganneff*' profile ganneff
+#zstyle ':chpwd:profiles:/home/joerg/devel/Debian/grml*' profile grml
+#zstyle ':chpwd:profiles:/home/joerg/devel/Debian*' profile debian
+#zstyle ':chpwd:profiles:/home/joerg/devel/Grml*' profile grml
+#zstyle ':chpwd:profiles:/srv/somethingororhter/Bla*' profile redhat

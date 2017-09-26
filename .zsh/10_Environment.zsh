@@ -116,3 +116,8 @@ setvar REPORTTIME 30
 # in 'foo bar | baz' make a second ^W not eat 'bar |', but only '|'
 # this has the disadvantage that in 'bar|baz' it eats all of it.
 typeset WORDCHARS='|'$WORDCHARS
+
+# If we want directory profiles, add them to the chpwd hook
+if zstyle -t ':ganneff:config' chpwdprofiles; then
+    add-zsh-hook chpwd switch_environment_profiles
+fi

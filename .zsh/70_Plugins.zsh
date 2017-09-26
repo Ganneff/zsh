@@ -25,6 +25,7 @@ __ () {
         typeset -a plugins
         zstyle -a ':ganneff:config' plugins plugins \
             || plugins=(
+            directory-based-environment-configuration.zsh
             git-extras.plugin.zsh
             history-substring-search.zsh
             per-directory-history.plugin.zsh
