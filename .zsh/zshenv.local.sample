@@ -325,6 +325,14 @@ lmanpath=(
 # This may lead to unexpected results.
 #  
 # Hit enter again, to try execution anyway.'
+
+# If there is a /run/user/$UID/ mounted, use it as tempdir
+#zstyle ':ganneff:config' runtmp true
+# If true, ignore existing TMPDIR variable and always repoint
+#zstyle ':ganneff:config' resettmpdir true
+
+
+# Configure directory environment mappings
 # Set the environment variables in the Environment file,
 # either 10_Environment.zsh.local for all places your config
 # runs, or in one of the net/distri/host specific subdirs Environment.zsh
