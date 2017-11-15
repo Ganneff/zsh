@@ -1,5 +1,6 @@
+#!/usr/bin/env zsh
 # -------------------------------------------------------------------------------------------------
-# Copyright (c) 2015 zsh-syntax-highlighting contributors
+# Copyright (c) 2017 zsh-syntax-highlighting contributors
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -27,18 +28,15 @@
 # vim: ft=zsh sw=2 ts=2 et
 # -------------------------------------------------------------------------------------------------
 
-if [[ $OSTYPE == msys ]]; then
-  skip_test='Cannot chmod +x in msys2'
-else
-  setopt PATH_DIRS
-  mkdir -p foo/bar
-  touch foo/bar/testing-issue-228
-  chmod  +x foo/bar/testing-issue-228
-  path+=( "$PWD"/foo )
+BUFFER='elif true; then echo two; fi'
 
-  BUFFER='bar/testing-issue-228'
-
-  expected_region_highlight=(
-    "1 21 command" # bar/testing-issue-228
-  )
-fi
+expected_region_highlight=(
+  '1 4 unknown-token' # elif
+  '6 9 builtin' # true
+  '10 10 commandseparator' # ;
+  '12 15 unknown-token' # then
+  '17 20 builtin' # echo
+  '22 24 default' # two
+  '25 25 commandseparator' # ;
+  '27 28 unknown-token' # fi
+)

@@ -17,9 +17,14 @@ that is, `$i` and `$j` specify a range, 1-indexed, inclusive of both endpoints.
 highlighting should be observed.
 If `$todo` exists, the test point is marked as TODO (the failure of that test
 point will not fail the test), and `$todo` is used as the explanation.
+If a test sets `$skip_test` to a non-empty string, the test will be skipped
+with the provided string as the reason.
 
 **Note**: `$region_highlight` uses the same `"$i $j $style"` syntax but
 interprets the indexes differently.
+
+**Note**: Tests are run with `setopt NOUNSET WARN_CREATE_GLOBAL`, so any
+variables the test creates must be declared local.
 
 **Isolation**: Each test is run in a separate subshell, so any variables,
 aliases, functions, etc., it defines will be visible to the tested code (that

@@ -241,6 +241,8 @@ _zsh_highlight_highlighter_main_paint()
   # "Y" for curly
   # "D" for do/done
   # "$" for 'end' (matches 'foreach' always; also used with cshjunkiequotes in repeat/while)
+  # "?" for 'if'/'fi'; also checked by 'elif'/'else'
+  # ":" for 'then'
   local braces_stack
 
   if (( path_dirs_was_set )); then
@@ -509,6 +511,29 @@ _zsh_highlight_highlighter_main_paint()
                           ('done')
                             _zsh_highlight_main__stack_pop 'D' style=reserved-word
                             ;;
+                          ('if')
+                            braces_stack=':?'"$braces_stack"
+                            ;;
+                          ('then')
+                            _zsh_highlight_main__stack_pop ':' style=reserved-word
+                            ;;
+                          ('elif')
+                            if [[ ${braces_stack[1]} == '?' ]]; then
+                              braces_stack=':'"$braces_stack"
+                            else
+                              style=unknown-token
+                            fi
+                            ;;
+                          ('else')
+                            if [[ ${braces_stack[1]} == '?' ]]; then
+                              :
+                            else
+                              style=unknown-token
+                            fi
+                            ;;
+                          ('fi')
+                            _zsh_highlight_main__stack_pop '?' ""
+                            ;;
                           ('foreach')
                             braces_stack='$'"$braces_stack"
                             ;;
@@ -658,6 +683,7 @@ _zsh_highlight_highlighter_main_paint()
                  already_added=1
                  ;;
         '`'*)    style=back-quoted-argument;;
+        [$][*])  style=default;;
         [*?]*|*[^\\][*?]*)
                  $highlight_glob && style=globbing || style=default;;
         *)       if false; then
@@ -814,6 +840,13 @@ _zsh_highlight_main_highlighter_highlight_string()
             if [[ \\\`\"\$${histchars[1]} == *$arg[$i+1]* ]]; then
               (( k += 1 )) # Color following char too.
               (( i += 1 )) # Skip parsing the escaped char.
+            else
+              continue
+            fi
+            ;;
+      ($histchars[1]) # ! - may be a history expansion
+            if [[ $arg[i+1] != ('='|$'\x28'|$'\x7b'|[[:blank:]]) ]]; then
+              style=history-expansion
             else
               continue
             fi

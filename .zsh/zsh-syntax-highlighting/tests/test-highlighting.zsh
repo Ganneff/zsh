@@ -29,6 +29,8 @@
 # -------------------------------------------------------------------------------------------------
 
 
+setopt NO_UNSET WARN_CREATE_GLOBAL
+
 # Check an highlighter was given as argument.
 [[ -n "$1" ]] || {
   echo >&2 "Bail out! You must provide the name of a valid highlighter as argument."
@@ -47,8 +49,33 @@
   exit 2
 }
 
+# Set up results_filter
+local results_filter
+if [[ ${QUIET-} == y ]]; then
+  if type -w perl >/dev/null; then
+    results_filter=${0:A:h}/tap-filter
+  else
+    echo >&2 "Bail out! quiet mode not supported: perl not found"; exit 2
+  fi
+else
+  results_filter=cat
+fi
+[[ -n $results_filter ]] || { echo >&2 "Bail out! BUG setting \$results_filter"; exit 2 }
+
 # Load the main script.
+# While here, test that it doesn't eat aliases.
+print > >($results_filter | ${0:A:h}/tap-colorizer.zsh) -r -- "# global (driver) tests"
+print > >($results_filter | ${0:A:h}/tap-colorizer.zsh) -r -- "1..1"
+alias -- +plus=plus
+alias -- _other=other
+original_alias_dash_L_output="$(alias -L)"
 . ${0:h:h}/zsh-syntax-highlighting.zsh
+if [[ $original_alias_dash_L_output == $(alias -L) ]]; then
+  print -r -- "ok 1 # 'alias -- +foo=bar' is preserved"
+else
+  print -r -- "not ok 1 # 'alias -- +foo=bar' is preserved"
+  exit 1
+fi > >($results_filter | ${0:A:h}/tap-colorizer.zsh) 
 
 # Overwrite _zsh_highlight_add_highlight so we get the key itself instead of the style
 _zsh_highlight_add_highlight()
@@ -70,20 +97,26 @@ run_test_internal() {
   echo "# ${1:t:r}"
 
   # Load the data and prepare checking it.
-  PREBUFFER= BUFFER= ;
+  local BUFFER CURSOR MARK PENDING PREBUFFER REGION_ACTIVE WIDGET skip_test
+  local -a expected_region_highlight region_highlight
   . "$srcdir"/"$1"
+
+  (( $#skip_test )) && { print -r -- "1..0 # SKIP $skip_test"; return; }
 
   # Check the data declares $PREBUFFER or $BUFFER.
   [[ -z $PREBUFFER && -z $BUFFER ]] && { echo >&2 "Bail out! Either 'PREBUFFER' or 'BUFFER' must be declared and non-blank"; return 1; }
   # Check the data declares $expected_region_highlight.
   (( ${#expected_region_highlight} == 0 )) && { echo >&2 "Bail out! 'expected_region_highlight' is not declared or empty."; return 1; }
 
+  # Set sane defaults for ZLE variables
+  : ${CURSOR=$#BUFFER} ${PENDING=0} ${WIDGET=z-sy-h-test-harness-test-widget}
+
   # Process the data.
-  region_highlight=()
   _zsh_highlight
 
   # Overlapping regions can be declared in region_highlight, so we first build an array of the
   # observed highlighting.
+  local i j
   local -A observed_result
   for ((i=1; i<=${#region_highlight}; i++)); do
     local -a highlight_zone; highlight_zone=( ${(z)region_highlight[$i]} )
@@ -110,12 +143,16 @@ run_test_internal() {
     integer start=$highlight_zone[1] end=$highlight_zone[2]
     # Escape # as ♯ since the former is illegal in the 'description' part of TAP output
     local desc="[$start,$end] «${BUFFER[$start,$end]//'#'/♯}»"
-    # Match the emptiness of observed_result if no highlighting is expected
-    [[ $highlight_zone[3] == NONE ]] && highlight_zone[3]=
-    [[ -n "$highlight_zone[4]" ]] && todo="# TODO $highlight_zone[4]"
+    (( $+highlight_zone[4] )) && todo="# TODO $highlight_zone[4]"
     for j in {$start..$end}; do
-      if [[ "$observed_result[$j]" != "$highlight_zone[3]" ]]; then
-        print -r -- "not ok $i - $desc - expected ${(qqq)highlight_zone[3]}, observed ${(qqq)observed_result[$j]}. $todo"
+      if
+	if [[ $highlight_zone[3] == NONE ]]; then
+	  (( $+observed_result[$j] ))
+	else
+	  [[ "$observed_result[$j]" != "$highlight_zone[3]" ]]
+	fi
+      then
+        print -r -- "not ok $i - $desc - expected ${(qqq)highlight_zone[3]}, observed ${(qqq)observed_result[$j]-NONE}. $todo"
         continue 2
       fi
     done
@@ -156,19 +193,6 @@ run_test() {
     rm -rf -- "$__tests_tempdir"
   }
 }
-
-# Set up results_filter
-local results_filter
-if [[ $QUIET == y ]]; then
-  if type -w perl >/dev/null; then
-    results_filter=${0:A:h}/tap-filter
-  else
-    echo >&2 "Bail out! quiet mode not supported: perl not found"; exit 2
-  fi
-else
-  results_filter=cat
-fi
-[[ -n $results_filter ]] || { echo >&2 "Bail out! BUG setting \$results_filter"; exit 2 }
 
 # Process each test data file in test data directory.
 integer something_failed=0
