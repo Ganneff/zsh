@@ -149,6 +149,16 @@ alias gco='git checkout'
 #a# switch to the master branch
 alias gcm='git checkout master'
 
+# worktree
+#a# worktree
+alias gw='git worktree'
+#a# add worktree
+alias gwa='git worktree add'
+#a# list worktrees
+alias gwl='git worktree list'
+#a# prune worktrees
+alias gwp='git worktree prune'
+
 # merge
 #a# merge
 alias gm='git merge'
