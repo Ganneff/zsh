@@ -44,6 +44,7 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' group-order ''
 
 zstyle ':completion:*' accept-exact '*(N)'
+zstyle ':completion:*' accept-exact-dirs true
 
 ## determine in which order the names (files) should be
 ## listed and completed when using menu completion.
