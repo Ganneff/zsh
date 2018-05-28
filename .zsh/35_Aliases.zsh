@@ -83,6 +83,12 @@ if zstyle -T ':ganneff:config' dirstackhandling dirpersist dirstack; then
     alias popd="popd;dirpersiststore"
 fi
 
+# ip, if it can do it
+if ip -c a ls lo >/dev/null 2>&1; then
+    alias ip="ip --color"
+    alias ipb="ip --color --brief"
+fi
+
 # git related
 # Aliases
 alias g='git'
