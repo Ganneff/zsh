@@ -26,22 +26,24 @@ How to install
 [obs-repository]: https://software.opensuse.org//download.html?project=shells%3Azsh-users%3Azsh-syntax-highlighting&package=zsh-syntax-highlighting
 [void-package]: https://github.com/voidlinux/void-packages/tree/master/srcpkgs/zsh-syntax-highlighting
 
+See also [repology's cross-distro index](https://repology.org/metapackage/zsh-syntax-highlighting/versions)
+
 
 ### In your ~/.zshrc
 
 Simply clone this repository and source the script:
 
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
-        echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+    echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
 
   Then, enable syntax highlighting in the current interactive shell:
 
-        source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
   If `git` is not installed, download and extract a snapshot of the latest
   development tree from:
 
-        https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz
+    https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz
 
   Note the `source` command must be **at the end** of `~/.zshrc`.
 
@@ -53,9 +55,10 @@ Note that `zsh-syntax-highlighting` must be the last plugin sourced.
 The zsh-syntax-highlighting authors recommend manual installation over the use
 of a framework or plugin manager.
 
-This list is incomplete as there are too many [frameworks / plugin managers]
-(https://github.com/unixorn/awesome-zsh-plugins#frameworks) to list them all
-here.
+This list is incomplete as there are too many
+[frameworks / plugin managers][framework-list] to list them all here.
+
+[framework-list]: https://github.com/unixorn/awesome-zsh-plugins#frameworks
 
 #### [Antigen](https://github.com/zsh-users/antigen)
 
@@ -66,21 +69,22 @@ your `.zshrc`.
 
 1. Clone this repository in oh-my-zsh's plugins directory:
 
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 2. Activate the plugin in `~/.zshrc`:
 
-        plugins=( [plugins...] zsh-syntax-highlighting)
+       plugins=( [plugins...] zsh-syntax-highlighting)
 
 3. Source `~/.zshrc`  to take changes into account:
 
-        source ~/.zshrc
+       source ~/.zshrc
 
 #### [Prezto](https://github.com/sorin-ionescu/prezto)
 
-Zsh-syntax-highlighting is included with Prezto. See the [Prezto documentation]
-(https://github.com/sorin-ionescu/prezto/tree/master/modules/syntax-highlighting)
-to enable and configure highlighters.
+Zsh-syntax-highlighting is included with Prezto. See the
+[Prezto documentation][prezto-docs] to enable and configure highlighters.
+
+[prezto-docs]: https://github.com/sorin-ionescu/prezto/tree/master/modules/syntax-highlighting
 
 #### [zgen](https://github.com/tarjoilija/zgen)
 

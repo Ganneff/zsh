@@ -27,10 +27,12 @@
 # vim: ft=zsh sw=2 ts=2 et
 # -------------------------------------------------------------------------------------------------
 
-ZSH_HIGHLIGHT_STYLES[bracket-level-1]=
-
-BUFFER=': "\"{x"'
+# see alias-comment2.zsh
+setopt interactivecomments
+alias x=$'# foo\npwd'
+BUFFER='x'
 
 expected_region_highlight=(
-  "3 9 NONE 'issue #303'"
+  '1 1 alias' # x
+  '1 1 comment' # x (#)
 )

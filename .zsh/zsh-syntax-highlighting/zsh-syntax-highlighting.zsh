@@ -28,7 +28,7 @@
 # -------------------------------------------------------------------------------------------------
 
 # First of all, ensure predictable parsing.
-zsh_highlight__aliases=`builtin alias -Lm '[^+]*'`
+typeset zsh_highlight__aliases="$(builtin alias -Lm '[^+]*')"
 # In zsh <= 5.2, `alias -L` emits aliases that begin with a plus sign ('alias -- +foo=42')
 # them without a '--' guard, so they don't round trip.
 #
@@ -55,11 +55,11 @@ fi
 
 # Use workaround for bug in ZSH?
 # zsh-users/zsh@48cadf4 http://www.zsh.org/mla/workers//2017/msg00034.html
-autoload -U is-at-least
+autoload -Uz is-at-least
 if is-at-least 5.4; then
-  zsh_highlight__pat_static_bug=false
+  typeset -g zsh_highlight__pat_static_bug=false
 else
-  zsh_highlight__pat_static_bug=true
+  typeset -g zsh_highlight__pat_static_bug=true
 fi
 
 # Array declaring active highlighters names.
@@ -83,8 +83,25 @@ _zsh_highlight()
     return $ret
   fi
 
+  # Before we 'emulate -L', save the user's options
+  local -A zsyh_user_options
+  if zmodload -e zsh/parameter; then
+    zsyh_user_options=("${(@kv)options}")
+  else
+    local canonical_options onoff option raw_options
+    raw_options=(${(f)"$(emulate -R zsh; set -o)"})
+    canonical_options=(${${${(M)raw_options:#*off}%% *}#no} ${${(M)raw_options:#*on}%% *})
+    for option in $canonical_options; do
+      [[ -o $option ]]
+      # This variable cannot be eliminated c.f. workers/42101.
+      onoff=${${=:-off on}[2-$?]}
+      zsyh_user_options+=($option $onoff)
+    done
+  fi
+  typeset -r zsyh_user_options
+
+  emulate -L zsh
   setopt localoptions warncreateglobal
-  setopt localoptions noksharrays
   local REPLY # don't leak $REPLY into global scope
 
   # Do not highlight if there are more than 300 chars in the buffer. It's most
@@ -124,7 +141,7 @@ _zsh_highlight()
         {
           "_zsh_highlight_highlighter_${highlighter}_paint"
         } always {
-          eval "${cache_place}=(\"\${region_highlight[@]}\")"
+          : ${(AP)cache_place::="${region_highlight[@]}"}
         }
 
         # Restore saved region_highlight
@@ -133,7 +150,7 @@ _zsh_highlight()
       fi
 
       # Use value form cache if any cached
-      eval "region_highlight+=(\"\${${cache_place}[@]}\")"
+      region_highlight+=("${(@P)cache_place}")
 
     done
 
@@ -151,8 +168,10 @@ _zsh_highlight()
         else
           min=$MARK max=$CURSOR
         fi
-        (( min = ${${BUFFER[1,$min]}[(I)$needle]} ))
-        (( max += ${${BUFFER:($max-1)}[(i)$needle]} - 1 ))
+        # CURSOR and MARK are 0 indexed between letters like region_highlight
+        # Do not include the newline in the highlight
+        (( min = ${BUFFER[(Ib:min:)$needle]} ))
+        (( max = ${BUFFER[(ib:max:)$needle]} - 1 ))
         _zsh_highlight_apply_zle_highlight region standout "$min" "$max"
       }
     fi
@@ -286,7 +305,7 @@ _zsh_highlight_bind_widgets()
 
   # Override ZLE widgets to make them invoke _zsh_highlight.
   local -U widgets_to_bind
-  widgets_to_bind=(${${(k)widgets}:#(.*|run-help|which-command|beep|set-local-history|yank)})
+  widgets_to_bind=(${${(k)widgets}:#(.*|run-help|which-command|beep|set-local-history|yank|yank-pop)})
 
   # Always wrap special zle-line-finish widget. This is needed to decide if the
   # current line ends and special highlighting logic needs to be applied.
@@ -344,7 +363,7 @@ _zsh_highlight_bind_widgets()
 #   1) Path to the highlighters directory.
 _zsh_highlight_load_highlighters()
 {
-  setopt localoptions noksharrays
+  setopt localoptions noksharrays bareglobqual
 
   # Check the directory exists.
   [[ -d "$1" ]] || {
@@ -354,7 +373,7 @@ _zsh_highlight_load_highlighters()
 
   # Load highlighters from highlighters directory and check they define required functions.
   local highlighter highlighter_dir
-  for highlighter_dir ($1/*/); do
+  for highlighter_dir ($1/*/(/)); do
     highlighter="${highlighter_dir:t}"
     [[ -f "$highlighter_dir${highlighter}-highlighter.zsh" ]] &&
       . "$highlighter_dir${highlighter}-highlighter.zsh"
@@ -402,7 +421,7 @@ _zsh_highlight_preexec_hook()
   typeset -g _ZSH_HIGHLIGHT_PRIOR_BUFFER=
   typeset -gi _ZSH_HIGHLIGHT_PRIOR_CURSOR=
 }
-autoload -U add-zsh-hook
+autoload -Uz add-zsh-hook
 add-zsh-hook preexec _zsh_highlight_preexec_hook 2>/dev/null || {
     print -r -- >&2 'zsh-syntax-highlighting: failed loading add-zsh-hook.'
   }

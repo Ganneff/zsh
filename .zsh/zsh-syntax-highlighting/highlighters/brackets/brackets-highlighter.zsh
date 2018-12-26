@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------------------------------
-# Copyright (c) 2010-2016 zsh-syntax-highlighting contributors
+# Copyright (c) 2010-2017 zsh-syntax-highlighting contributors
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -69,10 +69,6 @@ _zsh_highlight_highlighter_brackets_paint()
         else
           levelpos[$pos]=-1
         fi
-        ;;
-      ['"'\'])
-        # Skip everything inside quotes
-	pos=$BUFFER[(ib:pos+1:)$char]
         ;;
     esac
   done
