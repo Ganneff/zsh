@@ -189,6 +189,8 @@ alias glg='git log --stat --max-count=10'
 alias glgg='git log --graph --max-count=10'
 #a# Show all commits with a text-based graph
 alias glgga='git log --graph --decorate --all'
+#a# Show git logs together with stats and dirs
+alias glog="\git log --color --all --date-order --decorate --dirstat=lines,cumulative --stat | sed 's/\([0-9] file[s]\? .*)$\)/\1\n_______\n-------/g' | \less -R"
 
 # various
 #a# revert a commit
